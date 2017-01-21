@@ -1,4 +1,4 @@
-package logging;
+package org.usfirst.frc2974.Testbed.logging;
 
 import java.io.File;
 import java.io.IOException;
