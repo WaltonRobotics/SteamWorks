@@ -1,4 +1,4 @@
-package logging;
+package org.usfirst.frc2974.Testbed.logging;
 
 import java.util.logging.Logger;
 
@@ -10,7 +10,7 @@ public class RobotLoggingDriver {
     }
 
     private static void test() {
-        // Base test with parent Logger robot with AUTOMOUS logging.Mode.
+        // Base test with parent Logger robot with AUTONOMOUS logging.Mode.
         RobotLogging.createFile(Mode.AUTONOMOUS, RobotLogging.COMPETITION);
         Logger log = Logger.getLogger("robot");
 
@@ -53,7 +53,6 @@ public class RobotLoggingDriver {
         log.info("info");
         log.warning("warning");
         log.severe("severe");
-
         // Tests the SEVERE Level
         RobotLogging.createFile(Mode.AUTONOMOUS, RobotLogging.CRITICAL);
         log = Logger.getLogger("robot");
@@ -65,7 +64,7 @@ public class RobotLoggingDriver {
         log.warning("warning");
         log.severe("severe");
 
-        // Base test with parent Logger robot with AUTOMOUS logging.Mode.
+        // Base test with parent Logger robot with DISABLED logging.Mode.
         RobotLogging.createFile(Mode.DISABLED, RobotLogging.COMPETITION);
         log = Logger.getLogger("robot");
 
@@ -120,7 +119,7 @@ public class RobotLoggingDriver {
         log.warning("warning");
         log.severe("severe");
 
-        // Base test with parent Logger robot with AUTOMOUS logging.Mode.
+        // Base test with parent Logger robot with TELEOP logging.Mode.
         RobotLogging.createFile(Mode.TELEOP, RobotLogging.COMPETITION);
         log = Logger.getLogger("robot");
 
@@ -175,7 +174,7 @@ public class RobotLoggingDriver {
         log.warning("warning");
         log.severe("severe");
 
-        // Base test with parent Logger robot with AUTOMOUS logging.Mode.
+        // Base test with parent Logger robot with TEST logging.Mode.
         RobotLogging.createFile(Mode.TEST, RobotLogging.COMPETITION);
         log = Logger.getLogger("robot");
 
