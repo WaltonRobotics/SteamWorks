@@ -84,7 +84,9 @@ public class Drivetrain extends Subsystem {
 		SmartDashboard.putNumber("EncoderRight", encoderRight.getDistance());
 		
 		SmartDashboard.putNumber("VelocityLeft", encoderLeft.getRate());
-		SmartDashboard.putNumber("Velocity Right", encoderRight.getRate());
+		SmartDashboard.putNumber("VelocityRight", encoderRight.getRate());
+		
+		SmartDashboard.putBoolean("AutoShifting", true);
 	}
 	
 	public void resetEncoders() {
