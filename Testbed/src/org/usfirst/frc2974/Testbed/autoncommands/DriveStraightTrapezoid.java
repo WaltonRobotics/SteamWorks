@@ -9,45 +9,75 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class DriveStraightTrapezoid extends Command {
-	public static final double vmax = 7;	//We should make this a real number hehehe
-	public final double amax;
-	public final double duration;
-	public final double t1;
-	public final double t0;
+	public static final double vmax = 1;	//Value is 1 because 1 is the max velocity
+	public double amax;   // Max acceleration (one of the inputs)
+	public double duration;    // How long to run code (one of inputs)
+	public double t1;
+	public double t0;
+	public double dtaccel;
+	public double triTime;
 	
 	public enum State{
 		ACC{
-			@Override
+			@Override // For accelerating portion of movement - moves to next state when done
 			public void run(DriveStraightTrapezoid d) {
 				if(Timer.getFPGATimestamp() >= d.t1) {
-					d.state = State.CONST;
+					d.state_trap = State.CONST;
 					return;
 				}
 				
-				double power = (Timer.getFPGATimestamp() - d.t0) / (d.t1 - d.t0);
+				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
 				Robot.drivetrain.setSpeeds(power, power);
 			}
-		},CONST{
-			@Override
+		},CONST{ 
+			@Override // Constant velocity portion of motion
 			public void run(DriveStraightTrapezoid d) {
-				if(d.duration - Timer.getFPGATimestamp() <= d.t1 - d.t0) {
-					d.state = State.DEC; 
+				if(d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
+					d.state_trap = State.DEC; 
+					return;
 				}
-				Robot.drivetrain.setSpeeds(1, 1);
+				Robot.drivetrain.setSpeeds(vmax, vmax);
 			}
 		}
 		,DEC{
+			@Override // Decelerating portion of motion
+			public void run(DriveStraightTrapezoid d){
+				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
+				Robot.drivetrain.setSpeeds(power, power);
+			}
+		}
+		,ACC_TRI{
 			@Override
 			public void run(DriveStraightTrapezoid d){
-				double power = (d.duration - Timer.getFPGATimestamp() - d.t0) / (d.t1 - d.t0);
+				if(Timer.getFPGATimestamp() > d.triTime){
+					d.state_tri = State.DEC_TRI;
+					return;
+				}
+				double power = (Timer.getFPGATimestamp() - d.t0) / d.triTime;
 				Robot.drivetrain.setSpeeds(power, power);
+			}
+		}
+		,DEC_TRI{
+			@Override
+			public void run(DriveStraightTrapezoid d){
+				double power = (d.duration - Timer.getFPGATimestamp()) / d.triTime;
+				Robot.drivetrain.setSpeeds(power, power);
+			}
+		}
+		,END{
+			@Override // Sets speed to 0 and ends program
+			public void run(DriveStraightTrapezoid d){
+				Robot.drivetrain.setSpeeds(0, 0);
+				d.end();
 			}
 		};
 		public void run(DriveStraightTrapezoid d) {
 		}
 	}
 	
-	private State state;
+	private State state_trap;
+	private State state_tri;
+	private State end;
 
     public DriveStraightTrapezoid(double amax, double time) {
         // Use requires() here to declare subsystem dependencies
@@ -56,31 +86,41 @@ public class DriveStraightTrapezoid extends Command {
          this.amax = amax;
          duration = time;
          t0 = Timer.getFPGATimestamp();
-         t1 = vmax/amax + t0;
+         t1 = vmax/amax;
+         dtaccel = t1 - t0;
+         triTime = (duration / 2) - t0;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	state = State.ACC;
+    	state_trap = State.ACC;
+    	state_tri = State.ACC_TRI;
+    	end = State.END;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	state.run(this);
+    	if(triTime < dtaccel){
+    		state_tri.run(this);
+    	}
+    	else{
+    		state_trap.run(this);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return duration == Timer.getFPGATimestamp() - t0;
+        return duration < Timer.getFPGATimestamp() - t0;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.drivetrain.setSpeeds(0, 0);
+    	end.run(this);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	end();
     }
 }
