@@ -41,7 +41,7 @@ public class RobotLoggerDriver {
 	 */
 	private static final String TEST = "Test";
 
-	public static void main(final String[] args) {
+	public static void test() {
 		testCSVWriter();
 		testRobotLogging();
 	}

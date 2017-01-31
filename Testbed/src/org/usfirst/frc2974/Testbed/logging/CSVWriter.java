@@ -34,7 +34,7 @@ public final class CSVWriter {
 	 * hashMap and the individually closes the FileChannel in each CSVWriter
 	 * instance.
 	 */
-	private static synchronized void closeAll() {
+	public static synchronized void closeAll() {
 		instances.values().stream().filter(Objects::nonNull).forEach(CSVWriter::close);
 		instances.clear();
 	}

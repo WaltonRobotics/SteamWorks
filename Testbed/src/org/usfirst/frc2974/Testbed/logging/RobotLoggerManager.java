@@ -34,7 +34,7 @@ public class RobotLoggerManager {
 					RobotLoggerLevel.INFORMATION)
 							.info("Closing, flushing and removing all File Handlers in the RobotLoggerManager class");
 
-			closeHandler(fileHandlers.values());
+			closeHandlers();
 		});
 	}
 
@@ -50,22 +50,21 @@ public class RobotLoggerManager {
 	private static synchronized void closeHandler(final FileHandler fileHandler, final Handler... handlers) {
 		for (final Handler handler : handlers)
 			if (!handler.equals(fileHandler)) {
-				handler.close();
 				handler.flush();
+				handler.close();
 			}
 	}
 
 	/**
-	 * Closes and flushes all Handlers form the handlers iterator
-	 *
-	 * @param handlers
-	 *            Iterator of Handlers to close
+	 * Closes and flushes all Handlers form the fileHandlers
 	 */
-	private static synchronized void closeHandler(final Iterable<FileHandler> handlers) {
-		for (final Handler handler : handlers) {
-			handler.close();
+	public static synchronized void closeHandlers() {
+		for (final Handler handler : fileHandlers.values()) {
 			handler.flush();
+			handler.close();
 		}
+		
+		fileHandlers.clear();		
 	}
 
 	/**
@@ -78,8 +77,8 @@ public class RobotLoggerManager {
 		final Handler[] handlers = logger.getHandlers();
 
 		for (final Handler handler : handlers) {
-			handler.close();
 			handler.flush();
+			handler.close();
 		}
 	}
 
