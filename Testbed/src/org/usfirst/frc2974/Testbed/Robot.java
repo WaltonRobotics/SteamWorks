@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.usfirst.frc2974.Testbed.commands.*;
+import org.usfirst.frc2974.Testbed.logging.CSVWriter;
+import org.usfirst.frc2974.Testbed.logging.RobotLoggerDriver;
+import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 import org.usfirst.frc2974.Testbed.subsystems.*;
 
 /**
@@ -66,12 +69,16 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
-
+    	CSVWriter.closeAll();
+    	RobotLoggerManager.closeHandlers();
     }
 
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
         Robot.drivetrain.dumpSmartdashboardValues();
+        
+        CSVWriter.closeAll();
+    	RobotLoggerManager.closeHandlers();
     }
 
     public void autonomousInit() {
@@ -101,6 +108,13 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         Robot.drivetrain.dumpSmartdashboardValues();
+    }
+    
+    @Override
+    public void testInit() {
+    	RobotLoggerDriver.test();
+    	CSVWriter.closeAll();
+    	RobotLoggerManager.closeHandlers();
     }
 
     /**
