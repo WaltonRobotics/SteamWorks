@@ -81,7 +81,7 @@ public class TurnInTime extends Command {
 	}
 
 	public enum Direction {
-		CLOCKWISE(1), ANTICLOCKWISE(-1);
+		CLOCKWISE(-1), ANTICLOCKWISE(1);
 
 		final int directionValue;
 
