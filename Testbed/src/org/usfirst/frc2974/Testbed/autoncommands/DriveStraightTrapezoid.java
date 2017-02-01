@@ -28,7 +28,7 @@ public class DriveStraightTrapezoid extends Command {
 				if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to Deceration because half time was reached");
+					.info("Changing state to Deceleration because half time was reached");
 					return;
 				} else if (Timer.getFPGATimestamp() >= d.t1) {
 					d.state = State.CONST;

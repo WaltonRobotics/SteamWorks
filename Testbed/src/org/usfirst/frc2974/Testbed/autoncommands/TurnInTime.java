@@ -25,7 +25,7 @@ public class TurnInTime extends Command {
 				if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to Deceration because half time was reached");
+					.info("Changing state to Deceleration because half time was reached");
 					return;
 				} else if (Timer.getFPGATimestamp() >= d.t1) {
 					d.state = State.CONST;
@@ -44,7 +44,7 @@ public class TurnInTime extends Command {
 				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to End beacuse there is a need to start decerating to reach 0 before end");
+					.info("Changing state to Deceleration beacuse there is a need to start decelerating to reach 0 before end");
 					return;
 				}
 
