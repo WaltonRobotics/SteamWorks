@@ -19,6 +19,8 @@ public class DriveDiffTrapezoid extends Command {
 	public double t0;
 	public double dtaccel;
 	public double triTime;
+	public double diffPercent;
+	public DiffDirection diffDirection;
 
 	private enum State {
 		ACC {
@@ -38,8 +40,11 @@ public class DriveDiffTrapezoid extends Command {
 				}
 
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
-
-				Robot.drivetrain.setSpeeds(power, power);
+				if(d.diffDirection == DiffDirection.CLOCKWISE){
+					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
+				}else{
+					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}
 			}
 		},
 		CONST {
@@ -86,8 +91,12 @@ public class DriveDiffTrapezoid extends Command {
 	}
 
 	private State state;
-
-	public DriveDiffTrapezoid(double amax, double time) {
+	
+	public enum DiffDirection{
+		CLOCKWISE, ANTICLOCKWISE
+	}
+	
+	public DriveDiffTrapezoid(double amax, double time, double diffPercent, DiffDirection diffDirection) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.drivetrain);
 
@@ -97,6 +106,8 @@ public class DriveDiffTrapezoid extends Command {
 		t1 = vmax / amax;
 		dtaccel = t1 - t0;
 		triTime = (duration / 2) - t0;
+		this.diffPercent = diffPercent;
+		this.diffDirection = diffDirection;
 	}
 
 	// Called just before this Command runs the first time
