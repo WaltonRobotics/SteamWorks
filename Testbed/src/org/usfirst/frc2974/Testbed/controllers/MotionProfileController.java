@@ -2,28 +2,140 @@ package org.usfirst.frc2974.Testbed.controllers;
 
 import java.util.TimerTask;
 
+import org.usfirst.frc2974.Testbed.Robot;
+
+import edu.wpi.first.wpilibj.Timer;
+
 public class MotionProfileController{
-	public double kV, kK, kA, kP;
-	public MotionProvider m; 
-	public PoseProvider p;
-	public TimerTask control;
 	
-	public MotionProfileController(double kV, double kK, double kA, double kP, double time,
-			MotionProvider motion, PoseProvider pose, double period, TimerTask controlTimer){
-		m = motion;
+	private double kV, kK, kA, kP;
+	private MotionProvider m = null; 
+	private PoseProvider p;
+	private java.util.Timer controller;
+	private double period;
+	private boolean isEnabled;
+	
+	private class MPCTask extends TimerTask{
+
+		@Override
+		public void run() {
+			
+			calculate();
+			
+		}
+		
+	}
+	
+	public MotionProfileController(double kV, double kK, double kA, double kP,
+			PoseProvider pose, double period){
+		
 		p = pose;
 		this.kV = kV;
 		this.kK = kK;
 		this.kA = kA;
 		this.kP = kP;
-		period = MotionProfileController.calculate();
-		controlTimer = control;
+		this.period = period;
+		
+		controller = new java.util.Timer();
+		
+		controller.schedule(new MPCTask(), 0L, (long)(period*1000));
+				
 	}
-
-	private static double calculate() {
-		return 0;
-	}
-
 	
+	public void free() {
+		controller.cancel();
+	}
+	
+	public synchronized void setMotion(MotionProvider motion) {
+		if(m != null) {
+			throw new RuntimeException("Can't set motion with existing motion.");
+		}
+		m = motion;
+	}
+	
+	public synchronized void enable() {
+		isEnabled = true;
+	}
+	
+	public synchronized void disable() {
+		isEnabled = false;
+	}
+	
+	public synchronized double getKV() {
+		return kV;
+	}
+	
+	public synchronized void setKV(double kV) {
+		this.kV = kV;
+	}	
+
+	public synchronized double getKK() {
+		return kK;
+	}
+	
+	public synchronized void setKK(double kK) {
+		this.kK = kK;
+	}
+	
+	public synchronized double getKA() {
+		return kA;
+	}
+	
+	public synchronized void setKA(double kA) {
+		this.kA = kA;
+	}
+		
+	public synchronized double getKP() {
+		return kP;
+	}
+	
+	public synchronized void setKP(double kP) {
+		this.kP = kP;
+	}
+	
+	private void calculate() {
+		
+		double leftPower = 0;
+		double rightPower = 0;
+		boolean enabled;
+		
+		synchronized (this) {
+			
+			enabled = this.isEnabled && m != null;
+		
+		}
+		
+		if(enabled) {
+			
+			double time = Timer.getFPGATimestamp();
+		
+			Pose pose = p.getPose();
+			Motion motion = m.getMotion(time);
+			
+			synchronized (this) {
+				
+				//feed forward
+				leftPower += (kV * motion.velocity.left + kK) + kA * motion.accel.left;
+				rightPower += (kV * motion.velocity.right + kK) + kA * motion.accel.right;
+				//feed back		
+				leftPower +=	kP * (motion.position.left - pose.positionWheel.left);
+				rightPower += kP * (motion.position.right - pose.positionWheel.right);
+				
+			}
+			
+			leftPower = Math.max(-1, Math.min(1, leftPower));
+			rightPower = Math.max(-1, Math.min(1, rightPower));
+			
+			Robot.drivetrain.setSpeeds(leftPower, rightPower);
+		
+			if(motion.isDone) {
+				
+				m = null;
+				
+			}
+			
+		}
+		
+	}
 	
 }

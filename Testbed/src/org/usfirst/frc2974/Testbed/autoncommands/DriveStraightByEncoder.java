@@ -22,38 +22,48 @@ public class DriveStraightByEncoder extends Command implements MotionProvider{
 	private double aMax;
 	
 	public DriveStraightByEncoder(double distance, double vCruise, double aMax) {
-		l3 = distance;
-		this.vCruise = vCruise;
-		this.aMax = aMax;
+		
+		synchronized (this) {
+			
+			l3 = distance;
+			this.vCruise = vCruise;
+			this.aMax = aMax;
+		
+		}
 	}
 	
 	@Override
 	protected void initialize() {		
-		initialPose = Robot.poseEstimator.getPose();
-		t0 = Timer.getFPGATimestamp();
 		
-		double lAcc;
-		double lDec;
-		double lCruise;
-		
-		lAcc = vCruise*vCruise/(2*aMax);
-		lDec = vCruise*vCruise/(2*aMax);
-		lCruise = l3 - lAcc - lDec;
-		if(lCruise >= 0) {
-			l1 = lAcc;
-			l2 = l1 + lCruise;
-		
-			t1 = vCruise/aMax + t0;
-			t2 = lCruise/vCruise + t1;
-			t3 = vCruise/aMax + t2;
-		}else{
-			l1 = l3/2;
-			l2 = l3/2;
-			t1 = Math.sqrt(l3/aMax + t0*t0);
-			t2 = t1;
-			t3 = Math.sqrt(l3/aMax + t1*t1) + t1;
-		}
+		synchronized (this) {
+			
+			initialPose = Robot.poseEstimator.getPose();
+			t0 = Timer.getFPGATimestamp();
+			
+			double lAcc;
+			double lDec;
+			double lCruise;
+					
+			lAcc = vCruise*vCruise/(2*aMax);
+			lDec = vCruise*vCruise/(2*aMax);
+			lCruise = l3 - lAcc - lDec;
+			if(lCruise >= 0) {
+				l1 = lAcc;
+				l2 = l1 + lCruise;
+			
+				t1 = vCruise/aMax + t0;
+				t2 = lCruise/vCruise + t1;
+				t3 = vCruise/aMax + t2;
+			}else{
+				l1 = l3/2;
+				l2 = l3/2;
+				t1 = Math.sqrt(l3/aMax + t0*t0);
+				t2 = t1;
+				t3 = Math.sqrt(l3/aMax + t1*t1) + t1;
+			}
 						
+		}
+		
 	}
 
 	@Override
@@ -62,7 +72,7 @@ public class DriveStraightByEncoder extends Command implements MotionProvider{
 	}
 
 	@Override
-	protected boolean isFinished() {
+	protected synchronized boolean isFinished() {
 		return(Timer.getFPGATimestamp() > t3);
 	}
 
@@ -76,7 +86,7 @@ public class DriveStraightByEncoder extends Command implements MotionProvider{
 		end();
 	}
 	
-	public Motion getMotion(double time) {
+	public synchronized Motion getMotion(double time) {
 		
 		double pos;
 		double vel;
@@ -104,8 +114,10 @@ public class DriveStraightByEncoder extends Command implements MotionProvider{
 			pos = 0;
 		}
 		
-		return new Motion(initialPose.positionLeftWheel + pos, vel, acc, 
-						  initialPose.positionRightWheel + pos, vel, acc);
+		
+		
+		return new Motion(initialPose.positionWheel.left + pos, vel, acc, 
+						  initialPose.positionWheel.right + pos, vel, acc, time > t3);
 	}
 
 }
