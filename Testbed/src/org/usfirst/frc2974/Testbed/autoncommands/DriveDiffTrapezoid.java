@@ -40,7 +40,7 @@ public class DriveDiffTrapezoid extends Command {
 				}
 
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
-				if(d.diffDirection == DiffDirection.CLOCKWISE){
+				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
 				}else{
 					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
@@ -58,7 +58,11 @@ public class DriveDiffTrapezoid extends Command {
 					return;
 				}
 
-				Robot.drivetrain.setSpeeds(vmax, vmax);
+				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
+					Robot.drivetrain.setSpeeds(vmax*d.diffPercent, vmax);
+				}else{
+					Robot.drivetrain.setSpeeds(vmax, vmax*d.diffPercent);
+				}
 			}
 		},
 		DEC {
@@ -74,7 +78,11 @@ public class DriveDiffTrapezoid extends Command {
 				}
 				
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
-				Robot.drivetrain.setSpeeds(power, power);
+				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
+					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
+				}else{
+					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}
 			}
 		},
 		END {

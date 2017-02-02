@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc2974.Testbed.autoncommands.AutonDiffRunnable;
-import org.usfirst.frc2974.Testbed.autoncommands.AutonRunnable;
+import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
+import org.usfirst.frc2974.Testbed.auton.AutonRunnable;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;

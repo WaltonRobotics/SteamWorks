@@ -1,11 +1,17 @@
-package org.usfirst.frc2974.Testbed.autoncommands;
+package org.usfirst.frc2974.Testbed.auton;
+
+import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
+import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
+import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
+import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid.DiffDirection;
+import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime.Direction;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class AutonRunnable extends CommandGroup {
+public class AutonDiffRunnable extends CommandGroup {
 	
 	public TurnInTime.Direction turnDirection;
 	public TurnInTime.Direction antiTurnDirection;
@@ -18,7 +24,7 @@ public class AutonRunnable extends CommandGroup {
     	LEFT, RIGHT, CENTER
     }
     
-    public  AutonRunnable(Position position, boolean doesShoot) {
+    public  AutonDiffRunnable(Position position, boolean doesShoot) {
     	
     	if(position == Position.CENTER){
     		addSequential(new DriveStraightTrapezoid(0.4, 0.5));
@@ -44,7 +50,9 @@ public class AutonRunnable extends CommandGroup {
         	addSequential(new DriveStraightTrapezoid(-0.4, 0.5));//reverse off peg
         	addSequential(new TurnInTime(0.4,turnTimeToGoal,turnDirection));//turn to goal
         	addSequential(new DriveStraightTrapezoid(0.4, timeToGoal));//move to goal
-        	//addSequential(new Shoot()); TODO add shooting
+        	if(doesShoot){
+            	//addSequential(new Shoot()); TODO add shooting
+        	}
     	}
     }
 }
