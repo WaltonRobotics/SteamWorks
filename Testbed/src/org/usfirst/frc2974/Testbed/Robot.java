@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc2974.Testbed.autoncommands.AutonDiffRunnable;
+import org.usfirst.frc2974.Testbed.autoncommands.AutonRunnable;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
@@ -107,12 +109,15 @@ public class Robot extends IterativeRobot {
     	
     	autoChooser = new SendableChooser();//TODO add in commands
     	autoChooser.addDefault("Do Nothing", null);
-    	autoChooser.addObject("Left (Shoot)", null);
-    	autoChooser.addObject("Middle (Shoot)", null);
-    	autoChooser.addObject("Right (Shoot)", null);
-    	autoChooser.addObject("Left (No Shoot)", null);
-    	autoChooser.addObject("Middle (No Shoot)", null);
-    	autoChooser.addObject("Right (No Shoot)", null);
+    	autoChooser.addObject("Left (Shoot)", new AutonRunnable(AutonRunnable.Position.LEFT, true));
+    	autoChooser.addObject("Middle (Shoot)", new AutonRunnable(AutonRunnable.Position.CENTER, true));
+    	autoChooser.addObject("Right (Shoot)", new AutonRunnable(AutonRunnable.Position.RIGHT, true));
+    	autoChooser.addObject("Left (No Shoot)", new AutonRunnable(AutonRunnable.Position.LEFT, false));
+    	autoChooser.addObject("Middle (No Shoot)", new AutonRunnable(AutonRunnable.Position.CENTER, false));
+    	autoChooser.addObject("Right (No Shoot)", new AutonRunnable(AutonRunnable.Position.RIGHT, false));
+    	autoChooser.addObject("DiffLeft (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT, true));
+    	autoChooser.addObject("DiffMiddle (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.CENTER, true));
+    	autoChooser.addObject("DiffRight (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, true));
     	SmartDashboard.putData("Auto", autoChooser);
     }
 

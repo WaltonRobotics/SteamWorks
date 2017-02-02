@@ -5,11 +5,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutonRunnable extends CommandGroup {
+public class AutonDiffRunnable extends CommandGroup {
 	
 	public TurnInTime.Direction turnDirection;
 	public TurnInTime.Direction antiTurnDirection;
-	public DriveDiffTrapezoid.DiffDirection diffDirection;
 	
 	public double timeToGoal;
 	public double turnTimeToGoal;
@@ -18,7 +17,7 @@ public class AutonRunnable extends CommandGroup {
     	LEFT, RIGHT, CENTER
     }
     
-    public  AutonRunnable(Position position, boolean doesShoot) {
+    public  AutonDiffRunnable(Position position, boolean doesShoot) {
     	
     	if(position == Position.CENTER){
     		addSequential(new DriveStraightTrapezoid(0.4, 0.5));
@@ -29,18 +28,19 @@ public class AutonRunnable extends CommandGroup {
     		if (position == Position.LEFT){
     			turnDirection = TurnInTime.Direction.ANTICLOCKWISE;
     			antiTurnDirection = TurnInTime.Direction.CLOCKWISE;
-    			diffDirection = DriveDiffTrapezoid.DiffDirection.CLOCKWISE;
     			timeToGoal=2;
     			turnTimeToGoal=.25;
     		}else{
     			turnDirection = TurnInTime.Direction.CLOCKWISE;
     			antiTurnDirection = TurnInTime.Direction.ANTICLOCKWISE;
-    			diffDirection = DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE;
     			timeToGoal=.8;
     			turnTimeToGoal=.8;
     		}
     		addSequential(new DriveStraightTrapezoid(1, 0.1));//move forward enough to turn
-    		addSequential(new DriveDiffTrapezoid(0.4, 0.5, 0.6,diffDirection));//move onto peg
+        	addSequential(new TurnInTime(0.4,0.16,turnDirection));//turn opposite angle of peg
+        	addSequential(new DriveStraightTrapezoid(0.4, 0.5));//move halfway to peg
+        	addSequential(new TurnInTime(0.4,0.16,antiTurnDirection));//turn to peg
+        	addSequential(new DriveStraightTrapezoid(0.4, 0.5));//move to peg
         	addSequential(new DriveStraightTrapezoid(-0.4, 0.5));//reverse off peg
         	addSequential(new TurnInTime(0.4,turnTimeToGoal,turnDirection));//turn to goal
         	addSequential(new DriveStraightTrapezoid(0.4, timeToGoal));//move to goal
