@@ -7,7 +7,10 @@ import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TurnInTime extends Command {
+/**
+ *
+ */
+public class DriveDiffTrapezoid extends Command {
 	public static final double vmax = 1; // Value is 1 because 1 is the max
 											// velocity
 	public double amax; // Max acceleration (one of the inputs)
@@ -16,12 +19,14 @@ public class TurnInTime extends Command {
 	public double t0;
 	public double dtaccel;
 	public double triTime;
+	public double diffPercent;
+	public DiffDirection diffDirection;
 
 	private enum State {
 		ACC {
 			@Override // For accelerating portion of movement - moves to next
 						// state when done
-			public void run(TurnInTime d) {
+			public void run(DriveDiffTrapezoid d) {
 				if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
@@ -35,25 +40,34 @@ public class TurnInTime extends Command {
 				}
 
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
-				Robot.drivetrain.setSpeeds(d.direction.directionValue * power, -d.direction.directionValue * power);
+				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
+					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
+				}else{
+					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}
 			}
 		},
 		CONST {
 			@Override // Constant velocity portion of motion
-			public void run(TurnInTime d) {
+			public void run(DriveDiffTrapezoid d) {
 				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to Deceleration beacuse there is a need to start decelerating to reach 0 before end");
+					.info("Changing state to Deceleration beacuse there is a need to start decerating to reach 0 before end");
+					
 					return;
 				}
 
-				Robot.drivetrain.setSpeeds(d.direction.directionValue * vmax, -d.direction.directionValue * vmax);
+				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
+					Robot.drivetrain.setSpeeds(vmax*d.diffPercent, vmax);
+				}else{
+					Robot.drivetrain.setSpeeds(vmax, vmax*d.diffPercent);
+				}
 			}
 		},
 		DEC {
 			@Override // Decelerating portion of motion
-			public void run(TurnInTime d) {
+			public void run(DriveDiffTrapezoid d) {
 				if(d.duration < Timer.getFPGATimestamp() - d.t0)
 				{
 					d.state = END;
@@ -64,46 +78,44 @@ public class TurnInTime extends Command {
 				}
 				
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
-				Robot.drivetrain.setSpeeds(d.direction.directionValue * power, -d.direction.directionValue * power);
+				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
+					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
+				}else{
+					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}
 			}
 		},
 		END {
 			@Override // Sets speed to 0 and ends program
-			public void run(TurnInTime d) {
+			public void run(DriveDiffTrapezoid d) {
 				RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 						.info("Stopping the robot. Setting speeds to 0");
 				Robot.drivetrain.setSpeeds(0, 0);
 				d.end();
 			}
 		};
-		public void run(TurnInTime d) {
-		}
-	}
-
-	public enum Direction {
-		CLOCKWISE(1), ANTICLOCKWISE(-1);
-
-		final int directionValue;
-
-		Direction(int directionValue) {
-			this.directionValue = directionValue;
+		public void run(DriveDiffTrapezoid d) {
 		}
 	}
 
 	private State state;
-	private Direction direction;
-
-	public TurnInTime(double amax, double time, Direction direction) {
+	
+	public enum DiffDirection{
+		CLOCKWISE, ANTICLOCKWISE
+	}
+	
+	public DriveDiffTrapezoid(double amax, double time, double diffPercent, DiffDirection diffDirection) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.drivetrain);
 
 		this.amax = amax;
 		duration = time;
-		this.direction = direction;
 		t0 = Timer.getFPGATimestamp();
 		t1 = vmax / amax;
 		dtaccel = t1 - t0;
 		triTime = (duration / 2) - t0;
+		this.diffPercent = diffPercent;
+		this.diffDirection = diffDirection;
 	}
 
 	// Called just before this Command runs the first time
@@ -118,14 +130,13 @@ public class TurnInTime extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return state == State.END; // || duration < Timer.getFPGATimestamp() -
-									// t0;
+		return state == State.END; // || duration < Timer.getFPGATimestamp() - t0;
 	}
 
 	// Called once after isFinished returns true
 	protected void end() {
-		RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands").info(
-				"Turn for a duration of " + duration + " and " + direction.name() + " finished. Setting speeds to 0");
+		RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
+				.info("Drive straight for a duration of " + duration + " finished. Setting speeds to 0");
 		Robot.drivetrain.setSpeeds(0, 0);
 	}
 

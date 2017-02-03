@@ -46,9 +46,9 @@ public class Drive extends Command {
     protected void execute() {
     	
     	if(SmartDashboard.getBoolean("Tank", true)) {
-    		Robot.drivetrain.setSpeeds(Robot.oi.left.getY(), Robot.oi.right.getY());
+    		Robot.drivetrain.setSpeeds(-Robot.oi.left.getY(), -Robot.oi.right.getY());
     	}else {
-    		double throttle = (-Robot.oi.left.getY()+1)/2;
+    		double throttle = (Robot.oi.left.getY()+1)/2;
     		double forward = Robot.oi.right.getY();
     		double turn = Robot.oi.right.getX();
     		
