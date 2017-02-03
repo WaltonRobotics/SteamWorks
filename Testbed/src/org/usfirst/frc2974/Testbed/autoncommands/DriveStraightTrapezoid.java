@@ -30,7 +30,7 @@ public class DriveStraightTrapezoid extends Command {
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing state to Deceleration because half time was reached");
 					return;
-				} else if (Timer.getFPGATimestamp() >= d.t1) {
+				} else if (Timer.getFPGATimestamp() >= Math.abs(d.t1)) {
 					d.state = State.CONST;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing sate to Constant because max speed reached");
@@ -38,22 +38,26 @@ public class DriveStraightTrapezoid extends Command {
 				}
 
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
-
 				Robot.drivetrain.setSpeeds(power, power);
+
 			}
 		},
 		CONST {
 			@Override // Constant velocity portion of motion
 			public void run(DriveStraightTrapezoid d) {
-				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
+				if (d.duration - Timer.getFPGATimestamp() <= Math.abs(d.dtaccel)) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing state to Deceleration beacuse there is a need to start decerating to reach 0 before end");
-					
 					return;
 				}
-
-				Robot.drivetrain.setSpeeds(vmax, vmax);
+				
+				if(d.dtaccel < 0){
+					Robot.drivetrain.setSpeeds(-vmax, -vmax);
+				}
+				else if(d.dtaccel >= 0){
+					Robot.drivetrain.setSpeeds(vmax, vmax);
+				}
 			}
 		},
 		DEC {
