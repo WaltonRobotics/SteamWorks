@@ -48,11 +48,12 @@ public class RobotLoggerManager {
 	 *            Array of Handlers to close
 	 */
 	private static synchronized void closeHandler(final FileHandler fileHandler, final Handler... handlers) {
-		for (final Handler handler : handlers)
-			if (!handler.equals(fileHandler)) {
-				handler.flush();
-				handler.close();
-			}
+		if (fileHandler != null)
+			for (final Handler handler : handlers)
+				if (handler != null && !handler.equals(fileHandler)) {
+					handler.flush();
+					handler.close();
+				}
 	}
 
 	/**
@@ -60,11 +61,13 @@ public class RobotLoggerManager {
 	 */
 	public static synchronized void closeHandlers() {
 		for (final Handler handler : fileHandlers.values()) {
-			handler.flush();
-			handler.close();
+			if (handler != null) {
+				handler.flush();
+				handler.close();
+			}
 		}
-		
-		fileHandlers.clear();		
+
+		fileHandlers.clear();
 	}
 
 	/**
@@ -77,8 +80,10 @@ public class RobotLoggerManager {
 		final Handler[] handlers = logger.getHandlers();
 
 		for (final Handler handler : handlers) {
-			handler.flush();
-			handler.close();
+			if (handler != null) {
+				handler.flush();
+				handler.close();
+			}
 		}
 	}
 
@@ -158,7 +163,7 @@ public class RobotLoggerManager {
 		final Handler[] handlers = logger.getHandlers();
 
 		for (final Handler handler1 : handlers)
-			if (handler1.equals(handler))
+			if (handler1 != null && handler1.equals(handler))
 				return true;
 
 		return false;
@@ -190,20 +195,21 @@ public class RobotLoggerManager {
 	 *            The FileHandler to exempt
 	 */
 	private static synchronized void removeHandlers(final Logger logger, final FileHandler handler) {
-		final Handler[] handlers = logger.getHandlers();
+		if (handler != null) {
+			final Handler[] handlers = logger.getHandlers();
 
-		for (final Handler handler1 : handlers)
-			if (!handler1.equals(handler))
-				logger.removeHandler(handler1);
+			for (final Handler handler1 : handlers)
+				if (handler1 != null && !handler1.equals(handler))
+					logger.removeHandler(handler1);
+		}
 	}
 
-	public static void setRobotMode(Mode mode)
-	{
+	public static void setRobotMode(Mode mode) {
 		robotMode = mode;
 	}
-	
+
 	private static Mode robotMode = Mode.AUTONOMOUS;
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -216,7 +222,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final Logger logger) {
 		return setFileHandlerInstance(robotMode, logger, logger.getLevel());
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -229,7 +235,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final String logger) {
 		return setFileHandlerInstance(robotMode, Logger.getLogger(logger));
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -242,7 +248,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final Logger logger, Level level) {
 		return setFileHandlerInstance(robotMode, logger, level);
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -255,7 +261,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final String logger, Level level) {
 		return setFileHandlerInstance(robotMode, Logger.getLogger(logger), level);
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
