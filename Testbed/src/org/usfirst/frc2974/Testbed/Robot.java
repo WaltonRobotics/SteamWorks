@@ -145,8 +145,10 @@ public class Robot extends IterativeRobot {
     			,SmartDashboard.getNumber("Duration",0),TurnInTime.Direction.CLOCKWISE));
     	SmartDashboard.putData("TurnTimeAntiClockwise",new TurnInTime(SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0),TurnInTime.Direction.ANTICLOCKWISE));
-      	SmartDashboard.putData("MoveTime",new DriveStraightTrapezoid(SmartDashboard.getNumber("aMax",0)
-    			,SmartDashboard.getNumber("Duration",0)));
+      	SmartDashboard.putData("MoveTimeForward",new DriveStraightTrapezoid(SmartDashboard.getNumber("aMax",0)
+    			,SmartDashboard.getNumber("Duration",0), DriveStraightTrapezoid.Direction.FORWARD));
+      	SmartDashboard.putData("MoveTimeAntiforward",new DriveStraightTrapezoid(SmartDashboard.getNumber("aMax",0)
+    			,SmartDashboard.getNumber("Duration",0), DriveStraightTrapezoid.Direction.ANTIFORWARD));
       	SmartDashboard.putData("DiffTimeClockWise",new DriveDiffTrapezoid(SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0)
     			,SmartDashboard.getNumber("DiffPercent", 0)
@@ -155,7 +157,14 @@ public class Robot extends IterativeRobot {
     			,SmartDashboard.getNumber("Duration",0)
     			,SmartDashboard.getNumber("DiffPercent", 0)
     			,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
-      	
+      	SmartDashboard.putData("DiffTimeClockWiseBack",new DriveDiffTrapezoid(SmartDashboard.getNumber("aMax",0)
+    			,SmartDashboard.getNumber("Duration",0)
+    			,SmartDashboard.getNumber("DiffPercent", 0)
+    			,DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
+      	SmartDashboard.putData("DiffTimeAntiClockWiseBack",new DriveDiffTrapezoid(SmartDashboard.getNumber("aMax",0)
+    			,SmartDashboard.getNumber("Duration",0)
+    			,SmartDashboard.getNumber("DiffPercent", 0)
+    			,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));
       	
       	
     }

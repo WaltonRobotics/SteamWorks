@@ -19,7 +19,10 @@ public class DriveStraightTrapezoid extends Command {
 	public double t0;
 	public double dtaccel;
 	public double triTime;
-
+	public Direction direction;
+	public enum Direction{
+		FORWARD,ANTIFORWARD
+	}
 	private enum State {
 		ACC {
 			@Override // For accelerating portion of movement - moves to next
@@ -30,7 +33,7 @@ public class DriveStraightTrapezoid extends Command {
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing state to Deceleration because half time was reached");
 					return;
-				} else if (Timer.getFPGATimestamp() >= Math.abs(d.t1)) {
+				} else if (Timer.getFPGATimestamp() >= d.t1) {
 					d.state = State.CONST;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing sate to Constant because max speed reached");
@@ -38,24 +41,27 @@ public class DriveStraightTrapezoid extends Command {
 				}
 
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
-				Robot.drivetrain.setSpeeds(power, power);
-
+				if(d.direction == Direction.FORWARD){
+					Robot.drivetrain.setSpeeds(power, power);
+				}else{
+					Robot.drivetrain.setSpeeds(-power, -power);
+				}
 			}
 		},
 		CONST {
 			@Override // Constant velocity portion of motion
 			public void run(DriveStraightTrapezoid d) {
-				if (d.duration - Timer.getFPGATimestamp() <= Math.abs(d.dtaccel)) {
+				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing state to Deceleration beacuse there is a need to start decerating to reach 0 before end");
 					return;
 				}
 				
-				if(d.dtaccel < 0){
+				if(d.direction == Direction.ANTIFORWARD){
 					Robot.drivetrain.setSpeeds(-vmax, -vmax);
 				}
-				else if(d.dtaccel >= 0){
+				else{
 					Robot.drivetrain.setSpeeds(vmax, vmax);
 				}
 			}
@@ -73,7 +79,11 @@ public class DriveStraightTrapezoid extends Command {
 				}
 				
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
-				Robot.drivetrain.setSpeeds(power, power);
+				if(d.direction == Direction.FORWARD){
+					Robot.drivetrain.setSpeeds(power, power);
+				}else{
+					Robot.drivetrain.setSpeeds(-power, -power);
+				}
 			}
 		},
 		END {
@@ -91,11 +101,12 @@ public class DriveStraightTrapezoid extends Command {
 
 	private State state;
 
-	public DriveStraightTrapezoid(double amax, double time) {
+	public DriveStraightTrapezoid(double amax, double time, Direction direction) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.drivetrain);
 
 		this.amax = amax;
+		this.direction = direction;
 		duration = time;
 		t0 = Timer.getFPGATimestamp();
 		t1 = vmax / amax;
