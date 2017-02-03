@@ -10,10 +10,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoShifting extends Command{
 	
-	double delayStart;
+	private double delayStart;
+	private boolean activated;
 	
 	public AutoShifting() {
 		requires(Robot.drivetrain);
+
+		activated = SmartDashboard.getBoolean("AutoShifting", true);
 	}
 	
 	private Talon left = RobotMap.left;
@@ -21,6 +24,7 @@ public class AutoShifting extends Command{
 	
 	@Override
 	protected void initialize() {
+		
 	}
 	
 	@Override
@@ -31,8 +35,6 @@ public class AutoShifting extends Command{
 	 * Tries to shift down if motors go below 65% speed, or aren't within 10% of each other.
 	 * If the driver chooses to manually shift, wait 5 seconds before attempting again.
 	 */
-		
-		boolean activated = SmartDashboard.getBoolean("AutoShifting", false);
 		
 		if(activated) {
 			if(Robot.oi.shiftDown.get() || Robot.oi.shiftUp.get()) 

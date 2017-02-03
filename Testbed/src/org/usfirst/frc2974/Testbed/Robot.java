@@ -128,6 +128,7 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         RobotMap.compressor.start();
+        SmartDashboard.putBoolean("AutoShifting", true);
     }
 
     /**
@@ -154,6 +155,9 @@ public class Robot extends IterativeRobot {
     			,SmartDashboard.getNumber("Duration",0)
     			,SmartDashboard.getNumber("DiffPercent", 0)
     			,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
+      	
+      	
+      	
     }
     @Override
     public void testInit() {

@@ -5,6 +5,7 @@ import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.*;
 import org.usfirst.frc2974.Testbed.controllers.MotionProfileController;
 
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -17,11 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 
 public class Drivetrain extends Subsystem {
-
-	// public PIDControllerAccel leftController;
-
-	// public PIDControllerAccel rightController;
-
+	
 	private final double PERIOD = .01;
 	public final double DEFAULTKV = 0;
 	public final double DEFAULTKK = 0;
@@ -63,9 +60,10 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void dumpSmartdashboardValues() {
-
-		SmartDashboard.putBoolean("AutoShifting", true);
-
+		
+		SmartDashboard.putData("Set Motion Controller Constants", new SetMotionControllerConstants());
+		SmartDashboard.putData("Set Motion Controller Constants", new ReadMotionControllerConstants());
+		
 	}
 
 	public void initDefaultCommand() {
@@ -84,7 +82,8 @@ public class Drivetrain extends Subsystem {
     	controller.setKV(kV);
     	controller.setKK(kK);
     	controller.setKA(kA);    	
-    	controller.setKP(kP);    	
+    	controller.setKP(kP); 
+    	
     }
     
     public void readConstants() {
@@ -92,6 +91,5 @@ public class Drivetrain extends Subsystem {
 		SmartDashboard.putNumber("kK", controller.getKK());
 		SmartDashboard.putNumber("kA", controller.getKA());
 		SmartDashboard.putNumber("kP", controller.getKP());
-    }
-    
+    }    
 }
