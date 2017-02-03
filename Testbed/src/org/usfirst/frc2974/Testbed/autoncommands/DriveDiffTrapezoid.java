@@ -32,7 +32,7 @@ public class DriveDiffTrapezoid extends Command {
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing state to Deceleration because half time was reached");
 					return;
-				} else if (Timer.getFPGATimestamp() >= d.t1) {
+				} else if (Timer.getFPGATimestamp() >= Math.abs(d.t1)) {
 					d.state = State.CONST;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing sate to Constant because max speed reached");
@@ -42,15 +42,19 @@ public class DriveDiffTrapezoid extends Command {
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
 				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
-				}else{
+				}else if(d.diffDirection == DiffDirection.CLOCKWISE){
 					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}else if(d.diffDirection == DiffDirection.ANTICLOCKWISEBACK){
+					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}else{
+					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
 				}
 			}
 		},
 		CONST {
 			@Override // Constant velocity portion of motion
 			public void run(DriveDiffTrapezoid d) {
-				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
+				if (d.duration - Timer.getFPGATimestamp() <= Math.abs(d.dtaccel)) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
 					.info("Changing state to Deceleration beacuse there is a need to start decerating to reach 0 before end");
@@ -60,8 +64,12 @@ public class DriveDiffTrapezoid extends Command {
 
 				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(vmax*d.diffPercent, vmax);
-				}else{
+				}else if(d.diffDirection == DiffDirection.CLOCKWISE){
 					Robot.drivetrain.setSpeeds(vmax, vmax*d.diffPercent);
+				}else if(d.diffDirection == DiffDirection.ANTICLOCKWISEBACK){
+					Robot.drivetrain.setSpeeds(-vmax, -vmax*d.diffPercent);
+				}else{
+					Robot.drivetrain.setSpeeds(-vmax*d.diffPercent, -vmax);
 				}
 			}
 		},
@@ -80,8 +88,12 @@ public class DriveDiffTrapezoid extends Command {
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
 				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
-				}else{
+				}else if(d.diffDirection == DiffDirection.CLOCKWISE){
 					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}else if(d.diffDirection == DiffDirection.ANTICLOCKWISEBACK){
+					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}else{
+					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
 				}
 			}
 		},
