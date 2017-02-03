@@ -197,6 +197,65 @@ public class RobotLoggerManager {
 				logger.removeHandler(handler1);
 	}
 
+	public static void setRobotMode(Mode mode)
+	{
+		robotMode = mode;
+	}
+	
+	private static Mode robotMode = Mode.AUTONOMOUS;
+	
+	/**
+	 * Sets the Logger with the FileHandler that fits its mode.
+	 *
+	 * @param mode
+	 *            Mode to be
+	 * @param logger
+	 *            Which Logger to change
+	 * @return Returns the Logger
+	 */
+	public static synchronized Logger setFileHandlerInstance(final Logger logger) {
+		return setFileHandlerInstance(robotMode, logger, logger.getLevel());
+	}
+	
+	/**
+	 * Sets the Logger with the FileHandler that fits its mode.
+	 *
+	 * @param mode
+	 *            Mode to be
+	 * @param logger
+	 *            Which Logger to change
+	 * @return Returns the Logger
+	 */
+	public static synchronized Logger setFileHandlerInstance(final String logger) {
+		return setFileHandlerInstance(robotMode, Logger.getLogger(logger));
+	}
+	
+	/**
+	 * Sets the Logger with the FileHandler that fits its mode.
+	 *
+	 * @param mode
+	 *            Mode to be
+	 * @param logger
+	 *            Which Logger to change
+	 * @return Returns the Logger
+	 */
+	public static synchronized Logger setFileHandlerInstance(final Logger logger, Level level) {
+		return setFileHandlerInstance(robotMode, logger, level);
+	}
+	
+	/**
+	 * Sets the Logger with the FileHandler that fits its mode.
+	 *
+	 * @param mode
+	 *            Mode to be
+	 * @param logger
+	 *            Which Logger to change
+	 * @return Returns the Logger
+	 */
+	public static synchronized Logger setFileHandlerInstance(final String logger, Level level) {
+		return setFileHandlerInstance(robotMode, Logger.getLogger(logger), level);
+	}
+	
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *

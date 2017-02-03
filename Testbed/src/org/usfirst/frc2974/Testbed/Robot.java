@@ -24,6 +24,7 @@ import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
+import org.usfirst.frc2974.Testbed.logging.Mode;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerDriver;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 import org.usfirst.frc2974.Testbed.subsystems.*;
@@ -83,6 +84,7 @@ public class Robot extends IterativeRobot {
     public void disabledInit(){
     	CSVWriter.closeAll();
     	RobotLoggerManager.closeHandlers();
+    	RobotLoggerManager.setRobotMode(Mode.DISABLED);
     }
 
     public void disabledPeriodic() {
@@ -96,6 +98,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         autonomousCommand = (Command) autoChooser.getSelected();
         if (autonomousCommand != null) autonomousCommand.start();
+        RobotLoggerManager.setRobotMode(Mode.AUTONOMOUS);
     }
 
     /**
@@ -120,7 +123,7 @@ public class Robot extends IterativeRobot {
     	autoChooser.addObject("DiffRight (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, true));
     	SmartDashboard.putData("Auto", autoChooser);
     }
-
+    
     public void teleopInit() {
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
@@ -129,6 +132,8 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();
         RobotMap.compressor.start();
         SmartDashboard.putBoolean("AutoShifting", true);
+        RobotLoggerManager.setRobotMode(Mode.TELEOP);
+        
     }
 
     /**
@@ -162,6 +167,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void testInit() {
     	RobotLoggerDriver.test();
+    	RobotLoggerManager.setRobotMode(Mode.TEST);
     	
     	CSVWriter.closeAll();
     	RobotLoggerManager.closeHandlers();
