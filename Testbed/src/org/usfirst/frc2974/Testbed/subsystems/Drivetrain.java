@@ -34,10 +34,10 @@ public class Drivetrain extends Subsystem {
 //	public PIDControllerAccel rightController;
 	
 	private final double PERIOD = .01;
-	private final double kV = 0;
-	private final double kK = 0;
-	private final double kA = 0;
-	private final double kP = 0;
+	public final double DEFAULTKV = 0;
+	public final double DEFAULTKK = 0;
+	public final double DEFAULTKA = 0;
+	public final double DEFAULTKP = 0;
 	
 	private Talon right = RobotMap.right;
 	private Talon left = RobotMap.left;
@@ -54,8 +54,9 @@ public class Drivetrain extends Subsystem {
 	}
 
  	public Drivetrain() {
-		
- 		controller = new MotionProfileController(kV, kK, kA, kP, Robot.poseEstimator, PERIOD);
+ 		
+ 		controller = new MotionProfileController(
+ 				DEFAULTKV, DEFAULTKK, DEFAULTKA, DEFAULTKP, Robot.poseEstimator, PERIOD);
 		
 	}
 	
@@ -87,5 +88,26 @@ public class Drivetrain extends Subsystem {
         // Set the default command for a subsystem here.
         // setDefaultCommand(new MySpecialCommand());
     }
+    
+    public void setConstants() {
+    	
+    	double kV = SmartDashboard.getNumber("kV", DEFAULTKV);
+ 		double kK = SmartDashboard.getNumber("kK", DEFAULTKK);
+ 		double kA = SmartDashboard.getNumber("kA", DEFAULTKA);
+ 		double kP = SmartDashboard.getNumber("kP", DEFAULTKP);
+    	
+    	controller.setKV(kV);
+    	controller.setKK(kK);
+    	controller.setKA(kA);    	
+    	controller.setKP(kP);    	
+    }
+    
+    public void readConstants() {
+    	SmartDashboard.putNumber("kV", controller.getKV());
+		SmartDashboard.putNumber("kK", controller.getKK());
+		SmartDashboard.putNumber("kA", controller.getKA());
+		SmartDashboard.putNumber("kP", controller.getKP());
+    }
+    
 }
 
