@@ -150,7 +150,7 @@ public class Robot extends IterativeRobot {
     			,SmartDashboard.getNumber("Duration",0)
     			,SmartDashboard.getNumber("DiffPercent", 0)
     			,DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
-      	SmartDashboard.putData("DiffTimeClockWise",new DriveDiffTrapezoid(SmartDashboard.getNumber("aMax",0)
+      	SmartDashboard.putData("DiffTimeAntiClockWise",new DriveDiffTrapezoid(SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0)
     			,SmartDashboard.getNumber("DiffPercent", 0)
     			,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));

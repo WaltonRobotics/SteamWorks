@@ -101,7 +101,7 @@ public class DriveDiffTrapezoid extends Command {
 	private State state;
 	
 	public enum DiffDirection{
-		CLOCKWISE, ANTICLOCKWISE
+		CLOCKWISE, ANTICLOCKWISE, CLOCKWISEBACK, ANTICLOCKWISEBACK
 	}
 	
 	public DriveDiffTrapezoid(double amax, double time, double diffPercent, DiffDirection diffDirection) {

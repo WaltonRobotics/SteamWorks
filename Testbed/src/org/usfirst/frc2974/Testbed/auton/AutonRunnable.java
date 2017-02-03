@@ -27,8 +27,8 @@ public class AutonRunnable extends CommandGroup {
     public  AutonRunnable(Position position, boolean doesShoot) {
     	
     	if(position == Position.CENTER){
-    		addSequential(new DriveStraightTrapezoid(0.4, 0.5));
-    		addSequential(new DriveStraightTrapezoid(-0.4, 0.2));
+    		addSequential(new DriveStraightTrapezoid(0.7, 1.1));
+    		addSequential(new DriveStraightTrapezoid(-0.5, 0.7));
         	addSequential(new TurnInTime(0.4,0.25,TurnInTime.Direction.CLOCKWISE));
         	addSequential(new DriveStraightTrapezoid(0.4, 1));
     	}else{
