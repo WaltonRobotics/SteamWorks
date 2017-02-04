@@ -60,8 +60,10 @@ public class RobotLoggerManager {
 	 */
 	public static synchronized void closeHandlers() {
 		for (final Handler handler : fileHandlers.values()) {
+			if(handler != null) {
 			handler.flush();
 			handler.close();
+			}
 		}
 		
 		fileHandlers.clear();		

@@ -27,10 +27,10 @@ public class AutonDiffRunnable extends CommandGroup {
     public  AutonDiffRunnable(Position position, boolean doesShoot) {
     	
     	if(position == Position.CENTER){
-    		addSequential(new DriveStraightTrapezoid(0.4, 0.5));
-    		addSequential(new DriveStraightTrapezoid(-0.4, 0.2));
+    		addSequential(new DriveStraightTrapezoid(0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
+    		addSequential(new DriveStraightTrapezoid(0.5, 0.7,DriveStraightTrapezoid.Direction.ANTIFORWARD));
         	addSequential(new TurnInTime(0.4,0.25,TurnInTime.Direction.CLOCKWISE));
-        	addSequential(new DriveStraightTrapezoid(0.4, 1));
+        	addSequential(new DriveStraightTrapezoid(0.7, 2,DriveStraightTrapezoid.Direction.FORWARD));
     	}else{
     		if (position == Position.LEFT){
     			turnDirection = TurnInTime.Direction.ANTICLOCKWISE;
@@ -45,10 +45,9 @@ public class AutonDiffRunnable extends CommandGroup {
     			timeToGoal=.8;
     			turnTimeToGoal=.8;
     		}
-    		addSequential(new DriveDiffTrapezoid(0.7, 1.8, 0.65,diffDirection));//move onto peg
-        	addSequential(new DriveStraightTrapezoid(-0.5, 0.7));//reverse off peg
-        	addSequential(new TurnInTime(0.4,turnTimeToGoal,turnDirection));//turn to goal
-        	addSequential(new DriveStraightTrapezoid(0.4, timeToGoal));//move to goal
+    		addSequential(new DriveDiffTrapezoid(0.7, 1.8, 0.65,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));//move onto peg
+        	addSequential(new DriveDiffTrapezoid(0.7, 1.2,0.2,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));//reverse off peg
+        	addSequential(new DriveStraightTrapezoid(0.7, 1.2,DriveStraightTrapezoid.Direction.FORWARD));//move to goal
         	if(doesShoot){
             	//addSequential(new Shoot()); TODO add shooting
         	}
