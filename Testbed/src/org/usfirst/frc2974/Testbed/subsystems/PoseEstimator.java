@@ -3,6 +3,8 @@ package org.usfirst.frc2974.Testbed.subsystems;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.controllers.PoseProvider;
+import org.usfirst.frc2974.Testbed.logging.CSVWriter;
+import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -30,14 +32,14 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 		}
 		
 		reset();
-		
+		RobotLoggerManager.setFileHandlerInstance("robot.subsystems").info("PoseEstimator is created.");
 	}
 	
 	public synchronized void updatePose() {
 		
 		positionLeftWheel = encoderLeft.getDistance();
 		positionRightWheel = encoderRight.getDistance();
-	
+		CSVWriter.getInstance("PoseEstimator_position").write(positionLeftWheel, positionRightWheel);
 	}
 	
 	public synchronized Pose getPose() {

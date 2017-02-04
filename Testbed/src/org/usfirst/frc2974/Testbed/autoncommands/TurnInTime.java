@@ -115,7 +115,8 @@ public class TurnInTime extends Command {
 	protected void execute() {
 		state.run(this);
 	}
-
+//hello billy
+	// billy doesn't live here any more :(
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END ;

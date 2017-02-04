@@ -12,7 +12,7 @@ public class Shoot extends Command {
 		MotorSpeedsUp{
 			@Override
 			public void run(Shoot shoot){
-				if (/*motorspeedsup*/true){
+				if (Robot.shooter.isAtSpeed()){
 					shoot.state = Aiming;
 				}
 			}
@@ -27,7 +27,7 @@ public class Shoot extends Command {
 		}, ReadyToShoot{
 			@Override
 			public void run(Shoot shoot){
-				if (/*readytoshoot*/true){
+				if (Robot.oi.shoot.get()){
 					shoot.state = Firing;
 				}
 			}
@@ -35,9 +35,9 @@ public class Shoot extends Command {
 		}, Firing{
 			@Override
 			public void run(Shoot shoot){
-				if (/*firing*/true){
-					shoot.state = MotorSpeedsUp;
-				}
+				Robot.shooter.index();
+				
+				shoot.state = MotorSpeedsUp;
 			}
 			
 		};
@@ -48,8 +48,7 @@ public class Shoot extends Command {
 	private State state;
 
     public Shoot() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        //requires(Robot.shooter);
     }
 
     // Called just before this Command runs the first time
@@ -74,5 +73,6 @@ public class Shoot extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	end();
     }
 }
