@@ -42,8 +42,12 @@ public class DriveDiffTrapezoid extends Command {
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
 				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
-				}else{
+				}else if(d.diffDirection == DiffDirection.CLOCKWISE){
 					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}else if(d.diffDirection == DiffDirection.ANTICLOCKWISEBACK){
+					Robot.drivetrain.setSpeeds(-power, -power*d.diffPercent);
+				}else{
+					Robot.drivetrain.setSpeeds(-power*d.diffPercent, -power);
 				}
 			}
 		},
@@ -60,8 +64,12 @@ public class DriveDiffTrapezoid extends Command {
 
 				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(vmax*d.diffPercent, vmax);
-				}else{
+				}else if(d.diffDirection == DiffDirection.CLOCKWISE){
 					Robot.drivetrain.setSpeeds(vmax, vmax*d.diffPercent);
+				}else if(d.diffDirection == DiffDirection.ANTICLOCKWISEBACK){
+					Robot.drivetrain.setSpeeds(-vmax, -vmax*d.diffPercent);
+				}else{
+					Robot.drivetrain.setSpeeds(-vmax*d.diffPercent, -vmax);
 				}
 			}
 		},
@@ -80,8 +88,12 @@ public class DriveDiffTrapezoid extends Command {
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
 				if(d.diffDirection == DiffDirection.ANTICLOCKWISE){
 					Robot.drivetrain.setSpeeds(power*d.diffPercent, power);
-				}else{
+				}else if(d.diffDirection == DiffDirection.CLOCKWISE){
 					Robot.drivetrain.setSpeeds(power, power*d.diffPercent);
+				}else if(d.diffDirection == DiffDirection.ANTICLOCKWISEBACK){
+					Robot.drivetrain.setSpeeds(-power, -power*d.diffPercent);
+				}else{
+					Robot.drivetrain.setSpeeds(-power*d.diffPercent, -power);
 				}
 			}
 		},
@@ -101,7 +113,7 @@ public class DriveDiffTrapezoid extends Command {
 	private State state;
 	
 	public enum DiffDirection{
-		CLOCKWISE, ANTICLOCKWISE
+		CLOCKWISE, ANTICLOCKWISE, CLOCKWISEBACK, ANTICLOCKWISEBACK
 	}
 	
 	public DriveDiffTrapezoid(double amax, double time, double diffPercent, DiffDirection diffDirection) {
@@ -110,10 +122,6 @@ public class DriveDiffTrapezoid extends Command {
 
 		this.amax = amax;
 		duration = time;
-		t0 = Timer.getFPGATimestamp();
-		t1 = vmax / amax;
-		dtaccel = t1 - t0;
-		triTime = (duration / 2) - t0;
 		this.diffPercent = diffPercent;
 		this.diffDirection = diffDirection;
 	}
@@ -121,6 +129,9 @@ public class DriveDiffTrapezoid extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		state = State.ACC;
+		t0 = Timer.getFPGATimestamp();
+		dtaccel = t1 - t0;
+		triTime = (duration / 2) - t0;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -130,7 +141,7 @@ public class DriveDiffTrapezoid extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return state == State.END; // || duration < Timer.getFPGATimestamp() - t0;
+		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END ;
 	}
 
 	// Called once after isFinished returns true

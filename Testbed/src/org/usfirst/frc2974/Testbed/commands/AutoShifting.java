@@ -3,6 +3,7 @@ package org.usfirst.frc2974.Testbed.commands;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -10,7 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoShifting extends Command{
 	
-	double delayStart;
+	private double delayStart;
+	private static boolean activated;
 	
 	public AutoShifting() {
 		requires(Robot.drivetrain);
@@ -21,6 +23,7 @@ public class AutoShifting extends Command{
 	
 	@Override
 	protected void initialize() {
+		
 	}
 	
 	@Override
@@ -31,8 +34,6 @@ public class AutoShifting extends Command{
 	 * Tries to shift down if motors go below 65% speed, or aren't within 10% of each other.
 	 * If the driver chooses to manually shift, wait 5 seconds before attempting again.
 	 */
-		
-		boolean activated = SmartDashboard.getBoolean("AutoShifting", false);
 		
 		if(activated) {
 			if(Robot.oi.shiftDown.get() || Robot.oi.shiftUp.get()) 
@@ -69,6 +70,12 @@ public class AutoShifting extends Command{
 		end();
 	}
 	
+	public static void enable() {
+		activated = true;
+	}
 	
+	public static void disable() {
+		activated = false;
+	}
 	
 }
