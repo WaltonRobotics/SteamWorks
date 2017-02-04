@@ -1,4 +1,4 @@
-package org.usfirst.frc2974.Testbed.autoncommands;
+package org.usfirst.frc2974.Testbed.commands;
 
 import org.usfirst.frc2974.Testbed.Robot;
 
@@ -7,40 +7,54 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class Aim extends Command {
-	
-	public enum State{
-		AIMING{
+public class Shoot extends Command {
+	public enum State {
+		MotorSpeedsUp{
 			@Override
-			public void run(Aim aim){
-				if(/*aimed*/true){
-					aim.state = AIMED;
-				}		
-			}
-		}, AIMED{
-			@Override
-			public void run (Aim aim){
-				if(/*moved*/true) {
-					aim.state = AIMING;
+			public void run(Shoot shoot){
+				if (/*motorspeedsup*/true){
+					shoot.state = Aiming;
 				}
 			}
+		}, Aiming{
+			@Override
+			public void run(Shoot shoot){
+				if (Robot.aim.aimed()){
+					shoot.state = ReadyToShoot;
+				}
+			}
+			
+		}, ReadyToShoot{
+			@Override
+			public void run(Shoot shoot){
+				if (/*readytoshoot*/true){
+					shoot.state = Firing;
+				}
+			}
+			
+		}, Firing{
+			@Override
+			public void run(Shoot shoot){
+				if (/*firing*/true){
+					shoot.state = MotorSpeedsUp;
+				}
+			}
+			
 		};
-		
-		public void run(Aim aim){
+		public void run(Shoot shoot){
 		}
 	}
 	
 	private State state;
 
-    public Aim() {
+    public Shoot() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.shooter);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	state = state.AIMING;
+    	state = State.MotorSpeedsUp;
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -60,9 +74,5 @@ public class Aim extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    }
-    
-    public boolean aimed(){
-    	return state == State.AIMED;
     }
 }
