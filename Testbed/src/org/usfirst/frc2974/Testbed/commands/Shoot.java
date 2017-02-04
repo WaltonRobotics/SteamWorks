@@ -48,7 +48,6 @@ public class Shoot extends Command {
 	private State state;
 
     public Shoot() {
-        //requires(Robot.shooter);
     }
 
     // Called just before this Command runs the first time
