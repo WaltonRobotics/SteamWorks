@@ -32,9 +32,8 @@ public class AutonDiffRunnable extends CommandGroup {
     	
     	case CENTER:
     		addSequential(new DriveStraightTrapezoid(0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
-    		addSequential(new DriveStraightTrapezoid(0.5, 1.8,DriveStraightTrapezoid.Direction.ANTIFORWARD));
-        	addSequential(new TurnInTime(0.4,0.25,TurnInTime.Direction.CLOCKWISE));//check
-        	addSequential(new DriveStraightTrapezoid(0.7, 2,DriveStraightTrapezoid.Direction.FORWARD));//check
+    		addSequential(new DriveDiffTrapezoid(0.5, 0.9,0.2,DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
+        	addSequential(new DriveStraightTrapezoid(0.7, 1.3,DriveStraightTrapezoid.Direction.FORWARD));//check
     		break;
     		
     	case LEFT:
