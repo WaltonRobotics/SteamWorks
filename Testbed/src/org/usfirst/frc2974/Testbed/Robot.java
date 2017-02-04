@@ -97,8 +97,8 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        autonomousCommand = new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT,true);
-        autonomousCommand.start();
+        autonomousCommand = autoChooser.getSelected();
+        if(autonomousCommand != null) autonomousCommand.start();
     }
 
     /**
@@ -112,15 +112,12 @@ public class Robot extends IterativeRobot {
     	
     	autoChooser = new SendableChooser<CommandGroup>();//TODO add in commands
     	autoChooser.addDefault("Do Nothing", null);
-    	autoChooser.addObject("Left (Shoot)", new AutonRunnable(AutonRunnable.Position.LEFT, true));
-    	autoChooser.addObject("Middle (Shoot)", new AutonRunnable(AutonRunnable.Position.CENTER, true));
-    	autoChooser.addObject("Right (Shoot)", new AutonRunnable(AutonRunnable.Position.RIGHT, true));
-    	autoChooser.addObject("Left (No Shoot)", new AutonRunnable(AutonRunnable.Position.LEFT, false));
-    	autoChooser.addObject("Middle (No Shoot)", new AutonRunnable(AutonRunnable.Position.CENTER, false));
-    	autoChooser.addObject("Right (No Shoot)", new AutonRunnable(AutonRunnable.Position.RIGHT, false));
     	autoChooser.addObject("DiffLeft (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT, true));
     	autoChooser.addObject("DiffMiddle (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.CENTER, true));
     	autoChooser.addObject("DiffRight (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, true));
+    	autoChooser.addObject("DiffLeft (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT, false));
+    	autoChooser.addObject("DiffMiddle (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.CENTER, false));
+    	autoChooser.addObject("DiffRight (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, false));
     	SmartDashboard.putData("Auto", autoChooser);
     }
 
