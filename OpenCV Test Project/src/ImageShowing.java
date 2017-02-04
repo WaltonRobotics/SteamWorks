@@ -23,22 +23,20 @@ public class ImageShowing {
 		// TODO Auto-generated method stub
 
 		GripPipeline pipeline = new GripPipeline();
-		VideoCapture video = new VideoCapture(0);
+		VideoCapture video = new VideoCapture("/dev/video0");// 0
 
 		System.out.println("Beginning of the while loop");
 		Mat source0 = new Mat();
-		
-		JFrame frame = new JFrame()
-				{
+
+		JFrame frame = new JFrame() {
 			private static final long serialVersionUID = -3270063354802201853L;
 
 			@Override
-			public void paint(Graphics g)
-			{
+			public void paint(Graphics g) {
 				BufferedImage image = toBufferedImage(source0);
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setColor(Color.BLUE);
-				//g2.fillRect(0,0,image.getWidth(null), image.getHeight(null));
+				// g2.fillRect(0,0,image.getWidth(null), image.getHeight(null));
 				g2.drawImage(image, 0, 0, null);
 			}
 		};
@@ -46,13 +44,13 @@ public class ImageShowing {
 		frame.setTitle("baby i am the frame king");
 		frame.setLocationRelativeTo(null);
 		frame.setPreferredSize(new Dimension(1000, 1000));
-		frame.setMaximumSize(new Dimension(1000,1000));
-		frame.setMinimumSize(new Dimension(1000,1000));
+		frame.setMaximumSize(new Dimension(1000, 1000));
+		frame.setMinimumSize(new Dimension(1000, 1000));
 		frame.setVisible(true);
 		frame.pack();
 
 		while (video.retrieve(source0)) {
-			//pipeline.process(source0);
+			// pipeline.process(source0);
 			frame.repaint();
 			System.out.println("Recieved frame");
 		}
@@ -60,18 +58,18 @@ public class ImageShowing {
 		video.release();
 		System.out.println("end of while loop");
 	}
-	
-		public static BufferedImage toBufferedImage(Mat m){
-		      int type = BufferedImage.TYPE_BYTE_GRAY;
-		      if ( m.channels() > 1 ) {
-		          type = BufferedImage.TYPE_3BYTE_BGR;
-		      }
-		      int bufferSize = m.channels()*m.cols()*m.rows();
-		      byte [] b = new byte[bufferSize];
-		      m.get(0,0,b); // get all the pixels
-		      BufferedImage image = new BufferedImage(m.cols(),m.rows(), type);
-		      final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-		      System.arraycopy(b, 0, targetPixels, 0, b.length);  
-		      return image;
-		  }
+
+	public static BufferedImage toBufferedImage(Mat m) {
+		int type = BufferedImage.TYPE_BYTE_GRAY;
+		if (m.channels() > 1) {
+			type = BufferedImage.TYPE_3BYTE_BGR;
+		}
+		int bufferSize = m.channels() * m.cols() * m.rows();
+		byte[] b = new byte[bufferSize];
+		m.get(0, 0, b); // get all the pixels
+		BufferedImage image = new BufferedImage(m.cols(), m.rows(), type);
+		final byte[] targetPixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+		System.arraycopy(b, 0, targetPixels, 0, b.length);
+		return image;
+	}
 }
