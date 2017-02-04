@@ -6,6 +6,7 @@ import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid.DiffDirection;
 import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime.Direction;
 
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -13,12 +14,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutonDiffRunnable extends CommandGroup {
 	
-	public TurnInTime.Direction turnDirection;
-	public TurnInTime.Direction antiTurnDirection;
 	public DriveDiffTrapezoid.DiffDirection diffDirection;
+	public DriveDiffTrapezoid.DiffDirection antiDiffDirection;
 	
-	public double timeToGoal;
-	public double turnTimeToGoal;
+	public Command toGoalCommand;
 	
     public enum Position{
     	LEFT, RIGHT, CENTER
@@ -28,26 +27,22 @@ public class AutonDiffRunnable extends CommandGroup {
     	
     	if(position == Position.CENTER){
     		addSequential(new DriveStraightTrapezoid(0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
-    		addSequential(new DriveStraightTrapezoid(0.5, 0.7,DriveStraightTrapezoid.Direction.ANTIFORWARD));
-        	addSequential(new TurnInTime(0.4,0.25,TurnInTime.Direction.CLOCKWISE));
-        	addSequential(new DriveStraightTrapezoid(0.7, 2,DriveStraightTrapezoid.Direction.FORWARD));
+    		addSequential(new DriveStraightTrapezoid(0.5, 1.8,DriveStraightTrapezoid.Direction.ANTIFORWARD));
+        	addSequential(new TurnInTime(0.4,0.25,TurnInTime.Direction.CLOCKWISE));//check
+        	addSequential(new DriveStraightTrapezoid(0.7, 2,DriveStraightTrapezoid.Direction.FORWARD));//check
     	}else{
-    		if (position == Position.LEFT){
-    			turnDirection = TurnInTime.Direction.ANTICLOCKWISE;
-    			antiTurnDirection = TurnInTime.Direction.CLOCKWISE;
+    		if (position == Position.LEFT) {
     			diffDirection = DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE;
-    			timeToGoal=2;
-    			turnTimeToGoal=.25;
+    			antiDiffDirection = DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK;
+    			toGoalCommand = new DriveStraightTrapezoid(0.7, 4.2,DriveStraightTrapezoid.Direction.FORWARD);
     		}else{
-    			turnDirection = TurnInTime.Direction.CLOCKWISE;
-    			antiTurnDirection = TurnInTime.Direction.ANTICLOCKWISE;
     			diffDirection = DriveDiffTrapezoid.DiffDirection.CLOCKWISE;
-    			timeToGoal=.8;
-    			turnTimeToGoal=.8;
+    			antiDiffDirection = DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK;
+    			toGoalCommand = new DriveDiffTrapezoid(0.7, 4.8, 0.65,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE);
     		}
-    		addSequential(new DriveDiffTrapezoid(0.7, 1.8, 0.65,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));//move onto peg
-        	addSequential(new DriveDiffTrapezoid(0.7, 1.2,0.2,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));//reverse off peg
-        	addSequential(new DriveStraightTrapezoid(0.7, 1.2,DriveStraightTrapezoid.Direction.FORWARD));//move to goal
+    		addSequential(new DriveDiffTrapezoid(0.7, 1.8, 0.65,diffDirection));//move onto peg
+        	addSequential(new DriveDiffTrapezoid(0.7, 3,0.2,antiDiffDirection));//reverse off peg
+        	addSequential(toGoalCommand);//move to goal
         	if(doesShoot){
             	//addSequential(new Shoot()); TODO add shooting
         	}
