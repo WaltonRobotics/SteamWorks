@@ -48,11 +48,14 @@ public class MotionProfileController{
 		RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is destroyed.");
 	}
 	
-	public synchronized void setMotion(MotionProvider motion) {
+	public synchronized void setMotion(MotionProvider path) {
 		if(m != null) {
 			throw new RuntimeException("Can't set motion with existing motion.");
 		}
-		m = motion;
+		Pose pose = p.getPose();
+		Motion motion = new Motion(pose.positionWheel.left, 0, 0, pose.positionWheel.right, 0, 0, false);
+		m = path;
+		m.initialized(Timer.getFPGATimestamp(), motion);
 		isEnabled = true;
 	}
 	
