@@ -11,7 +11,7 @@ public class ImageShowing {
 
 		System.out.println("Beginning of the while loop");
 		Mat source0 = new Mat();
-		
+
 		while (video.retrieve(source0)) {
 			pipeline.process(source0);
 			System.out.println("Recieved frame");
