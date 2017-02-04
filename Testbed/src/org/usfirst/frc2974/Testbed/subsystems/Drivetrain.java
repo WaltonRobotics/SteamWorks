@@ -63,6 +63,7 @@ public class Drivetrain extends Subsystem {
 		
 		SmartDashboard.putData("Set Motion Controller Constants", new SetMotionControllerConstants());
 		SmartDashboard.putData("Set Motion Controller Constants", new ReadMotionControllerConstants());
+		SmartDashboard.putData("EnableAutoShifting", new EnableAutoShifting());
 		
 	}
 

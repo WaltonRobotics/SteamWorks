@@ -25,6 +25,7 @@ import org.usfirst.frc2974.Testbed.auton.AutonRunnable;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
+import org.usfirst.frc2974.Testbed.commands.AutoShifting;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerDriver;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
@@ -130,7 +131,6 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if (autonomousCommand != null) autonomousCommand.cancel();
         RobotMap.compressor.start();
-        SmartDashboard.putBoolean("AutoShifting", true);
     }
 
     /**

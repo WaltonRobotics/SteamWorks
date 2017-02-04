@@ -3,6 +3,7 @@ package org.usfirst.frc2974.Testbed.commands;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -11,12 +12,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AutoShifting extends Command{
 	
 	private double delayStart;
-	private boolean activated;
+	private static boolean activated;
 	
 	public AutoShifting() {
 		requires(Robot.drivetrain);
-
-		activated = SmartDashboard.getBoolean("AutoShifting", true);
 	}
 	
 	private Talon left = RobotMap.left;
@@ -71,6 +70,12 @@ public class AutoShifting extends Command{
 		end();
 	}
 	
+	public static void enable() {
+		activated = true;
+	}
 	
+	public static void disable() {
+		activated = false;
+	}
 	
 }
