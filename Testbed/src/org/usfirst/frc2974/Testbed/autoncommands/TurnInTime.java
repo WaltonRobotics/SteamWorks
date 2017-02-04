@@ -100,15 +100,15 @@ public class TurnInTime extends Command {
 		this.amax = amax;
 		duration = time;
 		this.direction = direction;
-		t0 = Timer.getFPGATimestamp();
 		t1 = vmax / amax;
-		dtaccel = t1 - t0;
-		triTime = (duration / 2) - t0;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		state = State.ACC;
+		t0 = Timer.getFPGATimestamp();
+		dtaccel = t1 - t0;
+		triTime = (duration / 2) - t0;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -116,9 +116,10 @@ public class TurnInTime extends Command {
 		state.run(this);
 	}
 //hello billy
+	// billy doesn't live here any more :(
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return state == State.END || duration < Timer.getFPGATimestamp() - t0;
+		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END ;
 	}
 
 	// Called once after isFinished returns true

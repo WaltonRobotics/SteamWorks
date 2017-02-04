@@ -110,15 +110,15 @@ public class DriveStraightTrapezoid extends Command {
 		this.amax = amax;
 		this.direction = direction;
 		duration = time;
-		t0 = Timer.getFPGATimestamp();
 		t1 = vmax / amax;
-		dtaccel = t1 - t0;
-		triTime = (duration / 2) - t0;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		state = State.ACC;
+		t0 = Timer.getFPGATimestamp();
+		dtaccel = t1 - t0;
+		triTime = (duration / 2) - t0;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -128,7 +128,7 @@ public class DriveStraightTrapezoid extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return state == State.END || duration < Timer.getFPGATimestamp() - t0;
+		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END ;
 	}
 
 	// Called once after isFinished returns true
