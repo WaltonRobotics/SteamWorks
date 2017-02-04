@@ -22,7 +22,7 @@ import org.opencv.imgproc.Imgproc;
 public class GripPipeline {
 
 	// Outputs
-	private Mat hsvThresholdOutput = new Mat();
+	private Mat hslThresholdOutput = new Mat();
 	private ArrayList<MatOfPoint> findContoursOutput = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> filterContoursOutput = new ArrayList<MatOfPoint>();
 
@@ -35,21 +35,22 @@ public class GripPipeline {
 	 * outputs.
 	 */
 	public void process(Mat source0) {
-		// Step HSV_Threshold0:
-		Mat hsvThresholdInput = source0;
-		double[] hsvThresholdHue = { 51.798561151079134, 103.20819112627989 };
-		double[] hsvThresholdSaturation = { 176.57374100719423, 255.0 };
-		double[] hsvThresholdValue = { 43.57014388489208, 204.95733788395907 };
-		hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
+		// Step HSL_Threshold0:
+		Mat hslThresholdInput = source0;
+		double[] hslThresholdHue = { 58.27338129496402, 93.99317406143345 };
+		double[] hslThresholdSaturation = { 171.98741007194246, 255.0 };
+		double[] hslThresholdLuminance = { 20.638489208633093, 96.1689419795222 };
+		hslThreshold(hslThresholdInput, hslThresholdHue, hslThresholdSaturation, hslThresholdLuminance,
+				hslThresholdOutput);
 
 		// Step Find_Contours0:
-		Mat findContoursInput = hsvThresholdOutput;
+		Mat findContoursInput = hslThresholdOutput;
 		boolean findContoursExternalOnly = false;
 		findContours(findContoursInput, findContoursExternalOnly, findContoursOutput);
 
 		// Step Filter_Contours0:
 		ArrayList<MatOfPoint> filterContoursContours = findContoursOutput;
-		double filterContoursMinArea = 125.0;
+		double filterContoursMinArea = 120.0;
 		double filterContoursMinPerimeter = 0.0;
 		double filterContoursMinWidth = 0.0;
 		double filterContoursMaxWidth = 1000.0;
@@ -68,12 +69,12 @@ public class GripPipeline {
 	}
 
 	/**
-	 * This method is a generated getter for the output of a HSV_Threshold.
+	 * This method is a generated getter for the output of a HSL_Threshold.
 	 * 
-	 * @return Mat output from HSV_Threshold.
+	 * @return Mat output from HSL_Threshold.
 	 */
-	public Mat hsvThresholdOutput() {
-		return hsvThresholdOutput;
+	public Mat hslThresholdOutput() {
+		return hslThresholdOutput;
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class GripPipeline {
 	}
 
 	/**
-	 * Segment an image based on hue, saturation, and value ranges.
+	 * Segment an image based on hue, saturation, and luminance ranges.
 	 *
 	 * @param input
 	 *            The image on which to perform the HSL threshold.
@@ -103,14 +104,14 @@ public class GripPipeline {
 	 *            The min and max hue
 	 * @param sat
 	 *            The min and max saturation
-	 * @param val
-	 *            The min and max value
+	 * @param lum
+	 *            The min and max luminance
 	 * @param output
 	 *            The image in which to store the output.
 	 */
-	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val, Mat out) {
-		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HSV);
-		Core.inRange(out, new Scalar(hue[0], sat[0], val[0]), new Scalar(hue[1], sat[1], val[1]), out);
+	private void hslThreshold(Mat input, double[] hue, double[] sat, double[] lum, Mat out) {
+		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2HLS);
+		Core.inRange(out, new Scalar(hue[0], lum[0], sat[0]), new Scalar(hue[1], lum[1], sat[1]), out);
 	}
 
 	/**
