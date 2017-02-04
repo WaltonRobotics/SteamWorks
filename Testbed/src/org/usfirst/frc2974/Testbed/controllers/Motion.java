@@ -1,5 +1,7 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
+import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
+
 public class Motion{
 	
 	public final RobotPair position;
@@ -15,6 +17,8 @@ public class Motion{
 		accel = new RobotPair(accLeft, accRight);
 		
 		this.isDone = isDone;
+		
+		RobotLoggerManager.setFileHandlerInstance("robot.controllers").info("");
 		
 	}
 	

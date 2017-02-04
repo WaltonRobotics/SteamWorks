@@ -43,7 +43,8 @@ public class DriveStraightTrapezoid extends Command {
 				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
 				if(d.direction == Direction.FORWARD){
 					Robot.drivetrain.setSpeeds(power, power);
-				}else{
+				}
+				else{
 					Robot.drivetrain.setSpeeds(-power, -power);
 				}
 			}
@@ -81,7 +82,8 @@ public class DriveStraightTrapezoid extends Command {
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
 				if(d.direction == Direction.FORWARD){
 					Robot.drivetrain.setSpeeds(power, power);
-				}else{
+				}
+				else{
 					Robot.drivetrain.setSpeeds(-power, -power);
 				}
 			}

@@ -3,6 +3,7 @@ package org.usfirst.frc2974.Testbed.controllers;
 import java.util.TimerTask;
 
 import org.usfirst.frc2974.Testbed.Robot;
+import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -16,12 +17,12 @@ public class MotionProfileController{
 	private boolean isEnabled;
 	
 	private class MPCTask extends TimerTask{
-
+		
 		@Override
 		public void run() {
-			
+
+			RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is running.");
 			calculate();
-			
 		}
 		
 	}
@@ -39,11 +40,12 @@ public class MotionProfileController{
 		controller = new java.util.Timer();
 		
 		controller.schedule(new MPCTask(), 0L, (long)(period*1000));
-				
+						
 	}
 	
 	public void free() {
 		controller.cancel();
+		RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is destroyed.");
 	}
 	
 	public synchronized void setMotion(MotionProvider motion) {
@@ -51,14 +53,18 @@ public class MotionProfileController{
 			throw new RuntimeException("Can't set motion with existing motion.");
 		}
 		m = motion;
-	}
-	
-	public synchronized void enable() {
 		isEnabled = true;
 	}
 	
-	public synchronized void disable() {
+	
+	public synchronized void cancel() {
 		isEnabled = false;
+		m = null;
+		Robot.drivetrain.setSpeeds(0, 0);
+	}
+	
+	public boolean getEnabled() {
+		return isEnabled;
 	}
 	
 	public synchronized double getKV() {
@@ -129,9 +135,9 @@ public class MotionProfileController{
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 		
 			if(motion.isDone) {
-				
 				m = null;
-				
+				isEnabled = false;
+				Robot.drivetrain.setSpeeds(0, 0);
 			}
 			
 		}

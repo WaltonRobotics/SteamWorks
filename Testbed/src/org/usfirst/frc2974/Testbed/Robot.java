@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
 import org.usfirst.frc2974.Testbed.auton.AutonRunnable;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
+import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
@@ -75,6 +76,8 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Duration", 0);
         SmartDashboard.putNumber("aMax", 0);    
         SmartDashboard.putNumber("DiffPercent", 0);  
+        SmartDashboard.putNumber("Distance", 0);  
+        SmartDashboard.putNumber("vCruise", 0);  
     }
 
     /**
@@ -103,6 +106,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	poseEstimator.updatePose();
         Scheduler.getInstance().run();
     }
     
@@ -136,12 +140,14 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+    	poseEstimator.updatePose();
         Scheduler.getInstance().run();
         Robot.drivetrain.dumpSmartdashboardValues();
         createTestButtons();
     }
     
     public void createTestButtons(){
+    	
     	SmartDashboard.putData("TurnTimeClockwise",new TurnInTime(SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0),TurnInTime.Direction.CLOCKWISE));
     	SmartDashboard.putData("TurnTimeAntiClockwise",new TurnInTime(SmartDashboard.getNumber("aMax",0)
@@ -166,8 +172,11 @@ public class Robot extends IterativeRobot {
     			,SmartDashboard.getNumber("Duration",0)
     			,SmartDashboard.getNumber("DiffPercent", 0)
     			,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));
-      	
-      	
+      	SmartDashboard.putData("MotionEncoder", new DriveStraightByEncoder(
+      			SmartDashboard.getNumber("distance", 0), 
+      			SmartDashboard.getNumber("vCruise", 0), 
+      			SmartDashboard.getNumber("aMax", 0)));
+ 
     }
     @Override
     public void testInit() {

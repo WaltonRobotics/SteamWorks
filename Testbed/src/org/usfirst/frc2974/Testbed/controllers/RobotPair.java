@@ -9,5 +9,9 @@ public class RobotPair {
 		this.left = left;
 		this.right = right;
 	}
+	
+	public double mean(){
+		return (this.left + this.right) / 2;
+	}
 
 }

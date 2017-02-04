@@ -4,6 +4,7 @@ import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.*;
 import org.usfirst.frc2974.Testbed.controllers.MotionProfileController;
+import org.usfirst.frc2974.Testbed.controllers.MotionProvider;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -30,7 +31,7 @@ public class Drivetrain extends Subsystem {
 
 	Solenoid shifter = RobotMap.pneumaticsShifter;
 
-	MotionProfileController controller;
+	private MotionProfileController controller;
 
 	public synchronized void setSpeeds(double leftSpeed, double rightSpeed) {
 
@@ -46,6 +47,20 @@ public class Drivetrain extends Subsystem {
  				DEFAULTKV, DEFAULTKK, DEFAULTKA, DEFAULTKP, Robot.poseEstimator, PERIOD);
 		
  	}
+ 	
+ 	public boolean getControllerStatus(){
+ 		return controller.getEnabled();
+ 	}
+ 	
+ 	public void cancelMotion(){
+ 		controller.cancel();
+ 	}
+ 	
+ 	
+ 	public void setControllerMotion(MotionProvider motion){
+ 		controller.setMotion(motion);
+ 	}
+ 	
  	
 	public void shiftUp() {
 		if (!shifter.get()) {
