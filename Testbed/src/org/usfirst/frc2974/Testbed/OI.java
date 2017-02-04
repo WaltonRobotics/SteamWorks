@@ -82,6 +82,11 @@ public class OI {
         shiftUp = new JoystickButton(left, 3);
         shiftDown = new JoystickButton(left, 2);
         
+        shoot = new JoystickButton(right, 1);
+        
+        intake = new JoystickButton(gamepad, 1);
+        outtake = new JoystickButton(gamepad, 3);
+        stoptake = new JoystickButton(gamepad, 2);
 
 
         // SmartDashboard Buttons
