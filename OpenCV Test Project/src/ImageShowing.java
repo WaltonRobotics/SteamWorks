@@ -2,15 +2,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -23,7 +17,7 @@ public class ImageShowing {
 		// TODO Auto-generated method stub
 
 		GripPipeline pipeline = new GripPipeline();
-		VideoCapture video = new VideoCapture("/dev/video0");// 0
+		VideoCapture video = new VideoCapture(0);// 0
 
 		System.out.println("Beginning of the while loop");
 		Mat source0 = new Mat();
@@ -35,8 +29,8 @@ public class ImageShowing {
 			public void paint(Graphics g) {
 				BufferedImage image = toBufferedImage(source0);
 				Graphics2D g2 = (Graphics2D) g;
-				g2.setColor(Color.BLUE);
-				// g2.fillRect(0,0,image.getWidth(null), image.getHeight(null));
+//				g2.setColor(Color.BLUE);
+//				g2.fillRect(0,0,image.getWidth(null), image.getHeight(null));
 				g2.drawImage(image, 0, 0, null);
 			}
 		};
@@ -50,7 +44,7 @@ public class ImageShowing {
 		frame.pack();
 
 		while (video.retrieve(source0)) {
-			// pipeline.process(source0);
+			 pipeline.process(source0);
 			frame.repaint();
 			System.out.println("Recieved frame");
 		}
