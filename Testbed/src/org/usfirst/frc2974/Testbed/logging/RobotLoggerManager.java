@@ -205,6 +205,11 @@ public class RobotLoggerManager {
 	}
 	
 	private static Mode robotMode = Mode.AUTONOMOUS;
+	private static Level robotLevel = RobotLoggerLevel.COMPETITION;
+	public void setRobotLevel(Level level)
+	{
+		robotLevel = level;
+	}
 	
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
@@ -216,7 +221,7 @@ public class RobotLoggerManager {
 	 * @return Returns the Logger
 	 */
 	public static synchronized Logger setFileHandlerInstance(final Logger logger) {
-		return setFileHandlerInstance(robotMode, logger, logger.getLevel());
+		return setFileHandlerInstance(robotMode, logger, robotLevel);
 	}
 	
 	/**
