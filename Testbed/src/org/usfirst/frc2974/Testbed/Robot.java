@@ -154,7 +154,6 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         Robot.drivetrain.dumpSmartdashboardValues();
 //        createTestButtons();
-        SmartDashboard.putNumber("RaspberryTester",NetworkTable.getTable("SmartDashboard").getNumber("someNumber",0));
     }
     
     public void createTestButtons(){
