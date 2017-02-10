@@ -18,7 +18,7 @@ public class DriveStraightByEncoder extends Command {
 	private Drivetrain driveTrain;
 	private MotionPathStraight motion;
 	
-	public DriveStraightByEncoder(double distance, double vCruise, double aMax) {
+	public DriveStraightByEncoder() {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
 		
@@ -30,12 +30,13 @@ public class DriveStraightByEncoder extends Command {
 		double distance = SmartDashboard.getNumber("encoderDistance", 0);
 		double speed = SmartDashboard.getNumber("encoderSpeed", 0);
 		double acceleration = SmartDashboard.getNumber("encoderAccel", 0);
+		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
+		
 		motion = new MotionPathStraight(distance, speed, acceleration);
 		
-		RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info(motion.toString());
-		
 		driveTrain.setControllerMotion(motion);
-		RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Command starts: Controller enabled = " + driveTrain.getControllerStatus());
+		System.out.println(motion.toString());
+		System.out.println("Command starts: Controller enabled = " + driveTrain.getControllerStatus());
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class DriveStraightByEncoder extends Command {
 
 	@Override
 	protected void end() {		
-		RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Command ends: Controller enabled = " + driveTrain.getControllerStatus());
+		System.out.print("Command ends: Controller enabled = " + driveTrain.getControllerStatus());
 	}
 
 	@Override

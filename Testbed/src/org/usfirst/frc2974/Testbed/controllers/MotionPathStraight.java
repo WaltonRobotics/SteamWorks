@@ -93,8 +93,9 @@ public class MotionPathStraight implements MotionProvider{
 	
 	@Override
 	public String toString(){
+		double l0 = initialMotion!=null?initialMotion.position.mean():Float.NaN;
 		return String.format("Calculated path: t0=%3.1f, t1=%3.1f, t2=%3.1f, t3=%3.1f, l0=%5.3f, l1=%5.3f, l2=%5.3f, l3=%5.3f",
-						      t0, t1, t2, t3, initialMotion.position.mean(), l1, l2, l3);
+						      t0, t1, t2, t3, l0, l1, l2, l3);
 		
 	}
 	@Override

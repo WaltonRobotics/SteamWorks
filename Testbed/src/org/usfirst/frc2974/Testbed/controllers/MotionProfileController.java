@@ -20,8 +20,6 @@ public class MotionProfileController{
 		
 		@Override
 		public void run() {
-
-			RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is running.");
 			calculate();
 		}
 		
@@ -122,7 +120,7 @@ public class MotionProfileController{
 			Motion motion = m.getMotion(time);
 			
 			synchronized (this) {
-				
+				System.out.println(String.format("kV=%f, kK=%f, kA=%f, kP=%f", kV, kK, kA, kP));
 				//feed forward
 				leftPower += (kV * motion.velocity.left + kK) + kA * motion.accel.left;
 				rightPower += (kV * motion.velocity.right + kK) + kA * motion.accel.right;

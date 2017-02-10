@@ -34,11 +34,8 @@ public class Drivetrain extends Subsystem {
 	private MotionProfileController controller;
 
 	public synchronized void setSpeeds(double leftSpeed, double rightSpeed) {
-
 		right.set(-rightSpeed);
-
 		left.set(leftSpeed);
-
 	}
 
  	public Drivetrain() {
@@ -76,8 +73,6 @@ public class Drivetrain extends Subsystem {
 
 	public void dumpSmartdashboardValues() {
 		
-		SmartDashboard.putData("Set Motion Controller Constants", new SetMotionControllerConstants());
-		SmartDashboard.putData("Set Motion Controller Constants", new ReadMotionControllerConstants());
 		SmartDashboard.putData("EnableAutoShifting", new EnableAutoShifting());
 		
 	}
@@ -95,6 +90,8 @@ public class Drivetrain extends Subsystem {
  		double kA = SmartDashboard.getNumber("kA", DEFAULTKA);
  		double kP = SmartDashboard.getNumber("kP", DEFAULTKP);
     	
+ 		System.out.println(String.format("kV=%f, kK=%f, kA=%f, kP=%f", kV, kK, kA, kP));
+ 		
     	controller.setKV(kV);
     	controller.setKK(kK);
     	controller.setKA(kA);    	

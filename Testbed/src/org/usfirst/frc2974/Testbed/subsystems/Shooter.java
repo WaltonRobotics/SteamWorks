@@ -3,7 +3,7 @@ package org.usfirst.frc2974.Testbed.subsystems;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 
-import com.ctre.talonsrx.CANTalon;
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -21,7 +21,7 @@ public class Shooter extends Subsystem{
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(Robot.aim);
+		//setDefaultCommand(Robot.aim);
 	}
 	
 	public void enable() {

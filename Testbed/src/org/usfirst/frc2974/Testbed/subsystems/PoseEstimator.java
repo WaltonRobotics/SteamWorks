@@ -39,7 +39,7 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 		
 		positionLeftWheel = encoderLeft.getDistance();
 		positionRightWheel = encoderRight.getDistance();
-		CSVWriter.getInstance("PoseEstimator_position").write(positionLeftWheel, positionRightWheel);
+//		CSVWriter.getInstance("PoseEstimator_position").write(positionLeftWheel, positionRightWheel);
 	}
 	
 	public synchronized Pose getPose() {

@@ -18,7 +18,7 @@ public class Motion{
 		
 		this.isDone = isDone;
 		
-		RobotLoggerManager.setFileHandlerInstance("robot.controllers").info("");
+//		RobotLoggerManager.setFileHandlerInstance("robot.controllers").info("");
 		
 	}
 	
