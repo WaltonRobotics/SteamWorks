@@ -6,6 +6,7 @@ import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -111,15 +112,17 @@ public class DriveDiffTrapezoid extends Command {
 	}
 
 	private State state;
+	public boolean isDashboard;
 	
 	public enum DiffDirection{
 		CLOCKWISE, ANTICLOCKWISE, CLOCKWISEBACK, ANTICLOCKWISEBACK
 	}
 	
-	public DriveDiffTrapezoid(double amax, double time, double diffPercent, DiffDirection diffDirection) {
+	public DriveDiffTrapezoid(boolean isDashboard, double amax, double time, double diffPercent, DiffDirection diffDirection) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.drivetrain);
-
+		
+		this.isDashboard = isDashboard;
 		this.amax = amax;
 		duration = time;
 		this.diffPercent = diffPercent;
@@ -128,6 +131,11 @@ public class DriveDiffTrapezoid extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		if(isDashboard){
+			amax = SmartDashboard.getNumber("amax", 0);
+			duration = SmartDashboard.getNumber("duration", 0);
+			diffPercent = SmartDashboard.getNumber("diffPercent", 0);
+		}
 		state = State.ACC;
 		t0 = Timer.getFPGATimestamp();
 		dtaccel = t1 - t0;

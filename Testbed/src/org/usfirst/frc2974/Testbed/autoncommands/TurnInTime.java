@@ -6,6 +6,7 @@ import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnInTime extends Command {
 	public static final double vmax = 1; // Value is 1 because 1 is the max
@@ -92,11 +93,13 @@ public class TurnInTime extends Command {
 
 	private State state;
 	private Direction direction;
+	public boolean isDashboard;
 
-	public TurnInTime(double amax, double time, Direction direction) {
+	public TurnInTime(boolean isDashboard, double amax, double time, Direction direction) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.drivetrain);
 
+		this.isDashboard = isDashboard;
 		this.amax = amax;
 		duration = time;
 		this.direction = direction;
@@ -105,6 +108,10 @@ public class TurnInTime extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		if(isDashboard){
+			amax = SmartDashboard.getNumber("amax", 0);
+			duration = SmartDashboard.getNumber("duartion", 0);
+		}
 		state = State.ACC;
 		t0 = Timer.getFPGATimestamp();
 		dtaccel = t1 - t0;

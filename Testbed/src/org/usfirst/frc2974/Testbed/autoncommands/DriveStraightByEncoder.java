@@ -17,19 +17,30 @@ public class DriveStraightByEncoder extends Command {
 	public final double SETTLE_TIME = 1;
 	private Drivetrain driveTrain;
 	private MotionPathStraight motion;
+	private boolean isDashboard;
+	public double distance;
+	public double speed;
+	public double acceleration;
 	
-	public DriveStraightByEncoder() {
+	public DriveStraightByEncoder(boolean isDashboard,double distance, double speed, double acceleration) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
+		this.isDashboard = isDashboard;
+		this.distance = distance;
+		this.speed = speed;
+		this.acceleration = acceleration;
 		
 		RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created DriveStraightByEncoder");
 	}
 	
 	@Override
 	protected void initialize() {	
-		double distance = SmartDashboard.getNumber("encoderDistance", 0);
-		double speed = SmartDashboard.getNumber("encoderSpeed", 0);
-		double acceleration = SmartDashboard.getNumber("encoderAccel", 0);
+		if(isDashboard){
+			distance = SmartDashboard.getNumber("encoderDistance", 0);
+			speed = SmartDashboard.getNumber("encoderSpeed", 0);
+			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
+		}
+
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
 		
 		motion = new MotionPathStraight(distance, speed, acceleration);

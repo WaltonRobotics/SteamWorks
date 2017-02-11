@@ -27,10 +27,10 @@ public class AutonRunnable extends CommandGroup {
     public  AutonRunnable(Position position, boolean doesShoot) {
     	
     	if(position == Position.CENTER){
-    		addSequential(new DriveStraightTrapezoid(0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
-    		addSequential(new DriveStraightTrapezoid(0.5, 0.7,DriveStraightTrapezoid.Direction.ANTIFORWARD));
-        	addSequential(new TurnInTime(0.4,0.25,TurnInTime.Direction.CLOCKWISE));
-        	addSequential(new DriveStraightTrapezoid(0.4, 2,DriveStraightTrapezoid.Direction.FORWARD));
+    		addSequential(new DriveStraightTrapezoid(false, 0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
+    		addSequential(new DriveStraightTrapezoid(false, 0.5, 0.7,DriveStraightTrapezoid.Direction.ANTIFORWARD));
+        	addSequential(new TurnInTime(false, 0.4,0.25,TurnInTime.Direction.CLOCKWISE));
+        	addSequential(new DriveStraightTrapezoid(false, 0.4, 2,DriveStraightTrapezoid.Direction.FORWARD));
     	}else{
     		if (position == Position.LEFT){
     			turnDirection = TurnInTime.Direction.ANTICLOCKWISE;
@@ -45,14 +45,14 @@ public class AutonRunnable extends CommandGroup {
     			timeToGoal=.8;
     			turnTimeToGoal=.8;
     		}
-    		addSequential(new DriveStraightTrapezoid(1, 0.1,DriveStraightTrapezoid.Direction.FORWARD));//move forward enough to turn
-        	addSequential(new TurnInTime(0.4,0.16,turnDirection));//turn opposite angle of peg
-        	addSequential(new DriveStraightTrapezoid(0.4, 0.5,DriveStraightTrapezoid.Direction.FORWARD));//move halfway to peg
-        	addSequential(new TurnInTime(0.4,0.16,antiTurnDirection));//turn to peg
-        	addSequential(new DriveStraightTrapezoid(0.4, 0.5,DriveStraightTrapezoid.Direction.FORWARD));//move to peg
-        	addSequential(new DriveStraightTrapezoid(0.4, 0.5,DriveStraightTrapezoid.Direction.ANTIFORWARD));//reverse off peg
-        	addSequential(new TurnInTime(0.4,turnTimeToGoal,turnDirection));//turn to goal
-        	addSequential(new DriveStraightTrapezoid(0.4, timeToGoal,DriveStraightTrapezoid.Direction.FORWARD));//move to goal
+    		addSequential(new DriveStraightTrapezoid(false, 1, 0.1,DriveStraightTrapezoid.Direction.FORWARD));//move forward enough to turn
+        	addSequential(new TurnInTime(false, 0.4,0.16,turnDirection));//turn opposite angle of peg
+        	addSequential(new DriveStraightTrapezoid(false, 0.4, 0.5,DriveStraightTrapezoid.Direction.FORWARD));//move halfway to peg
+        	addSequential(new TurnInTime(false, 0.4,0.16,antiTurnDirection));//turn to peg
+        	addSequential(new DriveStraightTrapezoid(false, 0.4, 0.5,DriveStraightTrapezoid.Direction.FORWARD));//move to peg
+        	addSequential(new DriveStraightTrapezoid(false, 0.4, 0.5,DriveStraightTrapezoid.Direction.ANTIFORWARD));//reverse off peg
+        	addSequential(new TurnInTime(false, 0.4,turnTimeToGoal,turnDirection));//turn to goal
+        	addSequential(new DriveStraightTrapezoid(false, 0.4, timeToGoal,DriveStraightTrapezoid.Direction.FORWARD));//move to goal
         	if(doesShoot){
             	//addSequential(new Shoot()); TODO add shooting
         	}

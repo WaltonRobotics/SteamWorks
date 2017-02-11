@@ -6,6 +6,7 @@ import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -102,11 +103,11 @@ public class DriveStraightTrapezoid extends Command {
 	}
 
 	private State state;
-
-	public DriveStraightTrapezoid(double amax, double time, Direction direction) {
+	public boolean isDashboard;
+	public DriveStraightTrapezoid(boolean isDashboard, double amax, double time, Direction direction) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.drivetrain);
-
+		this.isDashboard=isDashboard;
 		this.amax = amax;
 		this.direction = direction;
 		duration = time;
@@ -115,6 +116,10 @@ public class DriveStraightTrapezoid extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		if(isDashboard){
+			amax= SmartDashboard.getNumber("amax", 0);
+			duration = SmartDashboard.getNumber("duaration", 0);
+			}
 		state = State.ACC;
 		t0 = Timer.getFPGATimestamp();
 		dtaccel = t1 - t0;

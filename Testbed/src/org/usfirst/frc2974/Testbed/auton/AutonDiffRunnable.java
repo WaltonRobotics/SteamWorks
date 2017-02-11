@@ -31,21 +31,21 @@ public class AutonDiffRunnable extends CommandGroup {
     	switch(position) {
     	
     	case CENTER:
-    		addSequential(new DriveStraightTrapezoid(0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
-    		addSequential(new DriveDiffTrapezoid(0.5, 0.9,0.2,DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
-        	addSequential(new DriveStraightTrapezoid(0.7, 1.3,DriveStraightTrapezoid.Direction.FORWARD));//check
+    		addSequential(new DriveStraightTrapezoid(false, 0.7, 1.1,DriveStraightTrapezoid.Direction.FORWARD));
+    		addSequential(new DriveDiffTrapezoid(false, 0.5, 0.9,0.2,DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
+        	addSequential(new DriveStraightTrapezoid(false, 0.7, 1.3,DriveStraightTrapezoid.Direction.FORWARD));//check
     		break;
     		
     	case LEFT:
     		directionAuton(DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE,
     				DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK,
-    				new DriveStraightTrapezoid(0.7,1.2,DriveStraightTrapezoid.Direction.FORWARD));
+    				new DriveStraightTrapezoid(false, 0.7,1.2,DriveStraightTrapezoid.Direction.FORWARD));
     		break;
     		
     	case RIGHT:
     		directionAuton(DriveDiffTrapezoid.DiffDirection.CLOCKWISE,
     				DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK,
-    				new DriveDiffTrapezoid(0.7,1.8,0.65,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
+    				new DriveDiffTrapezoid(false, 0.7,1.8,0.65,DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
     		break;
     	}
         if(doesShoot){
@@ -55,8 +55,8 @@ public class AutonDiffRunnable extends CommandGroup {
 
 	private void directionAuton(DiffDirection diffDirection, DiffDirection antiDiffDirection,
 			Command toGoalCommand) {
-		addSequential(new DriveDiffTrapezoid(0.7, 1.8, 0.65,diffDirection));//move onto peg
-    	addSequential(new DriveDiffTrapezoid(0.7, 1.2,0.2,antiDiffDirection));//reverse off peg
+		addSequential(new DriveDiffTrapezoid(false, 0.7, 1.8, 0.65,diffDirection));//move onto peg
+    	addSequential(new DriveDiffTrapezoid(false, 0.7, 1.2,0.2,antiDiffDirection));//reverse off peg
     	addSequential(toGoalCommand);
 	}
 }
