@@ -3,6 +3,7 @@ package org.usfirst.frc2974.Testbed.commands;
 import org.usfirst.frc2974.Testbed.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
  *
@@ -33,11 +34,16 @@ public class Shoot extends Command {
 			}
 			
 		}, Firing{
+			Index index = new Index();
 			@Override
 			public void run(Shoot shoot){
-				Robot.shooter.index();
+				if(!index.isRunning()) {
+					Scheduler.getInstance().add(new Index());
+				}
 				
-				shoot.state = MotorSpeedsUp;
+				if(index.isFinished()) {
+					shoot.state = MotorSpeedsUp;
+				}
 			}
 			
 		};

@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class RobotMap {
 	public static Talon left;
 	public static Talon right;
+	public static Talon indexer;
 	
 	public static com.ctre.talonsrx.CANTalon flywheelMotor;
 	
