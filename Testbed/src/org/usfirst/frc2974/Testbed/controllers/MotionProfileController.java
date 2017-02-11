@@ -121,7 +121,7 @@ public class MotionProfileController{
 		
 			Pose pose = p.getPose();
 			Motion motion = m.getMotion(time);
-			System.out.println(motion + "time:" + time);
+			System.out.println("time:" + time+ " " + pose.positionWheel + " " + motion.position);
 			synchronized (this) {
 				//feed forward
 				leftPower += (kV * motion.velocity.left + kK) + kA * motion.accel.left;

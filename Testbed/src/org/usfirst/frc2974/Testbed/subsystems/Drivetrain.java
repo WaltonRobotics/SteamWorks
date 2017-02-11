@@ -39,6 +39,10 @@ public class Drivetrain extends Subsystem {
 		right.set(-rightSpeed);
 		left.set(leftSpeed);
 	}
+	
+	public synchronized double getSpeeds(){
+		return 0.5*(right.get()+left.get());
+	}
 
  	public Drivetrain() {
  		
@@ -74,6 +78,8 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void dumpSmartdashboardValues() {
+		
+		//
 		
 		SmartDashboard.putData("EnableAutoShifting", new EnableAutoShifting());
 		

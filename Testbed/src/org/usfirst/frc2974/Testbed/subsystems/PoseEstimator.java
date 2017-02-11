@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed.subsystems;
 
+import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.controllers.PoseProvider;
@@ -18,6 +19,8 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	
 	private double positionLeftWheel;
 	private double positionRightWheel;
+	private double positionMiddle;
+	private double rate;
 	private double x;
 	private double y;
 	private double angle;
@@ -26,10 +29,9 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	public PoseEstimator() {
 		
 		synchronized (this) {
-			
-			encoderLeft.setDistancePerPulse(0.005);
-			encoderRight.setDistancePerPulse(0.005);
-
+			//0.0024936392
+			encoderLeft.setDistancePerPulse(0.0003979673);
+			encoderRight.setDistancePerPulse(-0.0003979673);
 		}
 		
 		reset();
@@ -61,6 +63,9 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 		
 		positionLeftWheel = encoderLeft.getDistance();
 		positionRightWheel = encoderRight.getDistance();
+		positionMiddle = 0.5*(positionLeftWheel+positionRightWheel);
+		rate = 0.5*(encoderLeft.getRate() + encoderRight.getRate());
+		System.out.println(positionMiddle+","+rate+","+Robot.drivetrain.getSpeeds());
 //		CSVWriter.getInstance("PoseEstimator_position").write(positionLeftWheel, positionRightWheel);
 	}
 	
@@ -71,6 +76,7 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	}
 	
 	public synchronized void reset() {
+		
 		
 		encoderLeft.reset();
 		encoderRight.reset();
