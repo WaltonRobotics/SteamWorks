@@ -12,9 +12,15 @@ class GripPipeline:
         """initializes all values to presets or None if need to be set
         """
 
-        self.__hsl_threshold_hue = [57.6271186440678, 94.97326203208556]
-        self.__hsl_threshold_saturation = [182.4858757062147, 255.0]
-        self.__hsl_threshold_luminance = [19.209039548022602, 82.27272727272727]
+        self.__blur_type = BlurType.Box_Blur
+        self.__blur_radius = 1.8018018018018018
+
+        self.blur_output = None
+
+        self.__hsl_threshold_input = self.blur_output
+        self.__hsl_threshold_hue = [64.74820143884892, 98.60068259385666]
+        self.__hsl_threshold_saturation = [77.96762589928058, 187.55119453924914]
+        self.__hsl_threshold_luminance = [160.52158273381295, 255.0]
 
         self.hsl_threshold_output = None
 
@@ -24,17 +30,17 @@ class GripPipeline:
         self.find_contours_output = None
 
         self.__filter_contours_contours = self.find_contours_output
-        self.__filter_contours_min_area = 120.0
+        self.__filter_contours_min_area = 32.0
         self.__filter_contours_min_perimeter = 0.0
-        self.__filter_contours_min_width = 0.0
-        self.__filter_contours_max_width = 1000.0
-        self.__filter_contours_min_height = 0.0
-        self.__filter_contours_max_height = 1000.0
-        self.__filter_contours_solidity = [0, 100]
-        self.__filter_contours_max_vertices = 1000000.0
-        self.__filter_contours_min_vertices = 0.0
-        self.__filter_contours_min_ratio = 0.0
-        self.__filter_contours_max_ratio = 1000.0
+        self.__filter_contours_min_width = 0
+        self.__filter_contours_max_width = 1000
+        self.__filter_contours_min_height = 0
+        self.__filter_contours_max_height = 1000
+        self.__filter_contours_solidity = [87.23021582733811, 100]
+        self.__filter_contours_max_vertices = 1000000
+        self.__filter_contours_min_vertices = 0
+        self.__filter_contours_min_ratio = 0.3
+        self.__filter_contours_max_ratio = 0.6
 
         self.filter_contours_output = None
 
@@ -43,8 +49,12 @@ class GripPipeline:
         """
         Runs the pipeline and sets all outputs to new values.
         """
+        # Step Blur0:
+        self.__blur_input = source0
+        (self.blur_output) = self.__blur(self.__blur_input, self.__blur_type, self.__blur_radius)
+
         # Step HSL_Threshold0:
-        self.__hsl_threshold_input = source0
+        self.__hsl_threshold_input = self.blur_output
         (self.hsl_threshold_output) = self.__hsl_threshold(self.__hsl_threshold_input, self.__hsl_threshold_hue, self.__hsl_threshold_saturation, self.__hsl_threshold_luminance)
 
         # Step Find_Contours0:
@@ -55,6 +65,28 @@ class GripPipeline:
         self.__filter_contours_contours = self.find_contours_output
         (self.filter_contours_output) = self.__filter_contours(self.__filter_contours_contours, self.__filter_contours_min_area, self.__filter_contours_min_perimeter, self.__filter_contours_min_width, self.__filter_contours_max_width, self.__filter_contours_min_height, self.__filter_contours_max_height, self.__filter_contours_solidity, self.__filter_contours_max_vertices, self.__filter_contours_min_vertices, self.__filter_contours_min_ratio, self.__filter_contours_max_ratio)
 
+
+    @staticmethod
+    def __blur(src, type, radius):
+        """Softens an image using one of several filters.
+        Args:
+            src: The source mat (numpy.ndarray).
+            type: The blurType to perform represented as an int.
+            radius: The radius for the blur as a float.
+        Returns:
+            A numpy.ndarray that has been blurred.
+        """
+        if(type is BlurType.Box_Blur):
+            ksize = int(2 * round(radius) + 1)
+            return cv2.blur(src, (ksize, ksize))
+        elif(type is BlurType.Gaussian_Blur):
+            ksize = int(6 * round(radius) + 1)
+            return cv2.GaussianBlur(src, (ksize, ksize), round(radius))
+        elif(type is BlurType.Median_Filter):
+            ksize = int(2 * round(radius) + 1)
+            return cv2.medianBlur(src, ksize)
+        else:
+            return cv2.bilateralFilter(src, -1, round(radius), round(radius))
 
     @staticmethod
     def __hsl_threshold(input, hue, sat, lum):
@@ -133,4 +165,5 @@ class GripPipeline:
         return output
 
 
+BlurType = Enum('BlurType', 'Box_Blur Gaussian_Blur Median_Filter Bilateral_Filter')
 
