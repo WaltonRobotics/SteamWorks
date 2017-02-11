@@ -1,4 +1,4 @@
-1import time
+import time
 import picamera
 import numpy as np
 import cv2
