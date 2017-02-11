@@ -38,15 +38,15 @@ public class MotionPathStraight implements MotionProvider{
 		}else if(time > t2) {
 			acc = -aMax;
 			vel = acc*(time-t3);
-			pos = l2+.5*acc*(time*time-t2*t2);
+			pos = l3+.5*acc*(Math.pow(time-t3, 2));
 		}else if(time > t1) {
 			acc = 0;
 			vel = vCruise;
 			pos = l1 + vCruise*(time-t1);
 		}else if(time >t0) {
 			acc = aMax;
-			vel = acc*time;
-			pos = .5*acc*(time*time-t0*t0);
+			vel = acc*(time-t0);
+			pos = .5*acc*(Math.pow(time-t0, 2));
 		}else{
 			acc = 0;
 			vel = 0;
@@ -83,9 +83,9 @@ public class MotionPathStraight implements MotionProvider{
 			}else{
 				l1 = l3/2;
 				l2 = l3/2;
-				t1 = Math.sqrt(l3/aMax + t0*t0);
+				t1 = Math.sqrt(l3/aMax) + t0;
 				t2 = t1;
-				t3 = Math.sqrt(l3/aMax + t1*t1) + t1;
+				t3 = Math.sqrt(l3/aMax) + t1;
 			}			
 		}
 		

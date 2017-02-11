@@ -55,6 +55,9 @@ public class MotionProfileController{
 		m = path;
 		m.initialized(Timer.getFPGATimestamp(), motion);
 		isEnabled = true;
+		
+		System.out.println(String.format("Setting motion: constants are kV=%f, kK=%f, kA=%f, kP=%f", kV, kK, kA, kP));
+		
 	}
 	
 	
@@ -118,9 +121,8 @@ public class MotionProfileController{
 		
 			Pose pose = p.getPose();
 			Motion motion = m.getMotion(time);
-			
+			System.out.println(motion + "time:" + time);
 			synchronized (this) {
-				System.out.println(String.format("kV=%f, kK=%f, kA=%f, kP=%f", kV, kK, kA, kP));
 				//feed forward
 				leftPower += (kV * motion.velocity.left + kK) + kA * motion.accel.left;
 				rightPower += (kV * motion.velocity.right + kK) + kA * motion.accel.right;
@@ -132,7 +134,7 @@ public class MotionProfileController{
 			
 			leftPower = Math.max(-1, Math.min(1, leftPower));
 			rightPower = Math.max(-1, Math.min(1, rightPower));
-			
+		//	System.out.println(String.format("LP=%f,RP=%f", leftPower,rightPower));
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 		
 			if(motion.isDone) {

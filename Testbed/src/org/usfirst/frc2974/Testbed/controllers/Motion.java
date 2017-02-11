@@ -19,9 +19,11 @@ public class Motion{
 		this.isDone = isDone;
 		
 //		RobotLoggerManager.setFileHandlerInstance("robot.controllers").info("");
-		
 	}
-	
+	@Override
+	public String toString() {
+		return String.format("position=%s; velocity=%s; accel=%s", position,velocity,accel);
+	}
 	
 	
 }

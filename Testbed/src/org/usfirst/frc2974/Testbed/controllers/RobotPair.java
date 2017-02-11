@@ -13,5 +13,10 @@ public class RobotPair {
 	public double mean(){
 		return (this.left + this.right) / 2;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%f, %f", left, right);
+	}
 
 }
