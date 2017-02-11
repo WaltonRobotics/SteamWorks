@@ -21,6 +21,7 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	private double x;
 	private double y;
 	private double angle;
+	public static final double wheelDistance = .6477;
 	
 	public PoseEstimator() {
 		
@@ -36,6 +37,27 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	}
 	
 	public synchronized void updatePose() {
+		double sr = encoderRight.getDistance() - positionRightWheel;
+		double sl = encoderLeft.getDistance() - positionLeftWheel;
+		double s;
+		boolean goesLeft = sl < sr;
+		if(goesLeft){
+			s = 1.5*sl;
+		}else{
+			s = 1.5*sr;
+		}
+		
+		double r = wheelDistance;
+		double theta = s/r;
+		
+		x += r*Math.cos(theta);
+		y += r*Math.cos(theta);
+
+		if(goesLeft){
+			angle += theta;
+		}else{
+			angle -= theta;
+		}
 		
 		positionLeftWheel = encoderLeft.getDistance();
 		positionRightWheel = encoderRight.getDistance();

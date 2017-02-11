@@ -26,6 +26,8 @@ public class Drivetrain extends Subsystem {
 	public final double DEFAULTKA = 0;
 	public final double DEFAULTKP = 0;
 	
+	
+	
 	private Talon right = RobotMap.right;
 	private Talon left = RobotMap.left;
 
