@@ -1,4 +1,4 @@
-import time
+1import time
 import picamera
 import numpy as np
 import cv2
@@ -25,9 +25,13 @@ KNOWN_FOCAL_LENGTH = 232.73809523809524
 with picamera.PiCamera() as camera:
     camera.resolution = (320, 240)
     camera.framerate = 60
-    camera.iso = 200
+    camera.iso = 100
+    camera.shutter_speed = 1000
+    camera.awb_mode = "off"
+    camera.awb_gains = (Fraction(135, 128), Fraction(343, 128))
+    
     time.sleep(2)
-    print(camera.shutter_speed)
+    camera.exposure_mode = "off"
     
     while True:
         camera.capture(image, 'bgr')
