@@ -30,18 +30,17 @@ public class Shoot extends Command {
 			public void run(Shoot shoot){
 				if (Robot.oi.shoot.get()){
 					shoot.state = Firing;
+					shoot.state.run(shoot);
 				}
 			}
 			
 		}, Firing{
-			Index index = new Index();
 			@Override
 			public void run(Shoot shoot){
-				if(!index.isRunning()) {
-					Scheduler.getInstance().add(new Index());
-				}
-				
-				if(index.isFinished()) {
+				if(Robot.oi.shoot.get()) {
+					Robot.shooter.index(true);
+				} else {
+					Robot.shooter.index(false);
 					shoot.state = MotorSpeedsUp;
 				}
 			}
@@ -54,6 +53,7 @@ public class Shoot extends Command {
 	private State state;
 
     public Shoot() {
+    	requires(Robot.shooter);
     }
 
     // Called just before this Command runs the first time

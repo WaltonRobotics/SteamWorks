@@ -1,10 +1,6 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
-import org.usfirst.frc2974.Testbed.Robot;
-
-import edu.wpi.first.wpilibj.Timer;
-
-public class MotionPathStraight implements MotionProvider{
+public class MotionPathStraight extends MotionProvider{
 	private Motion initialMotion;
 	private double l1;
 	private double l2;
@@ -13,14 +9,11 @@ public class MotionPathStraight implements MotionProvider{
 	private double t1;
 	private double t2;
 	private double t3;
-	private double vCruise;
-	private double aMax;
 	
 	public MotionPathStraight(double distance, double vCruise, double aMax){
+		super(vCruise, aMax);
 		synchronized (this) {
 			l3 = distance;
-			this.vCruise = vCruise;
-			this.aMax = aMax;
 		}
 		
 
