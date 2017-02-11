@@ -164,4 +164,8 @@ public class DriveDiffTrapezoid extends Command {
 	protected void interrupted() {
 		end();
 	}
+	@Override
+	public String toString(){
+		return String.format("amax = %f, duration = %f, diffPercent = %f", amax, duration, diffPercent);
+	}
 }

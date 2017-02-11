@@ -73,4 +73,9 @@ public class DriveStraightByEncoder extends Command {
 	protected void interrupted() {	
 		driveTrain.cancelMotion();
 	}
+
+	@Override
+	public String toString(){
+		return String.format("acceleration = %f,distance = %f,speed = %f",acceleration, distance, speed);
+	}
 }

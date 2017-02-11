@@ -141,4 +141,8 @@ public class TurnInTime extends Command {
 	protected void interrupted() {
 		end();
 	}
+	@Override
+	public String toString(){
+		return String.format("amax = %f, duration = %f", amax, duration);
+	}
 }
