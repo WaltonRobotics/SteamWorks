@@ -35,6 +35,7 @@ public class RobotMap {
 	public static Talon right;
 	public static Talon indexer;
 	public static Talon intake;
+	public static Talon climber;
 	
 	public static com.ctre.talonsrx.CANTalon flywheelMotor;
 	
