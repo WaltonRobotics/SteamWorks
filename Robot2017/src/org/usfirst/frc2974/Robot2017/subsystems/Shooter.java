@@ -11,14 +11,12 @@ public class Shooter extends Subsystem{
 	
 	private com.ctre.talonsrx.CANTalon flywheelMotor;
 	private Talon indexer;
-	private Encoder encoderFlyWheel;
 	
 	private final double SPEED = 6000; //rpm
 	
 	public Shooter() {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
-		encoderFlyWheel = RobotMap.encoderFlyWheel;
 	}
 
 	@Override

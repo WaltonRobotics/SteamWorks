@@ -20,7 +20,8 @@ public class Shoot extends Command {
 		}, Aiming{
 			@Override
 			public void run(Shoot shoot){
-				if (Robot.aim.aimed()){
+				//if (Robot.aim.aimed()){
+				if(true){
 					shoot.state = ReadyToShoot;
 				}
 			}
