@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
+import java.util.ArrayDeque;
 import java.util.TimerTask;
 
 import org.usfirst.frc2974.Testbed.Robot;
@@ -10,8 +11,10 @@ import edu.wpi.first.wpilibj.Timer;
 public class MotionProfileController{
 	
 	private double kV, kK, kA, kP;
-	private MotionProvider m = null; 
-	private PoseProvider p;
+	private Kinematics currentKinematics = null;
+	private KinematicPose staticKinematicPose;
+	private ArrayDeque<MotionProvider> motions = new ArrayDeque<MotionProvider>();
+	private PoseProvider poseProvider;
 	private java.util.Timer controller;
 	private double period;
 	private boolean isEnabled;
@@ -26,9 +29,9 @@ public class MotionProfileController{
 	}
 	
 	public MotionProfileController(double kV, double kK, double kA, double kP,
-			PoseProvider pose, double period){
+			PoseProvider poseProvider, double period){
 		
-		p = pose;
+		this.poseProvider = poseProvider;
 		this.kV = kV;
 		this.kK = kK;
 		this.kA = kA;
@@ -38,7 +41,8 @@ public class MotionProfileController{
 		controller = new java.util.Timer();
 		
 		controller.schedule(new MPCTask(), 0L, (long)(period*1000));
-						
+	
+		staticKinematicPose = Kinematics.staticPose(poseProvider.getPose(), poseProvider.getWheelPositions(), Timer.getFPGATimestamp());
 	}
 	
 	public void free() {
@@ -46,24 +50,22 @@ public class MotionProfileController{
 		RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is destroyed.");
 	}
 	
-	public synchronized void setMotion(MotionProvider path) {
-		if(m != null) {
-			throw new RuntimeException("Can't set motion with existing motion.");
-		}
-		Pose pose = p.getPose();
-		Motion motion = new Motion(pose.positionWheel.left, 0, 0, pose.positionWheel.right, 0, 0, false);
-		m = path;
-		m.initialized(Timer.getFPGATimestamp(), motion);
-		isEnabled = true;
-		
-		System.out.println(String.format("Setting motion: constants are kV=%f, kK=%f, kA=%f, kP=%f", kV, kK, kA, kP));
-		
+	public synchronized void setMotion(MotionProvider motion) {
+		motions.add(motion);
 	}
 	
+	public synchronized void enable() {
+		if (!motions.isEmpty()) {
+			MotionProvider newMotion = motions.pop();
+			currentKinematics = new Kinematics(newMotion, poseProvider.getWheelPositions(), Timer.getFPGATimestamp(), 0, 0, nPoints);
+			isEnabled = true;
+		}
+	}
 	
 	public synchronized void cancel() {
 		isEnabled = false;
-		m = null;
+		currentKinematics = null;
+		motions.clear();
 		Robot.drivetrain.setSpeeds(0, 0);
 	}
 	
@@ -110,25 +112,30 @@ public class MotionProfileController{
 		boolean enabled;
 		
 		synchronized (this) {
-			
-			enabled = this.isEnabled && m != null;
-		
+			enabled = this.isEnabled;
 		}
 		
 		if(enabled) {
 			
 			double time = Timer.getFPGATimestamp();
 		
-			Pose pose = p.getPose();
-			Motion motion = m.getMotion(time);
-			System.out.println("time:" + time+ " " + pose.positionWheel + " " + motion.position);
+			RobotPair wheelPositions = poseProvider.getWheelPositions();
+			
+			KinematicPose kinematicPose;
+			if (currentKinematics != null) {
+				kinematicPose = currentKinematics.interpolatePose(time);
+			} else {
+				kinematicPose = staticKinematicPose;
+			}
+			
+			//System.out.println("time:" + time+ " " + pose.positionWheel + " " + kinematicPose.);
 			synchronized (this) {
 				//feed forward
-				leftPower += (kV * motion.velocity.left + kK) + kA * motion.accel.left;
-				rightPower += (kV * motion.velocity.right + kK) + kA * motion.accel.right;
+				leftPower += (kV * kinematicPose.left.v + kK) + kA * kinematicPose.left.a;
+				rightPower += (kV * kinematicPose.right.v + kK) + kA * kinematicPose.right.a;
 				//feed back		
-				leftPower +=	kP * (motion.position.left - pose.positionWheel.left);
-				rightPower += kP * (motion.position.right - pose.positionWheel.right);
+				leftPower +=	kP * (kinematicPose.left.l - pose.positionWheel.left);
+				rightPower += kP * (kinematicPose.right.l - pose.positionWheel.right);
 				
 			}
 			
@@ -137,14 +144,16 @@ public class MotionProfileController{
 		//	System.out.println(String.format("LP=%f,RP=%f", leftPower,rightPower));
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 		
-			if(motion.isDone) {
-				m = null;
-				isEnabled = false;
-				Robot.drivetrain.setSpeeds(0, 0);
-			}
-			
+			if(kinematicPose.isFinished) {
+				if (!motions.isEmpty()) {
+					MotionProvider newMotion = motions.pop();
+					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(), currentKinematics.getTime(), 0, 0, nPoints);
+				}
+				else {
+					currentKinematics = null;
+					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(), currentKinematics.getWheelPositions(), currentKinematics.getTime());
+				}
+			}			
 		}
-		
 	}
-	
 }

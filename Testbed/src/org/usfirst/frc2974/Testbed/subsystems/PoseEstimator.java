@@ -2,6 +2,7 @@ package org.usfirst.frc2974.Testbed.subsystems;
 
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
+import org.usfirst.frc2974.Testbed.controllers.Point2D;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.controllers.PoseProvider;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
@@ -17,14 +18,15 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	private Encoder encoderLeft = RobotMap.encoderLeft;
 	private Encoder encoderRight = RobotMap.encoderRight;
 	
-	private double positionLeftWheel;
-	private double positionRightWheel;
-	private double positionMiddle;
+	private static double positionLeftWheel;
+	private static double positionRightWheel;
+	private static double positionMiddle;
 	private double rate;
 	private double x;
 	private double y;
 	private double angle;
 	public static final double wheelDistance = .6477;
+	private final Point2D X;
 	
 	public PoseEstimator() {
 		
@@ -71,9 +73,11 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	
 	public synchronized Pose getPose() {
 		
-		return new Pose(positionLeftWheel, positionRightWheel, x, y, angle);
+		return new Pose(positionLeftWheel, positionRightWheel, x, y, angle, X);
 		
 	}
+
+	
 	
 	public synchronized void reset() {
 		

@@ -1,6 +1,11 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
 public abstract class MotionProvider {
+	public enum LimitMode {
+		LimitLinearAcceleration, LimitRotationalAcceleration
+	}
+	
+	
 	protected Motion initialMotion;
 	protected double vCruise;
 	protected double aMax;
@@ -9,8 +14,20 @@ public abstract class MotionProvider {
 		this.vCruise = vCruise;
 		this.aMax = aMax;
 	}
+		
+	public abstract Pose evaluatePose(double s);
+	public abstract LimitMode getLimitMode();
+	public abstract double getLength();
+	public abstract double getInitialTheta();
+	public abstract double getFinalTheta();
 	
-	abstract Motion getMotion(double time);
-	abstract void initialized(double time, Motion motion);
-	abstract double getFinalTime();
+	public static double boundAngle(double angle){
+		if(angle > Math.PI){
+			return angle - Math.PI;
+		}
+		if(angle < -Math.PI){
+			return angle + Math.PI;
+		}
+		return angle;
+	}
 }
