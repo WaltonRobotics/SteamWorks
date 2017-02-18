@@ -1,7 +1,5 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
-import com.stanistreet.Point2D;
-import com.stanistreet.Pose;
 
 public class MotionPathSpline extends MotionProvider{
 	Motion goal;
@@ -23,7 +21,7 @@ public class MotionPathSpline extends MotionProvider{
 		for(int i=1; i<=100; i++){
 			double s = i/100;
 			Point2D Xnext = evaluate(B(s));
-			length += Xprev.distance(Xprev, Xnext);
+			length += Xprev.distance(Xnext);
 			Xprev = Xnext;
 		}
 		
@@ -38,7 +36,7 @@ public class MotionPathSpline extends MotionProvider{
 		Point2D X = evaluate(B(s));
 		Point2D dXds = evaluate(dBds(s));	
 		double theta = Math.atan2(dXds.y, dXds.x);
-		return new Pose(0.0, 0.0, 0.0, 0.0, theta, X); //Find the values for v and a and position
+		return new Pose(X, theta); //Find the values for v and a and position
 	
 		
 	}
@@ -80,19 +78,19 @@ public class MotionPathSpline extends MotionProvider{
 
 	@Override
 	public double getLength() {
-		return 0;
+		return length;
 	}
 
 	@Override
 	public double getInitialTheta() {
 		// TODO Auto-generated method stub
-		return 0;
+		return angle_init;
 	}
 
 	@Override
 	public double getFinalTheta() {
 		// TODO Auto-generated method stub
-		return 0;
+		return angle_fin;
 	}
 	
 	

@@ -26,10 +26,6 @@ public class Kinematics {
 		  evaluateNextPose(1 / nPoints);
 	  }
 	  
-	  public RobotPair getWheelPositions() {
-		  return new RobotPair(nextPose.left.l, nextPose.right.l);
-	  }
-	  
 	  public static KinematicPose staticPose(Pose pose, RobotPair wheelPosition, double t) {
 		  KinematicState left = new KinematicState(wheelPosition.left, v0, 0);
 		  KinematicState right = new KinematicState(wheelPosition.right, v0, 0);
@@ -140,10 +136,14 @@ public class Kinematics {
 	  }
 	  
 	  public Pose getPose(){
-		  return motion.evaluatePose(nPoints);
+		  return new Pose(nextPose.X, nextPose.angle);
+	  }
+
+	  public RobotPair getWheelPositions() {
+		  return new RobotPair(nextPose.left.l, nextPose.right.l);
 	  }
 	  
 	  public double getTime(){
-		  return Timer.getFPGATimestamp();
+		  return nextPose.t;
 	  }
 }

@@ -64,6 +64,10 @@ public class Drivetrain extends Subsystem {
  		controller.setMotion(motion);
  	}
  	
+ 	public boolean isControllerFinished(){
+ 		return controller.isFinished();
+ 	}
+ 	
  	
 	public void shiftUp() {
 		if (!shifter.get()) {

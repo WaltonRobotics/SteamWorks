@@ -7,6 +7,7 @@ import org.usfirst.frc2974.Testbed.controllers.MotionProvider;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 import org.usfirst.frc2974.Testbed.subsystems.Drivetrain;
+import org.usfirst.frc2974.Testbed.subsystems.PoseEstimator;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -16,15 +17,19 @@ public class DriveStraightByEncoder extends Command {
 
 	public final double SETTLE_TIME = 1;
 	private Drivetrain driveTrain;
+	private PoseEstimator poseEstimator;
 	private MotionPathStraight motion;
 	private boolean isDashboard;
 	public double distance;
 	public double speed;
 	public double acceleration;
+	private double finishedTime;
+	private boolean motionFinished;
 	
 	public DriveStraightByEncoder(boolean isDashboard,double distance, double speed, double acceleration) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
+		poseEstimator = Robot.poseEstimator;
 		this.isDashboard = isDashboard;
 		this.distance = distance;
 		this.speed = speed;
@@ -43,7 +48,7 @@ public class DriveStraightByEncoder extends Command {
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
 		
-		motion = new MotionPathStraight(distance, speed, acceleration);
+		motion = new MotionPathStraight(poseEstimator.getPose(), distance, speed, acceleration);
 		
 		driveTrain.setControllerMotion(motion);
 		System.out.println(motion.toString());
@@ -52,16 +57,15 @@ public class DriveStraightByEncoder extends Command {
 
 	@Override
 	protected void execute() {		
-		if(Timer.getFPGATimestamp() > motion.getFinalTime() + SETTLE_TIME){
-			driveTrain.cancelMotion();
-			RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").warning("Timed Out - motion stopped");
-
+		if(!motionFinished && driveTrain.isControllerFinished()){
+			finishedTime = Timer.getFPGATimestamp();
+			motionFinished = true;
 		}
 	}
 
 	@Override
 	protected synchronized boolean isFinished() {
-		return !driveTrain.getControllerStatus();
+		return motionFinished && (Timer.getFPGATimestamp() - finishedTime) > SETTLE_TIME;
 	}
 
 	@Override

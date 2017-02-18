@@ -2,6 +2,8 @@ package org.usfirst.frc2974.Testbed.controllers;
 
 import java.util.ArrayDeque;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
@@ -13,11 +15,12 @@ public class MotionProfileController{
 	private double kV, kK, kA, kP;
 	private Kinematics currentKinematics = null;
 	private KinematicPose staticKinematicPose;
-	private ArrayDeque<MotionProvider> motions = new ArrayDeque<MotionProvider>();
+	private BlockingDeque<MotionProvider> motions = new LinkedBlockingDeque<MotionProvider>();
 	private PoseProvider poseProvider;
 	private java.util.Timer controller;
 	private double period;
 	private boolean isEnabled;
+	private final int nPoints = 50;
 	
 	private class MPCTask extends TimerTask{
 		
@@ -51,7 +54,7 @@ public class MotionProfileController{
 	}
 	
 	public synchronized void setMotion(MotionProvider motion) {
-		motions.add(motion);
+		motions.addLast(motion);
 	}
 	
 	public synchronized void enable() {
@@ -128,14 +131,14 @@ public class MotionProfileController{
 				kinematicPose = staticKinematicPose;
 			}
 			
-			//System.out.println("time:" + time+ " " + pose.positionWheel + " " + kinematicPose.);
+			System.out.println("time:" + time+ " " + wheelPositions + " " + kinematicPose);
 			synchronized (this) {
 				//feed forward
 				leftPower += (kV * kinematicPose.left.v + kK) + kA * kinematicPose.left.a;
 				rightPower += (kV * kinematicPose.right.v + kK) + kA * kinematicPose.right.a;
 				//feed back		
-				leftPower +=	kP * (kinematicPose.left.l - pose.positionWheel.left);
-				rightPower += kP * (kinematicPose.right.l - pose.positionWheel.right);
+				leftPower += kP * (kinematicPose.left.l - wheelPositions.left);
+				rightPower += kP * (kinematicPose.right.l - wheelPositions.right);
 				
 			}
 			
@@ -145,15 +148,20 @@ public class MotionProfileController{
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 		
 			if(kinematicPose.isFinished) {
-				if (!motions.isEmpty()) {
-					MotionProvider newMotion = motions.pop();
-					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(), currentKinematics.getTime(), 0, 0, nPoints);
+				MotionProvider newMotion = motions.pollFirst();
+				if (newMotion != null) {
+					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(), 
+							                           currentKinematics.getTime(), 0, 0, nPoints);
 				}
 				else {
 					currentKinematics = null;
-					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(), currentKinematics.getWheelPositions(), currentKinematics.getTime());
+					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(), currentKinematics.getWheelPositions(), 
+							                                    currentKinematics.getTime());
 				}
 			}			
 		}
+	}
+	public synchronized boolean isFinished(){
+		return currentKinematics == null;
 	}
 }

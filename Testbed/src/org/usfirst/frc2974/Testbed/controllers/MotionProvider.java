@@ -30,4 +30,12 @@ public abstract class MotionProvider {
 		}
 		return angle;
 	}
+	
+	public Pose getFinalPose(){
+		return evaluatePose(1);
+	}
+	
+	public Pose getInitialPose(){
+		return evaluatePose(0);
+	}
 }
