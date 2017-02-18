@@ -27,8 +27,8 @@ public class Kinematics {
 	  }
 	  
 	  public static KinematicPose staticPose(Pose pose, RobotPair wheelPosition, double t) {
-		  KinematicState left = new KinematicState(wheelPosition.left, v0, 0);
-		  KinematicState right = new KinematicState(wheelPosition.right, v0, 0);
+		  KinematicState left = new KinematicState(wheelPosition.left, 0, 0);
+		  KinematicState right = new KinematicState(wheelPosition.right, 0, 0);
 		  return new KinematicPose(pose, left, right, t, false);
 	  }
 	  
