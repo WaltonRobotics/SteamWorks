@@ -51,7 +51,6 @@ public class MotionPathSpline extends MotionProvider{
 		return result;
 	}
 	
-	@SuppressWarnings("unused")
 	private double[] dBds(double s) {
 		double[] result = new double[4];
 		double r = 1 - s;

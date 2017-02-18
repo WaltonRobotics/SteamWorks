@@ -3,12 +3,14 @@ package org.usfirst.frc2974.Testbed.subsystems;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.Shoot;
 
+import com.ctre.CANTalon;
+
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Shooter extends Subsystem{
 	
-	private com.ctre.talonsrx.CANTalon flywheelMotor;
+	private CANTalon flywheelMotor;
 	private Talon indexer;
 	
 	private final double SPEED = 6000; //rpm
