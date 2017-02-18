@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed.autoncommands;
 
+import org.usfirst.frc2974.Testbed.controllers.Point2D;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -13,6 +14,7 @@ public class AimAuton extends Command {
 	public Pose goal;
 	Pose orientation;
 	public boolean isDashboard;
+	public Point2D X;
 	
     public AimAuton(boolean isDashboard,Pose goal) {
     	this.goal = goal;
@@ -21,11 +23,9 @@ public class AimAuton extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	if(isDashboard){
-    		goal = new Pose(SmartDashboard.getNumber("goalPosLeft", 0),
-    				SmartDashboard.getNumber("goalPosRight", 0),
-    				SmartDashboard.getNumber("goalX", 0),
-    				SmartDashboard.getNumber("goalY", 0),
-    				SmartDashboard.getNumber("goalAngle", 0));
+    		goal = new Pose(new Point2D(SmartDashboard.getNumber("goalX", 0),
+    				                    SmartDashboard.getNumber("goalY", 0)),
+    				            SmartDashboard.getNumber("goalAngle", 0));
     	}
     	
     }
