@@ -1,29 +1,31 @@
 package org.usfirst.frc2974.Robot2017.commands;
 
 import org.usfirst.frc2974.Robot2017.Robot;
+import org.usfirst.frc2974.Robot2017.commands.IntakeCommand.State;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class HopperControl extends Command {
-
-	public HopperControl() {
-		requires(Robot.hopper);
+public class Climb extends Command {
+	public Climb() {
+		// Use requires() here to declare subsystem dependencies
+		requires(Robot.climber);
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
+
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (Robot.hopper.noBallsInLeft() || Robot.oi.hopperControl.get()) {
-			Robot.hopper.setPiston(false);
-		} else {
-			Robot.hopper.setPiston(true);
-		}
+		if (Robot.oi.hold())
+			Robot.climber.hold();
+		else
+			Robot.climber.set(Robot.oi.climbY());
+
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

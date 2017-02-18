@@ -11,31 +11,31 @@ import edu.wpi.first.wpilibj.command.Command;
 public class Index extends Command {
 
 	double initialTime;
-	
-    public Index() {
-    }
 
-    protected void initialize() {
-    	
-    	Robot.shooter.index(true);
-    	
-    	initialTime = Timer.getFPGATimestamp();
-    	
-    }
+	public Index() {
+	}
 
-    protected void execute() {
-    }
+	protected void initialize() {
 
-    protected boolean isFinished() {
-    	return Timer.getFPGATimestamp()-initialTime >= 0.2;
-    }
+		Robot.shooter.index(true);
 
-    protected void end() {
-    	Robot.shooter.index(false);
-    }
+		initialTime = Timer.getFPGATimestamp();
 
-    protected void interrupted() {
-    	end();
-    }
-    
+	}
+
+	protected void execute() {
+	}
+
+	protected boolean isFinished() {
+		return Timer.getFPGATimestamp() - initialTime >= 0.2;
+	}
+
+	protected void end() {
+		Robot.shooter.index(false);
+	}
+
+	protected void interrupted() {
+		end();
+	}
+
 }

@@ -10,23 +10,22 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Intake extends Subsystem {
-	
+
 	public static final double INTAKE_STOP = 0;
 	public static final double INTAKE_IN = 1;
 	public static final double INTAKE_OUT = -1;
-	
+
 	private Talon intakeTalon;
-	
-	public Intake(){
+
+	public Intake() {
 		intakeTalon = RobotMap.intake;
 	}
 
-    public void initDefaultCommand() {
-        setDefaultCommand(new IntakeCommand());
-    }
-    
-    public void setIntake(double intakeSpeed){
-    	intakeTalon.set(intakeSpeed);
-    }
-}
+	public void initDefaultCommand() {
+		setDefaultCommand(new IntakeCommand());
+	}
 
+	public void setIntake(double intakeSpeed) {
+		intakeTalon.set(intakeSpeed);
+	}
+}

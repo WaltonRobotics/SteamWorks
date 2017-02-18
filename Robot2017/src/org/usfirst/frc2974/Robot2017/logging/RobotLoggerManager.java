@@ -60,13 +60,13 @@ public class RobotLoggerManager {
 	 */
 	public static synchronized void closeHandlers() {
 		for (final Handler handler : fileHandlers.values()) {
-			if(handler != null) {
-			handler.flush();
-			handler.close();
+			if (handler != null) {
+				handler.flush();
+				handler.close();
 			}
 		}
-		
-		fileHandlers.clear();		
+
+		fileHandlers.clear();
 	}
 
 	/**
@@ -199,18 +199,17 @@ public class RobotLoggerManager {
 				logger.removeHandler(handler1);
 	}
 
-	public static void setRobotMode(Mode mode)
-	{
+	public static void setRobotMode(Mode mode) {
 		robotMode = mode;
 	}
-	
+
 	private static Mode robotMode = Mode.AUTONOMOUS;
 	private static Level robotLevel = RobotLoggerLevel.COMPETITION;
-	public void setRobotLevel(Level level)
-	{
+
+	public void setRobotLevel(Level level) {
 		robotLevel = level;
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -223,7 +222,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final Logger logger) {
 		return setFileHandlerInstance(robotMode, logger, robotLevel);
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -236,7 +235,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final String logger) {
 		return setFileHandlerInstance(robotMode, Logger.getLogger(logger));
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -249,7 +248,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final Logger logger, Level level) {
 		return setFileHandlerInstance(robotMode, logger, level);
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *
@@ -262,7 +261,7 @@ public class RobotLoggerManager {
 	public static synchronized Logger setFileHandlerInstance(final String logger, Level level) {
 		return setFileHandlerInstance(robotMode, Logger.getLogger(logger), level);
 	}
-	
+
 	/**
 	 * Sets the Logger with the FileHandler that fits its mode.
 	 *

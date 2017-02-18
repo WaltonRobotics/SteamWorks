@@ -21,38 +21,38 @@ public class DriveStraightByEncoder extends Command {
 	public double distance;
 	public double speed;
 	public double acceleration;
-	
-	public DriveStraightByEncoder(boolean isDashboard,double distance, double speed, double acceleration) {
+
+	public DriveStraightByEncoder(boolean isDashboard, double distance, double speed, double acceleration) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
 		this.isDashboard = isDashboard;
 		this.distance = distance;
 		this.speed = speed;
 		this.acceleration = acceleration;
-		
+
 		RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created DriveStraightByEncoder");
 	}
-	
+
 	@Override
-	protected void initialize() {	
-		if(isDashboard){
+	protected void initialize() {
+		if (isDashboard) {
 			distance = SmartDashboard.getNumber("encoderDistance", 0);
 			speed = SmartDashboard.getNumber("encoderSpeed", 0);
 			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
 		}
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
-		
+
 		motion = new MotionPathStraight(distance, speed, acceleration);
-		
+
 		driveTrain.setControllerMotion(motion);
 		System.out.println(motion.toString());
 		System.out.println("Command starts: Controller enabled = " + driveTrain.getControllerStatus());
 	}
 
 	@Override
-	protected void execute() {		
-		if(Timer.getFPGATimestamp() > motion.getFinalTime() + SETTLE_TIME){
+	protected void execute() {
+		if (Timer.getFPGATimestamp() > motion.getFinalTime() + SETTLE_TIME) {
 			driveTrain.cancelMotion();
 			RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").warning("Timed Out - motion stopped");
 
@@ -65,17 +65,17 @@ public class DriveStraightByEncoder extends Command {
 	}
 
 	@Override
-	protected void end() {		
+	protected void end() {
 		System.out.print("Command ends: Controller enabled = " + driveTrain.getControllerStatus());
 	}
 
 	@Override
-	protected void interrupted() {	
+	protected void interrupted() {
 		driveTrain.cancelMotion();
 	}
 
 	@Override
-	public String toString(){
-		return String.format("acceleration = %f,distance = %f,speed = %f",acceleration, distance, speed);
+	public String toString() {
+		return String.format("acceleration = %f,distance = %f,speed = %f", acceleration, distance, speed);
 	}
 }

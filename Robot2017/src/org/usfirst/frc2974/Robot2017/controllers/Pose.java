@@ -5,12 +5,12 @@ public class Pose {
 	public final double x;
 	public final double y;
 	public final double angle;
-	
-	public Pose(double posLeft, double posRight, double x, double y, double angle){
+
+	public Pose(double posLeft, double posRight, double x, double y, double angle) {
 		positionWheel = new RobotPair(posLeft, posRight);
 		this.x = x;
 		this.y = y;
 		this.angle = angle;
-		
+
 	}
 }

@@ -26,12 +26,12 @@ public class TurnTrapazoid extends Command {
 				if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
 					d.state = State.DEC;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to Deceleration because half time was reached");
+							.info("Changing state to Deceleration because half time was reached");
 					return;
 				} else if (Timer.getFPGATimestamp() >= d.t1) {
 					d.state = State.CONST;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing sate to Constant because max speed reached");
+							.info("Changing sate to Constant because max speed reached");
 					return;
 				}
 
@@ -44,8 +44,8 @@ public class TurnTrapazoid extends Command {
 			public void run(TurnTrapazoid d) {
 				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
 					d.state = State.DEC;
-					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to Deceleration beacuse there is a need to start decelerating to reach 0 before end");
+					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands").info(
+							"Changing state to Deceleration beacuse there is a need to start decelerating to reach 0 before end");
 					return;
 				}
 
@@ -55,15 +55,14 @@ public class TurnTrapazoid extends Command {
 		DEC {
 			@Override // Decelerating portion of motion
 			public void run(TurnTrapazoid d) {
-				if(d.duration < Timer.getFPGATimestamp() - d.t0)
-				{
+				if (d.duration < Timer.getFPGATimestamp() - d.t0) {
 					d.state = END;
 					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-					.info("Changing state to End beacuse the robot has reached time limit");
-					
+							.info("Changing state to End beacuse the robot has reached time limit");
+
 					return;
 				}
-				
+
 				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
 				Robot.drivetrain.setSpeeds(d.direction.directionValue * power, -d.direction.directionValue * power);
 			}
@@ -108,7 +107,7 @@ public class TurnTrapazoid extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		if(isDashboard){
+		if (isDashboard) {
 			amax = SmartDashboard.getNumber("amax", 0);
 			duration = SmartDashboard.getNumber("duartion", 0);
 		}
@@ -122,11 +121,13 @@ public class TurnTrapazoid extends Command {
 	protected void execute() {
 		state.run(this);
 	}
-//hello billy
+
+	// hello billy
 	// billy doesn't live here any more :(
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END ;
+		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END
+														// ;
 	}
 
 	// Called once after isFinished returns true
@@ -141,8 +142,9 @@ public class TurnTrapazoid extends Command {
 	protected void interrupted() {
 		end();
 	}
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return String.format("amax = %f, duration = %f", amax, duration);
 	}
 }
