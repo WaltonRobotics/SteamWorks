@@ -21,10 +21,11 @@ public class DriveSplineByEncoder extends Command{
 	public double distance;
 	public double speed;
 	public double acceleration;
+	public double angle;
 	private double finishedTime;
 	private boolean motionFinished;
 	
-	public DriveSplineByEncoder(boolean isDashboard,double distance, double speed, double acceleration) {
+	public DriveSplineByEncoder(boolean isDashboard,double distance, double speed, double acceleration, double angle) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
 		poseEstimator = Robot.poseEstimator;
@@ -32,6 +33,7 @@ public class DriveSplineByEncoder extends Command{
 		this.distance = distance;
 		this.speed = speed;
 		this.acceleration = acceleration;
+		this.angle = angle;
 		
 		//RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created DriveStraightByEncoder");
 	}
@@ -39,15 +41,16 @@ public class DriveSplineByEncoder extends Command{
 	@Override
 	protected void initialize() {	
 		if(isDashboard){
-			distance = SmartDashboard.getNumber("encoderDistance", 1.57);
-			speed = SmartDashboard.getNumber("encoderSpeed", 0.25);
-			acceleration = SmartDashboard.getNumber("encoderAccel", 0.25);
+			distance = SmartDashboard.getNumber("encoderDistance", 0);
+			speed = SmartDashboard.getNumber("encoderSpeed", 0);
+			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
+			angle = SmartDashboard.getNumber("encoderAngle", 0);
 		}
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
 		motionFinished = false;
 		Pose init = poseEstimator.getPose();
-		Pose final_ = new Pose(new Point2D(init.X.x + distance, init.X.y + distance), Math.PI / 2);
+		Pose final_ = new Pose(new Point2D(init.X.x + distance, init.X.y + distance), angle);
 		motion = new MotionPathSpline(init, distance / 2, final_, distance/2, speed, acceleration);
 		
 		driveTrain.addControllerMotion(motion);
