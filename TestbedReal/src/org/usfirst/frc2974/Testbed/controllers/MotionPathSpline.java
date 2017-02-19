@@ -13,7 +13,7 @@ public class MotionPathSpline extends MotionProvider{
 		super(vCruise, aMax);
 		this.controlPoints[0] = initial.X;
 		this.controlPoints[1] = initial.offsetPoint(l0);
-		this.controlPoints[2] = initial.offsetPoint(-l1);
+		this.controlPoints[2] = initial.offsetPoint(l1);
 		this.controlPoints[3] = final_.X;
 		
 		Point2D Xprev = evaluate(B(0));

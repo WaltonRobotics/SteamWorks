@@ -1,6 +1,6 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
-public abstract class MotionProvider {
+public abstract class MotionProvider{
 	public enum LimitMode {
 		LimitLinearAcceleration, LimitRotationalAcceleration
 	}
@@ -38,4 +38,5 @@ public abstract class MotionProvider {
 	public Pose getInitialPose(){
 		return evaluatePose(0);
 	}
+	
 }
