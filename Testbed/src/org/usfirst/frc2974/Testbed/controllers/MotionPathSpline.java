@@ -6,10 +6,10 @@ public class MotionPathSpline extends MotionProvider{
 	
 	private Point2D[] controlPoints = new Point2D[4];
 	private double length;
-	private double angle_init;
-	private double angle_fin;
+	private double angle0;
+	private double angle1;
 	
-	public MotionPathSpline(double vCruise, double aMax, Pose initial, double l0, Pose final_, double l1) {
+	public MotionPathSpline(Pose initial, double l0, Pose final_, double l1, double vCruise, double aMax) {
 		super(vCruise, aMax);
 		this.controlPoints[0] = initial.X;
 		this.controlPoints[1] = initial.offsetPoint(l0);
@@ -19,15 +19,15 @@ public class MotionPathSpline extends MotionProvider{
 		Point2D Xprev = evaluate(B(0));
 		double length = 0;
 		for(int i=1; i<=100; i++){
-			double s = i/100;
+			double s = (double)i/100.0;
 			Point2D Xnext = evaluate(B(s));
 			length += Xprev.distance(Xnext);
 			Xprev = Xnext;
 		}
 		
 		this.length = length;
-		this.angle_init = initial.angle;
-		this.angle_fin = final_.angle;
+		this.angle0 = initial.angle;
+		this.angle1 = final_.angle;
 	}
 
 
@@ -36,9 +36,7 @@ public class MotionPathSpline extends MotionProvider{
 		Point2D X = evaluate(B(s));
 		Point2D dXds = evaluate(dBds(s));	
 		double theta = Math.atan2(dXds.y, dXds.x);
-		return new Pose(X, theta); //Find the values for v and a and position
-	
-		
+		return new Pose(X, theta); //Find the values for v and a and position	
 	}
 	
 	private double[] B(double s){
@@ -82,14 +80,12 @@ public class MotionPathSpline extends MotionProvider{
 
 	@Override
 	public double getInitialTheta() {
-		// TODO Auto-generated method stub
-		return angle_init;
+		return angle0;
 	}
 
 	@Override
 	public double getFinalTheta() {
-		// TODO Auto-generated method stub
-		return angle_fin;
+		return angle1;
 	}
 	
 	

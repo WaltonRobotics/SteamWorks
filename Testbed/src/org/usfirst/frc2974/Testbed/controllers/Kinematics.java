@@ -17,13 +17,13 @@ public class Kinematics {
 	  
 	  public Kinematics(MotionProvider motion, RobotPair wheelPosition, double t, double v0, double v1, int nPoints) {
 		  this.motion = motion;
-		  this.s = 0;
+		  this.s = 0.0;
 		  this.v0 = v0;
 		  this.v1 = v1;
 		  this.nPoints = nPoints;
 		  
 		  evaluateFirstPose(wheelPosition, t);
-		  evaluateNextPose(1 / nPoints);
+		  evaluateNextPose(1.0 / nPoints);
 	  }
 	  
 	  public static KinematicPose staticPose(Pose pose, RobotPair wheelPosition, double t) {
@@ -33,20 +33,33 @@ public class Kinematics {
 	  }
 	  
 	  private void evaluateFirstPose(RobotPair wheelPosition, double t) {
+		  System.out.println("evaluating first pose");
 		  Pose pose = motion.evaluatePose(0);
 		  KinematicState left = new KinematicState(wheelPosition.left, v0, 0);
 		  KinematicState right = new KinematicState(wheelPosition.right, v0, 0);
 		  
-		  lastPose = nextPose = new KinematicPose(pose, left, right, t, true);
+		  lastPose = nextPose = new KinematicPose(pose, left, right, t, false);
+//		  System.out.println(lastPose.toString());
+	  }
+	  private void evaluateLastPose(){
+		  System.out.println("evaluating last pose");
+		  Pose pose = motion.evaluatePose(1.0);
+		  KinematicState left = new KinematicState(lastPose.left.l, v1, 0);
+		  KinematicState right = new KinematicState(lastPose.right.l, v1, 0);
+		  
+		  lastPose = nextPose = new KinematicPose(pose, left, right, Double.POSITIVE_INFINITY, true);
+//		  System.out.println(lastPose.toString());
 	  }
 	  
 	  private void evaluateNextPose(double ds) {
 		  lastPose = nextPose;
 		  
 		  if (lastPose.isFinished) {
+			  evaluateLastPose();
 			  return;
 		  }
-		  
+		  System.out.println("evaluating next pose");
+
 		  boolean isFinished = false;
 		  if(s + ds > 1.0) {
 			  s = 1.0;
@@ -69,8 +82,8 @@ public class Kinematics {
 		  
 		  //assuming one of the wheels will limit motion, calculate time this step will take
 		  double dt = Math.max(dlLeft, dlRight) / motion.vCruise;
-		  double a = 0; //acceleration doesn't matter if following steady motion
-		  
+		  double a = 0.0; //acceleration doesn't matter if following steady motion
+		  System.out.println(String.format("s=%f, dlLeft=%f, dlRight=%f, dt=%f", s, dlLeft, dlRight, dt));
 		  //bound time steps for initial/final acceleration
 		  switch(motion.getLimitMode()) {
 		  case LimitLinearAcceleration:
@@ -95,12 +108,14 @@ public class Kinematics {
 			  double omega = Math.abs(dlRight - dlLeft) / dt / robotWidth;
 			  double thetaMidpoint = lastPose.angle + .5 * dAngle;
 			  
-			  double omegaAccel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getFinalTheta())));
+			  double omegaAccel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getInitialTheta())));
+			  System.out.println("OmegaAccel=" + omegaAccel);
 			  if(omegaAccel < omega) {
 				  dt = Math.abs(dlRight - dlLeft) / omegaAccel / robotWidth;
 			  }
 			  
 			  double omegaDecel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getFinalTheta())));
+			  System.out.println("OmegaDecel=" + omegaDecel);
 			  if(omegaDecel < omega) {
 				  dt = Math.abs(dlRight - dlLeft) / omegaDecel / robotWidth;
 			  }
@@ -108,10 +123,11 @@ public class Kinematics {
 		  }
 		  
 		  //create new kinematic state. Old state is retained to interpolate positions, new state contains estimate for speed and accel
-		  KinematicState left = new KinematicState(lastPose.left.l + dlLeft, dlLeft / dt, a * dlLeft / dl);
-		  KinematicState right = new KinematicState(lastPose.right.l + dlRight, dlRight / dt, a * dlRight / dl);
+		  KinematicState left = new KinematicState(lastPose.left.l + dlLeft, dlLeft / dt, a);
+		  KinematicState right = new KinematicState(lastPose.right.l + dlRight, dlRight / dt, a);
 		  
-		  nextPose = new KinematicPose(pose, left, right, 0, isFinished);
+		  nextPose = new KinematicPose(pose, left, right, lastPose.t + dt, isFinished);
+//		  System.out.println(nextPose.toString());
 	  }
 
 	  //calculates the path to follow within a particular distance
@@ -120,8 +136,8 @@ public class Kinematics {
 			  return lastPose;
 		  }
 		  
-		  while(t > nextPose.t && !nextPose.isFinished) {
-			  evaluateNextPose(1 / nPoints);
+		  while(t > nextPose.t) {
+			  evaluateNextPose(1.0 / nPoints);
 		  }
 		  
 		  if(lastPose.isFinished) {

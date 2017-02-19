@@ -1,7 +1,9 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
 public class Motion{
-	
+	// kK = 0.1
+	// kV = 0.4
+
 	public final RobotPair position;
 	public final RobotPair velocity;
 	public final RobotPair accel;

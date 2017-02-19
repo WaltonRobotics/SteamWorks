@@ -22,7 +22,7 @@ public class Shooter extends Subsystem{
 
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new Shoot());
+		//setDefaultCommand(new Shoot());
 	}
 	
 	public void enable() {

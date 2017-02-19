@@ -15,7 +15,7 @@ public class Hopper extends Subsystem {
     DigitalOutput piston;
 
     public void initDefaultCommand() {
-    	setDefaultCommand(new HopperControl());
+    	//setDefaultCommand(new HopperControl());
     }
     
     public boolean noBallsInLeft() {

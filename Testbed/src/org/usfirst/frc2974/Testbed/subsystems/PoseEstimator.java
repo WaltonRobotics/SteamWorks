@@ -32,10 +32,12 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 			angle = 0;
 			encoderLeft.setDistancePerPulse(0.0003979673);
 			encoderRight.setDistancePerPulse(-0.0003979673);
+			reset();
+			wheelPositions =  new RobotPair(encoderLeft.getDistance(), encoderRight.getDistance());
+
 		}
-		
-		reset();
-		RobotLoggerManager.setFileHandlerInstance("robot.subsystems").info("PoseEstimator is created.");
+	
+		//RobotLoggerManager.setFileHandlerInstance("robot.subsystems").info("PoseEstimator is created.");
 	}
 	
 	public synchronized void updatePose() {
