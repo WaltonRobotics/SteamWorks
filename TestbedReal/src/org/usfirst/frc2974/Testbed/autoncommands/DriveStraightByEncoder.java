@@ -51,13 +51,8 @@ public class DriveStraightByEncoder extends Command {
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
 		motionFinished = false;
-		//motion = new MotionPathStraight(poseEstimator.getPose(), distance, speed, acceleration);
-		// Pose pose0, double dAngle, double vCruise, double rotAccelMax
-		//motion = new MotionPathTurn(poseEstimator.getPose(), distance - distance/3, speed, acceleration);
-		//Pose initial, double l0 (length of the x value), Pose final_, double l1(length of y value), double vCruise, double aMax
-		Pose init = poseEstimator.getPose();
-		Pose final_ = new Pose(new Point2D(init.X.x + distance, init.X.y + distance), Math.PI / 2);
-		motion = new MotionPathSpline(init, distance / 2, final_, distance/2, speed, acceleration);
+		motion = new MotionPathStraight(poseEstimator.getPose(), distance, speed, acceleration);
+
 		driveTrain.addControllerMotion(motion);
 		System.out.println(motion.toString());
 		System.out.println("Command starts: Controller enabled = " + driveTrain.getControllerStatus());

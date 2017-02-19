@@ -72,13 +72,13 @@ public class Kinematics {
 		  //calculate the next pose from given motion
 		  Pose pose = motion.evaluatePose(s);
 		  
-		  //estimate angle to turn 
+		  //estimate angle to turn s
 		  double dl = lastPose.X.distance(pose.X);
 		  double dAngle = MotionProvider.boundAngle(pose.angle - lastPose.angle);
 		  
 		  //estimate lengths each wheel will turn
-		  double dlLeft = Math.abs(dl - dAngle * robotWidth / 2);
-		  double dlRight = Math.abs(dl + dAngle * robotWidth / 2);
+		  double dlLeft = (dl - dAngle * robotWidth / 2);
+		  double dlRight = (dl + dAngle * robotWidth / 2);
 		  
 		  //assuming one of the wheels will limit motion, calculate time this step will take
 		  double dt = Math.max(dlLeft, dlRight) / motion.vCruise;

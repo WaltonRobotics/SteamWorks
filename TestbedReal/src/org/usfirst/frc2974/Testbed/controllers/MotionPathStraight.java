@@ -12,8 +12,6 @@ public class MotionPathStraight extends MotionProvider{
 			this.pose1 = new Pose(pose0.offsetPoint(distance), pose0.angle);
 			this.length = distance;
 		}
-		
-
 	}
 
 	@Override

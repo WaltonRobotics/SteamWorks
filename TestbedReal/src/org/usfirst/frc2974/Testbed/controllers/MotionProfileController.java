@@ -155,7 +155,8 @@ public class MotionProfileController{
 					kinematicPose.right.l - wheelPositions.right));
 		
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
-		
+			System.out.println("starting motion");
+
 			if(kinematicPose.isFinished) {
 				MotionProvider newMotion = motions.pollFirst();
 				if (newMotion != null) {
