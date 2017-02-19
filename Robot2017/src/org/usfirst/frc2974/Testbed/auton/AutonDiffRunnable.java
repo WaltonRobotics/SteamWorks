@@ -31,20 +31,20 @@ public class AutonDiffRunnable extends CommandGroup {
 		switch (position) {
 
 		case CENTER:
-			addSequential(new DriveStraightTrapezoid(false, 0.7, 1.1, DriveStraightTrapezoid.Direction.FORWARD));
-			addSequential(new DriveDiffTrapezoid(false, 0.5, 0.9, 0.2, DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
-			addSequential(new DriveStraightTrapezoid(false, 0.7, 1.3, DriveStraightTrapezoid.Direction.FORWARD));// check
+			addSequential(new DriveStraightTrapezoid(false, 0.7, 1.1, DriveStraightTrapezoid.Direction.ANTIFORWARD));
+			addSequential(new DriveDiffTrapezoid(false, 0.5, 0.9, 0.2, DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
+			addSequential(new DriveStraightTrapezoid(false, 0.7, 1.3, DriveStraightTrapezoid.Direction.ANTIFORWARD));// check
 			break;
 
 		case LEFT:
-			directionAuton(DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE,
-					DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK,
-					new DriveStraightTrapezoid(false, 0.7, 1.2, DriveStraightTrapezoid.Direction.FORWARD));
+			directionAuton(DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK,
+					DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE,
+					new DriveStraightTrapezoid(false, 0.7, 1.2, DriveStraightTrapezoid.Direction.ANTIFORWARD));
 			break;
 
 		case RIGHT:
-			directionAuton(DriveDiffTrapezoid.DiffDirection.CLOCKWISE, DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK,
-					new DriveDiffTrapezoid(false, 0.7, 1.8, 0.65, DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
+			directionAuton(DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK, DriveDiffTrapezoid.DiffDirection.CLOCKWISE,
+					new DriveDiffTrapezoid(false, 0.7, 1.8, 0.65, DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
 			break;
 		}
 		if (doesShoot) {

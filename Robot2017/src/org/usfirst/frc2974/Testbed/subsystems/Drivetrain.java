@@ -34,8 +34,8 @@ public class Drivetrain extends Subsystem {
 	private MotionProfileController controller;
 
 	public synchronized void setSpeeds(double leftSpeed, double rightSpeed) {
-		right.set(-rightSpeed);
-		left.set(leftSpeed);
+		right.set(rightSpeed);
+		left.set(-leftSpeed);
 	}
 
 	public synchronized double getSpeeds() {

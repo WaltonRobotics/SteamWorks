@@ -22,9 +22,9 @@ public class HopperControl extends Command {
 	protected void execute() {
 		//if (Robot.hopper.noBallsInLeft() || Robot.oi.hopperControl.get()) {
 		if (Robot.oi.hopperControl.get()) {
-			Robot.hopper.setPiston(false);
-		} else {
 			Robot.hopper.setPiston(true);
+		} else {
+			Robot.hopper.setPiston(false);
 		}
 		//SmartDashboard.putBoolean("areBallsLeftInLeftAccordingToLaser", Robot.hopper.noBallsInLeft());
 	}

@@ -8,35 +8,44 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends Subsystem {
 
 	private CANTalon flywheelMotor;
 	private Talon indexer;
+	boolean enabled = false;
 
-	public static final double SPEED = -6000; // rpm
+	public static final double fSPEED = -3000; // rpm
 	public static final double ACCEPTED_ERROR = 200;
 
 	public Shooter() {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
+		SmartDashboard.putNumber("ShootSpeed", fSPEED);
 	}
-
+	
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new Shoot());
 	}
 
 	public void enable() {
-		flywheelMotor.set(rpmToEncoder(SPEED));
+		flywheelMotor.set(rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", 0)));
+		enabled = true;
 	}
 
 	public void disable() {
 		flywheelMotor.set(0);
+		enabled = false;
+	}
+	
+	public boolean enabled(){
+		return enabled;
 	}
 
 	public boolean isAtSpeed() {
-		return Math.abs(getSpeed() - SPEED) < ACCEPTED_ERROR;
+		return Math.abs(getSpeed() - SmartDashboard.getNumber("ShootSpeed", 0)) < ACCEPTED_ERROR;
 	}
 	
 	public double getSpeed(){

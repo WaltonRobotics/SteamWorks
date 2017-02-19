@@ -1,10 +1,12 @@
 package org.usfirst.frc2974.Testbed.autoncommands;
 
+import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -25,9 +27,8 @@ public class AutonShoot extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.flywheelMotor.set(Shooter.SPEED);
-    	if((60 * 102.4 * RobotMap.flywheelMotor.getSpeed()) >= Shooter.SPEEDMIN && 
-    			(60 * 102.4 * RobotMap.flywheelMotor.getSpeed()) <= Shooter.SPEEDMAX) { //reference Shooter for math notes
+    	RobotMap.flywheelMotor.set(Robot.shooter.rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", Shooter.fSPEED)));
+    	if(Math.abs(Robot.shooter.getSpeed() - SmartDashboard.getNumber("ShootSpeed", Shooter.fSPEED)) < Shooter.ACCEPTED_ERROR) { //reference Shooter for math notes
     		RobotMap.indexer.set(0.5);
     	}
     }
