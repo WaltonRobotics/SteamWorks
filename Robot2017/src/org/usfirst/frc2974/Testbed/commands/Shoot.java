@@ -93,12 +93,12 @@ public class Shoot extends Command {
 		state.run(this);
 		if(Robot.oi.right.getRawButton(5)){
 			if(!pressed){
-				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)+20);
+				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-20);
 				pressed = true;
 			}
 		}else if(Robot.oi.right.getRawButton(4)){
 			if(!pressed){
-				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-20);
+				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)+20);
 				pressed = true;
 			}
 		}else{
