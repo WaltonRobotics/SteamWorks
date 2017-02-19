@@ -109,13 +109,13 @@ public class Kinematics {
 			  double thetaMidpoint = lastPose.angle + .5 * dAngle;
 			  
 			  double omegaAccel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getInitialTheta())));
-			  System.out.println("OmegaAccel=" + omegaAccel);
+		//	  System.out.println("OmegaAccel=" + omegaAccel);
 			  if(omegaAccel < omega) {
 				  dt = Math.abs(dlRight - dlLeft) / omegaAccel / robotWidth;
 			  }
 			  
 			  double omegaDecel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getFinalTheta())));
-			  System.out.println("OmegaDecel=" + omegaDecel);
+		//	  System.out.println("OmegaDecel=" + omegaDecel);
 			  if(omegaDecel < omega) {
 				  dt = Math.abs(dlRight - dlLeft) / omegaDecel / robotWidth;
 			  }

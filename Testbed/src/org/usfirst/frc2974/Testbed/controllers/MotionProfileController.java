@@ -150,9 +150,9 @@ public class MotionProfileController{
 			leftPower = Math.max(-1, Math.min(1, leftPower));
 			rightPower = Math.max(-1, Math.min(1, rightPower));
 			
-			System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f", leftPower,rightPower, 
-					kinematicPose.left.l - wheelPositions.left,
-					kinematicPose.right.l - wheelPositions.right));
+		//	System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f", leftPower,rightPower, 
+		//			kinematicPose.left.l - wheelPositions.left,
+		//			kinematicPose.right.l - wheelPositions.right));
 		
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 		
