@@ -25,7 +25,7 @@ public class DriveTurnByEncoder extends Command{
 	private double finishedTime;
 	private boolean motionFinished;
 	
-	public DriveTurnByEncoder(boolean isDashboard,double distance, double speed, double acceleration) {
+	public DriveTurnByEncoder(boolean isDashboard,double angle, double speed, double acceleration) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
 		poseEstimator = Robot.poseEstimator;
