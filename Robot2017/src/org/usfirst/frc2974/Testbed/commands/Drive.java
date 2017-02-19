@@ -62,8 +62,13 @@ public class Drive extends Command {
 		if (SmartDashboard.getBoolean("Tank", true)) {
 			Robot.drivetrain.setSpeeds(-getLeftThrottle(), -getRightThrottle());
 		} else {
-			double throttle = (getLeftThrottle() + 1) / 2;
-			double forward = getRightThrottle();
+			double throttle;
+			if(getLeftThrottle() >=0.1){
+				throttle=0;
+			}else{
+				throttle = -getLeftThrottle();
+			}
+			double forward = -getRightThrottle();
 			double turn = Robot.oi.right.getX();
 
 			Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));

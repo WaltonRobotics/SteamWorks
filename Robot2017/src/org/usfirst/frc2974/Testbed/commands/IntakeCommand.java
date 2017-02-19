@@ -3,6 +3,7 @@ package org.usfirst.frc2974.Testbed.commands;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.subsystems.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -10,7 +11,8 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class IntakeCommand extends Command {
 	private State state;
-
+	private State saveState;
+	public double dumpStart;
 	public enum State {
 		IntakeStop {
 			@Override
@@ -19,6 +21,10 @@ public class IntakeCommand extends Command {
 					intakeCommand.state = IntakeIn;
 				} else if (Robot.oi.outtake.get()) {
 					intakeCommand.state = IntakeOut;
+				} else if (Robot.oi.dumptake.get()){
+					intakeCommand.dumpStart = Timer.getFPGATimestamp();
+					intakeCommand.saveState = intakeCommand.state;
+					intakeCommand.state = IntakeDump;
 				}
 				Robot.intake.setIntake(Intake.INTAKE_STOP);
 			}
@@ -30,6 +36,10 @@ public class IntakeCommand extends Command {
 					intakeCommand.state = IntakeOut;
 				} else if (Robot.oi.stoptake.get()) {
 					intakeCommand.state = IntakeStop;
+				}else if (Robot.oi.dumptake.get()){
+					intakeCommand.dumpStart = Timer.getFPGATimestamp();
+					intakeCommand.saveState = intakeCommand.state;
+					intakeCommand.state = IntakeDump;
 				}
 				Robot.intake.setIntake(Intake.INTAKE_IN);
 			}
@@ -41,8 +51,21 @@ public class IntakeCommand extends Command {
 					intakeCommand.state = IntakeIn;
 				} else if (Robot.oi.stoptake.get()) {
 					intakeCommand.state = IntakeStop;
+				}else if (Robot.oi.dumptake.get()){
+					intakeCommand.dumpStart = Timer.getFPGATimestamp();
+					intakeCommand.saveState = intakeCommand.state;
+					intakeCommand.state = IntakeDump;
 				}
 				Robot.intake.setIntake(Intake.INTAKE_OUT);
+			}
+		},
+		IntakeDump {
+			@Override
+			public void run(IntakeCommand intakeCommand){
+				Robot.intake.setIntake(Intake.INTAKE_OUT);
+				if(Timer.getFPGATimestamp()-intakeCommand.dumpStart>0.25){
+					intakeCommand.state = intakeCommand.saveState;
+				}
 			}
 		};
 

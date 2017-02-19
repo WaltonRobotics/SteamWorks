@@ -66,8 +66,10 @@ public class OI {
 	public Button intake;
 	public Button outtake;
 	public Button stoptake;
+	public Button dumptake;
 
 	public Button hopperControl;
+	public Button hopperAltControl;
 	public Button aimOverride;
 	public Button atSpeed;
 
@@ -88,8 +90,10 @@ public class OI {
 		intake = new JoystickButton(gamepad, 1);
 		outtake = new JoystickButton(gamepad, 3);
 		stoptake = new JoystickButton(gamepad, 2);
+		dumptake = new JoystickButton(gamepad,4);
 
-		hopperControl = new JoystickButton(right, 11);
+		hopperControl = new JoystickButton(right, 1);
+		hopperAltControl = new JoystickButton(gamepad,6);
 
 		aimOverride = new JoystickButton(right, 7);
 		atSpeed = new JoystickButton(right, 6);
