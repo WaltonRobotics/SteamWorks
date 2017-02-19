@@ -17,4 +17,8 @@ public class Pose {
 		return new Pose(Point2D.interpolate(pose0.X, p, pose1.X, q), p*pose0.angle + q*pose1.angle);
 	}
 	
+	public String toString(){
+		return String.format("x=%f, y=%f, angle=%f", X.x, X.y, angle);
+	}
+	
 }

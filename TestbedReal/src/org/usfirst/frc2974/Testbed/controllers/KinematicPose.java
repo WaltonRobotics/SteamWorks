@@ -28,4 +28,8 @@ public class KinematicPose extends Pose{
 		KinematicState right = KinematicState.interpolate(pose0.right, p, pose1.right, q);
 		return new KinematicPose(pose, left, right, p * pose0.t + q * pose1.t, false);
 	}
+	
+	public String toString(){
+		return String.format("%s, left:%s, right:%s, t=%f, isFinished=%s", super.toString(), left, right, t, isFinished);
+	}
 }

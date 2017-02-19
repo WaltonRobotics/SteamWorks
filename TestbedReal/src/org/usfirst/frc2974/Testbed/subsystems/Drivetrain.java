@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends Subsystem {
 	
-	private final double PERIOD = .01;
+	private final double PERIOD = .005;
 	public final double DEFAULTKV = 0;
 	public final double DEFAULTKK = 0;
 	public final double DEFAULTKA = 0;
@@ -59,9 +59,17 @@ public class Drivetrain extends Subsystem {
  		controller.cancel();
  	}
  	
+ 	public void startMotion(){
+ 		controller.enable();
+ 	}
  	
- 	public void setControllerMotion(MotionProvider motion){
- 		controller.setMotion(motion);
+ 	
+ 	public void addControllerMotion(MotionProvider motion){
+ 		controller.addMotion(motion);
+ 	}
+ 	
+ 	public boolean isControllerFinished(){
+ 		return controller.isFinished();
  	}
  	
  	

@@ -1,17 +1,15 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
-import com.stanistreet.Point2D;
-import com.stanistreet.Pose;
 
 public class MotionPathSpline extends MotionProvider{
 	Motion goal;
 	
 	private Point2D[] controlPoints = new Point2D[4];
 	private double length;
-	private double angle_init;
-	private double angle_fin;
+	private double angle0;
+	private double angle1;
 	
-	public MotionPathSpline(double vCruise, double aMax, Pose initial, double l0, Pose final_, double l1) {
+	public MotionPathSpline(Pose initial, double l0, Pose final_, double l1, double vCruise, double aMax) {
 		super(vCruise, aMax);
 		this.controlPoints[0] = initial.X;
 		this.controlPoints[1] = initial.offsetPoint(l0);
@@ -21,15 +19,15 @@ public class MotionPathSpline extends MotionProvider{
 		Point2D Xprev = evaluate(B(0));
 		double length = 0;
 		for(int i=1; i<=100; i++){
-			double s = i/100;
+			double s = (double)i/100.0;
 			Point2D Xnext = evaluate(B(s));
-			length += Xprev.distance(Xprev, Xnext);
+			length += Xprev.distance(Xnext);
 			Xprev = Xnext;
 		}
 		
 		this.length = length;
-		this.angle_init = initial.angle;
-		this.angle_fin = final_.angle;
+		this.angle0 = initial.angle;
+		this.angle1 = final_.angle;
 	}
 
 
@@ -38,9 +36,7 @@ public class MotionPathSpline extends MotionProvider{
 		Point2D X = evaluate(B(s));
 		Point2D dXds = evaluate(dBds(s));	
 		double theta = Math.atan2(dXds.y, dXds.x);
-		return new Pose(0.0, 0.0, 0.0, 0.0, theta, X); //Find the values for v and a and position
-	
-		
+		return new Pose(X, theta); //Find the values for v and a and position	
 	}
 	
 	private double[] B(double s){
@@ -53,7 +49,6 @@ public class MotionPathSpline extends MotionProvider{
 		return result;
 	}
 	
-	@SuppressWarnings("unused")
 	private double[] dBds(double s) {
 		double[] result = new double[4];
 		double r = 1 - s;
@@ -80,19 +75,17 @@ public class MotionPathSpline extends MotionProvider{
 
 	@Override
 	public double getLength() {
-		return 0;
+		return length;
 	}
 
 	@Override
 	public double getInitialTheta() {
-		// TODO Auto-generated method stub
-		return 0;
+		return angle0;
 	}
 
 	@Override
 	public double getFinalTheta() {
-		// TODO Auto-generated method stub
-		return 0;
+		return angle1;
 	}
 	
 	

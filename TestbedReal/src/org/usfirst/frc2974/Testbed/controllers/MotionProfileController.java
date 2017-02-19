@@ -2,6 +2,8 @@ package org.usfirst.frc2974.Testbed.controllers;
 
 import java.util.ArrayDeque;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
@@ -9,15 +11,19 @@ import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 import edu.wpi.first.wpilibj.Timer;
 
 public class MotionProfileController{
-	
+	//kV = 0.4
+	//kK = 0
+	//KA = 0.1
+	//kP = 20
 	private double kV, kK, kA, kP;
 	private Kinematics currentKinematics = null;
 	private KinematicPose staticKinematicPose;
-	private ArrayDeque<MotionProvider> motions = new ArrayDeque<MotionProvider>();
+	private BlockingDeque<MotionProvider> motions = new LinkedBlockingDeque<MotionProvider>();
 	private PoseProvider poseProvider;
 	private java.util.Timer controller;
 	private double period;
 	private boolean isEnabled;
+	private final int nPoints = 50;
 	
 	private class MPCTask extends TimerTask{
 		
@@ -47,16 +53,18 @@ public class MotionProfileController{
 	
 	public void free() {
 		controller.cancel();
-		RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is destroyed.");
+		//RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask is destroyed.");
 	}
 	
-	public synchronized void setMotion(MotionProvider motion) {
-		motions.add(motion);
+	public synchronized void addMotion(MotionProvider motion) {
+		motions.addLast(motion);
+		System.out.println("added motion" + motion.toString());
 	}
 	
 	public synchronized void enable() {
-		if (!motions.isEmpty()) {
-			MotionProvider newMotion = motions.pop();
+		System.out.println(String.format("kK=%f, kV=%f, kA=%f, kP=%f", kK, kV, kA, kP));
+		MotionProvider newMotion = motions.poll();
+		if (newMotion != null) {
 			currentKinematics = new Kinematics(newMotion, poseProvider.getWheelPositions(), Timer.getFPGATimestamp(), 0, 0, nPoints);
 			isEnabled = true;
 		}
@@ -128,32 +136,41 @@ public class MotionProfileController{
 				kinematicPose = staticKinematicPose;
 			}
 			
-			//System.out.println("time:" + time+ " " + pose.positionWheel + " " + kinematicPose.);
+			//System.out.println("time:" + time+ " " + wheelPositions + " " + kinematicPose);
 			synchronized (this) {
 				//feed forward
 				leftPower += (kV * kinematicPose.left.v + kK) + kA * kinematicPose.left.a;
 				rightPower += (kV * kinematicPose.right.v + kK) + kA * kinematicPose.right.a;
 				//feed back		
-				leftPower +=	kP * (kinematicPose.left.l - pose.positionWheel.left);
-				rightPower += kP * (kinematicPose.right.l - pose.positionWheel.right);
+				leftPower += kP * (kinematicPose.left.l - wheelPositions.left);
+				rightPower += kP * (kinematicPose.right.l - wheelPositions.right);
 				
 			}
 			
 			leftPower = Math.max(-1, Math.min(1, leftPower));
 			rightPower = Math.max(-1, Math.min(1, rightPower));
-		//	System.out.println(String.format("LP=%f,RP=%f", leftPower,rightPower));
+			
+		//	System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f", leftPower,rightPower, 
+		//			kinematicPose.left.l - wheelPositions.left,
+		//			kinematicPose.right.l - wheelPositions.right));
+		
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 		
 			if(kinematicPose.isFinished) {
-				if (!motions.isEmpty()) {
-					MotionProvider newMotion = motions.pop();
-					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(), currentKinematics.getTime(), 0, 0, nPoints);
+				MotionProvider newMotion = motions.pollFirst();
+				if (newMotion != null) {
+					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(), 
+							                           currentKinematics.getTime(), 0, 0, nPoints);
 				}
 				else {
+					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(), currentKinematics.getWheelPositions(), 
+							                                    currentKinematics.getTime());
 					currentKinematics = null;
-					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(), currentKinematics.getWheelPositions(), currentKinematics.getTime());
 				}
 			}			
 		}
+	}
+	public synchronized boolean isFinished(){
+		return currentKinematics == null;
 	}
 }
