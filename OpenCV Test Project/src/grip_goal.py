@@ -13,14 +13,14 @@ class GripPipeline:
         """
 
         self.__blur_type = BlurType.Box_Blur
-        self.__blur_radius = 2.7027027027027044
+        self.__blur_radius = 5.405405405405405
 
         self.blur_output = None
 
         self.__hsl_threshold_input = self.blur_output
-        self.__hsl_threshold_hue = [61.510791366906474, 83.24232081911263]
-        self.__hsl_threshold_saturation = [82.55395683453237, 255.0]
-        self.__hsl_threshold_luminance = [16.052158273381295, 70.05972696245733]
+        self.__hsl_threshold_hue = [67.98561151079136, 97.06484641638225]
+        self.__hsl_threshold_saturation = [123.83093525179855, 255.0]
+        self.__hsl_threshold_luminance = [9.172661870503596, 59.180887372013665]
 
         self.hsl_threshold_output = None
 
@@ -31,16 +31,16 @@ class GripPipeline:
 
         self.__filter_contours_contours = self.find_contours_output
         self.__filter_contours_min_area = 32.0
-        self.__filter_contours_min_perimeter = 45.0
-        self.__filter_contours_min_width = 7.0
+        self.__filter_contours_min_perimeter = 0.0
+        self.__filter_contours_min_width = 0
         self.__filter_contours_max_width = 1000
-        self.__filter_contours_min_height = 14.0
+        self.__filter_contours_min_height = 0
         self.__filter_contours_max_height = 1000
-        self.__filter_contours_solidity = [70.14388489208633, 100]
-        self.__filter_contours_max_vertices = 130.0
-        self.__filter_contours_min_vertices = 4.0
-        self.__filter_contours_min_ratio = 0.22
-        self.__filter_contours_max_ratio = 1.15
+        self.__filter_contours_solidity = [77.33812949640287, 100]
+        self.__filter_contours_max_vertices = 1000000
+        self.__filter_contours_min_vertices = 0
+        self.__filter_contours_min_ratio = 0.6
+        self.__filter_contours_max_ratio = 3.7
 
         self.filter_contours_output = None
 
