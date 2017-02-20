@@ -19,7 +19,7 @@ public class DriveTurnByEncoder extends Command{
 	private PoseEstimator poseEstimator;
 	private MotionProvider motion;
 	private boolean isDashboard;
-	public double distance;
+	public double angle;
 	public double speed;
 	public double acceleration;
 	private double finishedTime;
@@ -30,7 +30,7 @@ public class DriveTurnByEncoder extends Command{
 		driveTrain = Robot.drivetrain;
 		poseEstimator = Robot.poseEstimator;
 		this.isDashboard = isDashboard;
-		this.distance = distance;
+		this.angle = angle;
 		this.speed = speed;
 		this.acceleration = acceleration;
 		
@@ -40,14 +40,14 @@ public class DriveTurnByEncoder extends Command{
 	@Override
 	protected void initialize() {	
 		if(isDashboard){
-			distance = SmartDashboard.getNumber("encoderDistance", 1.57);
-			speed = SmartDashboard.getNumber("encoderSpeed", 0.25);
-			acceleration = SmartDashboard.getNumber("encoderAccel", 0.25);
+			angle = SmartDashboard.getNumber("encoderAngle", 0);
+			speed = SmartDashboard.getNumber("encoderSpeed", 0);
+			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
 		}
 
-		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
+		System.out.println(String.format("Angle=%f, Speed=%f, Accel=%f", angle, speed, acceleration));
 		motionFinished = false;
-		motion = new MotionPathTurn(poseEstimator.getPose(), distance - distance/3, speed, acceleration);
+		motion = new MotionPathTurn(poseEstimator.getPose(), angle - angle/3, speed, acceleration);
 
 		driveTrain.addControllerMotion(motion);
 		System.out.println(motion.toString());
@@ -81,6 +81,6 @@ public class DriveTurnByEncoder extends Command{
 
 	@Override
 	public String toString(){
-		return String.format("acceleration = %f,distance = %f,speed = %f",acceleration, distance, speed);
+		return String.format("acceleration = %f,distance = %f,speed = %f",acceleration, angle, speed);
 	}
 }
