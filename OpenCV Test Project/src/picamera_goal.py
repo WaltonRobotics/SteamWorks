@@ -122,6 +122,7 @@ with picamera.PiCamera() as camera:
                 sd.putNumber("Center point X", cX)
                 sd.putNumber("Center point Y", cY)
                 sd.putNumber("Camera distance", distance)
+                sd.putNumber("To Push", distance - 11)
 
             #break
         else:
