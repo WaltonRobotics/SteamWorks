@@ -64,10 +64,10 @@ with picamera.PiCamera() as camera:
         #cv2.imshow('img', image)
         if len(gripped.filter_contours_output) >= 2:
             if len(gripped.filter_contours_output) == 2:
-                sd.putString("status", "correct number of contours")
+                sd.putString("status goal", "correct number of contours")
 
             else:
-                sd.putString("status", "too many contours")
+                sd.putString("status goal", "too many contours")
             #print(gripped.filter_contours_output)
             #print(gripped.filter_contours_output[0].shape)
             #print(type(cv2.minAreaRect(gripped.filter_contours_output[0])))
@@ -119,14 +119,14 @@ with picamera.PiCamera() as camera:
             distance /= length
 
             if (abs(X1-X2) > abs(Y1-Y2)):
-                sd.putNumber("Center point X", cX)
-                sd.putNumber("Center point Y", cY)
-                sd.putNumber("Camera distance", distance)
-                sd.putNumber("To Fush", distance - 11)
+                sd.putNumber("Center point X goal", cX)
+                sd.putNumber("Center point Y goal", cY)
+                sd.putNumber("Camera distance goal", distance)
+                sd.putNumber("To Flush goal", distance - 11)
 
             #break
         else:
-            sd.putString("status", "too few contours")
+            sd.putString("status goal", "too few contours")
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
