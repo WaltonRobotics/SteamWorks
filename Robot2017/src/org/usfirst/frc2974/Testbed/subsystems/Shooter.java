@@ -23,6 +23,7 @@ public class Shooter extends Subsystem {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
 		SmartDashboard.putNumber("ShootSpeed", fSPEED);
+		flywheelMotor.setPID(0.3, 0, 0);
 	}
 	
 	@Override
@@ -31,13 +32,13 @@ public class Shooter extends Subsystem {
 	}
 
 	public void enable() {
-		//flywheelMotor.set(rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", 0)));
-		flywheelMotor.set(-1);
+		flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional Coefficient", flywheelMotor.getP()), 0, 0);
+		flywheelMotor.setSetpoint(rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", 0)));
 		enabled = true;
 	}
 
 	public void disable() {
-		flywheelMotor.set(0);
+		flywheelMotor.setSetpoint(0);
 		enabled = false;
 	}
 	
