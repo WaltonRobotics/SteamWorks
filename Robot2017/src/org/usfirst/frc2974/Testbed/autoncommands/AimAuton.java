@@ -21,9 +21,9 @@ public class AimAuton extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		if (isDashboard) {
-			goal = new Pose(SmartDashboard.getNumber("goalPosLeft", 0), SmartDashboard.getNumber("goalPosRight", 0),
-					SmartDashboard.getNumber("goalX", 0), SmartDashboard.getNumber("goalY", 0),
-					SmartDashboard.getNumber("goalAngle", 0));
+		//	goal = new Pose(SmartDashboard.getNumber("goalPosLeft", 0), SmartDashboard.getNumber("goalPosRight", 0),
+		//			SmartDashboard.getNumber("goalX", 0), SmartDashboard.getNumber("goalY", 0),
+		//			SmartDashboard.getNumber("goalAngle", 0));
 		}
 
 	}

@@ -14,6 +14,7 @@ public class Intake extends Subsystem {
 	public static final double INTAKE_STOP = 0;
 	public static final double INTAKE_IN = 0.55;
 	public static final double INTAKE_OUT = -0.55;
+	public static final double INTAKE_DUMP = -.7;
 
 	private Talon intakeTalon;
 

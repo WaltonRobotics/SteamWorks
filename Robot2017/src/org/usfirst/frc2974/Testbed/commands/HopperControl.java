@@ -21,7 +21,7 @@ public class HopperControl extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		//if (Robot.hopper.noBallsInLeft() || Robot.oi.hopperControl.get()) {
-		if (Robot.oi.hopperControl.get()) {
+		if (Robot.oi.hopperControl.get()||Robot.oi.hopperAltControl.get()) {
 			Robot.hopper.setPiston(true);
 		} else {
 			Robot.hopper.setPiston(false);

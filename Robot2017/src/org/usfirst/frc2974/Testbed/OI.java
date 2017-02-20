@@ -92,8 +92,8 @@ public class OI {
 		stoptake = new JoystickButton(gamepad, 2);
 		dumptake = new JoystickButton(gamepad,4);
 
-		hopperControl = new JoystickButton(right, 1);
-		hopperAltControl = new JoystickButton(gamepad,6);
+		hopperControl = new JoystickButton(left, 1);
+		hopperAltControl = new JoystickButton(gamepad,8);
 
 		aimOverride = new JoystickButton(right, 7);
 		atSpeed = new JoystickButton(right, 6);

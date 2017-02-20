@@ -130,8 +130,8 @@ public class Gamepad extends Joystick
 	 * @param index
 	 *            the index of the button
 	 * 
-	 *            A( 0 ), B( 1 ), X( 2 ), Y( 3 ), L( 4 ), R( 5 ), BACK( 6 ),
-	 *            START( 7 );
+	 *            A( 0 ), B( 1 ), X( 2 ), Y( 3 ), L( 7 ), R( 8 ), BACK( 9 ),
+	 *            START( 10 );
 	 * 
 	 * @return true if button pressed false if not pressed
 	 * 
