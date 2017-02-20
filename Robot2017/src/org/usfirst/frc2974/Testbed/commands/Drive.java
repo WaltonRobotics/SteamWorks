@@ -63,10 +63,10 @@ public class Drive extends Command {
 			Robot.drivetrain.setSpeeds(-getLeftThrottle(), -getRightThrottle());
 		} else {
 			double throttle;
-			if(getLeftThrottle() >=0.1){
+			if(getLeftThrottle() >=-0.1){
 				throttle=0;
 			}else{
-				throttle = -getLeftThrottle();
+				throttle = getLeftThrottle();
 			}
 			double forward = -getRightThrottle();
 			double turn = Robot.oi.right.getX();

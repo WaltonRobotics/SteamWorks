@@ -27,7 +27,6 @@ import org.usfirst.frc2974.Testbed.autoncommands.DriveSplineByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveTurnByEncoder;
-import org.usfirst.frc2974.Testbed.autoncommands.TurnInTime;
 import org.usfirst.frc2974.Testbed.commands.ReadMotionControllerConstants;
 import org.usfirst.frc2974.Testbed.commands.SetMotionControllerConstants;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
@@ -171,10 +170,6 @@ public class Robot extends IterativeRobot {
     
     public void createTestButtons(){
     	
-    	SmartDashboard.putData("TurnTimeClockwise",new TurnInTime(true,SmartDashboard.getNumber("aMax",0)
-    			,SmartDashboard.getNumber("Duration",0),TurnInTime.Direction.CLOCKWISE));
-    	SmartDashboard.putData("TurnTimeAntiClockwise",new TurnInTime(true, SmartDashboard.getNumber("aMax",0)
-    			,SmartDashboard.getNumber("Duration",0),TurnInTime.Direction.ANTICLOCKWISE));
       	SmartDashboard.putData("MoveTimeForward",new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0), DriveStraightTrapezoid.Direction.FORWARD));
       	SmartDashboard.putData("MoveTimeAntiforward",new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax",0)

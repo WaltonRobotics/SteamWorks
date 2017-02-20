@@ -63,7 +63,7 @@ public class IntakeCommand extends Command {
 			@Override
 			public void run(IntakeCommand intakeCommand){
 				Robot.intake.setIntake(Intake.INTAKE_OUT);
-				if(Timer.getFPGATimestamp()-intakeCommand.dumpStart>0.25){
+				if(Timer.getFPGATimestamp()-intakeCommand.dumpStart>0.4){
 					intakeCommand.state = intakeCommand.saveState;
 				}
 			}

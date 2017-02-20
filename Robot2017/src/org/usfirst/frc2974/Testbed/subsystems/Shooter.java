@@ -31,7 +31,8 @@ public class Shooter extends Subsystem {
 	}
 
 	public void enable() {
-		flywheelMotor.set(rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", 0)));
+		//flywheelMotor.set(rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", 0)));
+		flywheelMotor.set(-1);
 		enabled = true;
 	}
 
