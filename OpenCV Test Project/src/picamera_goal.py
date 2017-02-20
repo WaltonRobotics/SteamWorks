@@ -5,8 +5,7 @@ import cv2
 from grip_goal import GripPipeline
 from networktables import NetworkTables
 from fractions import Fraction
-import math 
-import os
+import math import os
 
 #Units are in feet
 # As a client to connect to a robot
@@ -14,7 +13,8 @@ import os
 ##NetworkTables.initialize(server='roborio-XXX-frc.local')
 
 PID_FILE_NAME = "pid.pid"
-
+WIDTH = 320
+HEIGHT = 240
 try:
     os.remove(PID_FILE_NAME)
 except IOError:
@@ -24,7 +24,7 @@ with open(PID_FILE_NAME, "w") as fd:
     fd.write("{0:d}\n".format(os.getpid()))
 
 
-image = np.empty((240, 320, 3), dtype=np.uint8)
+image = np.empty((HEIGHT, WIDTH, 3), dtype=np.uint8)
 gripped = GripPipeline()
 
 NetworkTables.initialize(server="roboRIO-2974-frc.local")
@@ -39,7 +39,7 @@ KNOWN_FOCAL_LENGTH = 387.94488525390625
 #KNOWN_HYPOTENEUSE = 8.375
 
 def camera_setup(camera):
-    camera.resolution = (320, 240)
+    camera.resolution = (WIDTH, HEIGHT)
     camera.framerate = 60
     camera.iso = 100
     camera.shutter_speed = 1000
@@ -51,7 +51,7 @@ def camera_setup(camera):
 with picamera.PiCamera() as camera:
     camera_setup(camera)
     
-    camera.start_preview(fullscreen=False, window=(0,0,320,240))
+    camera.start_preview(fullscreen=False, window=(0,0,WIDTH,HEIGHT))
     #print(type(sd))
     print("Started preview")
     
@@ -123,6 +123,7 @@ with picamera.PiCamera() as camera:
                 sd.putNumber("Center point Y goal", cY)
                 sd.putNumber("Camera distance goal", distance)
                 sd.putNumber("To Flush goal", distance - 11)
+                sd.putNumber("Camera angle goal", math.asin((cX - (WIDTH / 2)) / distance))
 
             #break
         else:
