@@ -28,8 +28,8 @@ public class DriveStraightByEncoder extends Command {
 	public double acceleration;
 	private double finishedTime;
 	private boolean motionFinished;
-	
-	public DriveStraightByEncoder(boolean isDashboard,double distance, double speed, double acceleration) {
+
+	public DriveStraightByEncoder(boolean isDashboard, double distance, double speed, double acceleration) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
 		poseEstimator = Robot.poseEstimator;
@@ -37,16 +37,17 @@ public class DriveStraightByEncoder extends Command {
 		this.distance = distance;
 		this.speed = speed;
 		this.acceleration = acceleration;
-		
-		//RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created DriveStraightByEncoder");
+
+		// RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created
+		// DriveStraightByEncoder");
 	}
-	
+
 	@Override
-	protected void initialize() {	
-		if(isDashboard){
-			distance = SmartDashboard.getNumber("encoderDistance", 1.57);
-			speed = SmartDashboard.getNumber("encoderSpeed", 0.25);
-			acceleration = SmartDashboard.getNumber("encoderAccel", 0.25);
+	protected void initialize() {
+		if (isDashboard) {
+			distance = SmartDashboard.getNumber("encoderDistance", 0);
+			speed = SmartDashboard.getNumber("encoderSpeed", 0);
+			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
 		}
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
@@ -60,8 +61,8 @@ public class DriveStraightByEncoder extends Command {
 	}
 
 	@Override
-	protected void execute() {		
-		if(!motionFinished && driveTrain.isControllerFinished()){
+	protected void execute() {
+		if (!motionFinished && driveTrain.isControllerFinished()) {
 			finishedTime = Timer.getFPGATimestamp();
 			motionFinished = true;
 		}
@@ -73,18 +74,18 @@ public class DriveStraightByEncoder extends Command {
 	}
 
 	@Override
-	protected void end() {		
+	protected void end() {
 		System.out.print("Command ends: Controller enabled = " + driveTrain.getControllerStatus());
 		driveTrain.cancelMotion();
 	}
 
 	@Override
-	protected void interrupted() {	
+	protected void interrupted() {
 		end();
 	}
 
 	@Override
-	public String toString(){
-		return String.format("acceleration = %f,distance = %f,speed = %f",acceleration, distance, speed);
+	public String toString() {
+		return String.format("acceleration = %f,distance = %f,speed = %f", acceleration, distance, speed);
 	}
 }
