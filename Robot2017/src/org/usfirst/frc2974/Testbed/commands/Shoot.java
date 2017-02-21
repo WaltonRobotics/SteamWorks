@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed.commands;
 
+import org.usfirst.frc2974.Testbed.Gamepad;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.subsystems.Shooter;
@@ -108,12 +109,12 @@ public class Shoot extends Command {
 		SmartDashboard.putString("Shooter State", state.name());
 		
 		state.run(this);
-		if(Robot.oi.right.getRawButton(5)){
+		if(Robot.oi.right.getRawButton(5)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.E)){
 			if(!pressed){
 				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-2.5);
 				pressed = true;
 			}
-		}else if(Robot.oi.right.getRawButton(4)){
+		}else if(Robot.oi.right.getRawButton(4)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.W)){
 			if(!pressed){
 				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)+2.5);
 				pressed = true;
