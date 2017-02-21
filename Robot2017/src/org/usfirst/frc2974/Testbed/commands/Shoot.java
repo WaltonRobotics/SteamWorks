@@ -35,7 +35,7 @@ public class Shoot extends Command {
 		Aiming {
 			@Override
 			public void run(Shoot shoot) {
-//				SmartDashboard.putBoolean("isShooterAtSpeed", true);
+				SmartDashboard.putBoolean("isShooterAtSpeed", true);
 //				if (Robot.aim.aimed() || Robot.oi.aimOverride.get()) {
 //					shoot.state = ReadyToShoot;
 //				}
