@@ -20,7 +20,7 @@ public class RobotMap {
 	public static Talon right;
 	public static Talon indexer;
 	public static Talon intake;
-	public static Spark climber;
+	public static Talon climber;
 
 	public static CANTalon flywheelMotor;
 
@@ -39,6 +39,7 @@ public class RobotMap {
 		right = new Talon(1);
 		indexer = new Talon(2);
 		intake = new Talon(3);
+		climber = new Talon(4);
 		flywheelMotor = new CANTalon(1);
 
 		compressor = new Compressor();

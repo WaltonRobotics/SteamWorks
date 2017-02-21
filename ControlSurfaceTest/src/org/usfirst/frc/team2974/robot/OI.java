@@ -14,11 +14,15 @@ public class OI {
 	Joystick left;
 	Button shiftUp;
 	Button shiftDown;
+	Button pistonUp;
+	Button pistonDown;
 	
 	public OI(){
 		left = new Joystick(0);
 		shiftUp = new JoystickButton(left,3);
 		shiftDown = new JoystickButton(left,2);
+		pistonUp = new JoystickButton(left,4);
+		pistonDown = new JoystickButton(left,5);
 	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a

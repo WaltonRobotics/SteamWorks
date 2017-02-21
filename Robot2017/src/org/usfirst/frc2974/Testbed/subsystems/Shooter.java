@@ -18,7 +18,7 @@ public class Shooter extends Subsystem {
 	private Talon indexer;
 	boolean enabled = false;
 
-	public static final double fSPEED = -2225; // rpm
+	public static final double fSPEED = -2235; // rpm
 	public static final double ACCEPTED_ERROR = 50;
 
 	public Shooter() {

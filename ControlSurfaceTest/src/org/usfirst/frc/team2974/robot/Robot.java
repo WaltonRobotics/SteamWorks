@@ -123,6 +123,12 @@ public class Robot extends IterativeRobot {
 		if(oi.shiftUp.get() && !RobotMap.pneumaticsShifter.get()){
 			RobotMap.pneumaticsShifter.set(true);
 		}
+		if(oi.pistonUp.get() && RobotMap.hopperRelease.get()){
+			RobotMap.hopperRelease.set(false);
+		}
+		if(oi.pistonDown.get() && !RobotMap.hopperRelease.get()){
+			RobotMap.hopperRelease.set(true);
+		}
 		SmartDashboard.putNumber("FLYWHEELSPEEDTEST", RobotMap.flywheelMotor.get());
 	}
 
