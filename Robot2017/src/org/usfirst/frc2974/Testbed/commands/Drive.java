@@ -74,7 +74,7 @@ public class Drive extends Command {
 		} else {
 			double throttle = (getLeftThrottle() + 1)/2;
 			double forward = -getRightThrottle();
-			double turn = getTurn()*2-1;
+			double turn = getTurn();
 
 			Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));
 			//System.out.println("Cheesy Error Stuff: throttle: "+throttle+"; forward: "+forward+"; turn: "+turn+"; speeds: ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");
