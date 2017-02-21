@@ -10,10 +10,10 @@
 // it from being updated in the future.
 
 /*Constants :
- * kK = 0
- * kP = 20
- * kV = 0.4
- * kA = 0.1
+ * kK = 0.215
+ * kP = 15
+ * kV = 0.368
+ * kA = 0.025
  */
 package org.usfirst.frc2974.Testbed;
 

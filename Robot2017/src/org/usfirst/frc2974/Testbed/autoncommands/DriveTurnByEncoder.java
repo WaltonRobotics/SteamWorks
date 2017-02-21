@@ -40,14 +40,14 @@ public class DriveTurnByEncoder extends Command{
 	@Override
 	protected void initialize() {	
 		if(isDashboard){
-			angle = SmartDashboard.getNumber("encoderAngle", 0);
+			angle = SmartDashboard.getNumber("encoderAngle", 0) * 180 / Math.PI;
 			speed = SmartDashboard.getNumber("encoderSpeed", 0);
 			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
 		}
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", angle, speed, acceleration));
 		motionFinished = false;
-		motion = new MotionPathTurn(poseEstimator.getPose(), angle - angle/3, speed, acceleration);
+		motion = new MotionPathTurn(poseEstimator.getPose(), angle, speed, acceleration);
 
 		driveTrain.addControllerMotion(motion);
 		System.out.println(motion.toString());

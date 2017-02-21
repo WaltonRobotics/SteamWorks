@@ -45,7 +45,7 @@ public class DriveSplineByEncoder extends Command {
 			distance = SmartDashboard.getNumber("encoderDistance", 0);
 			speed = SmartDashboard.getNumber("encoderSpeed", 0);
 			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
-			angle = SmartDashboard.getNumber("encoderAngle", 0);
+			angle = SmartDashboard.getNumber("encoderAngle", 0) * 180 / Math.PI;
 		}
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
