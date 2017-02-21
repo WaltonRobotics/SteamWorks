@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class DriveSplineByEncoder extends Command{
+public class DriveSplineByEncoder extends Command {
 	public final double SETTLE_TIME = 1;
 	private Drivetrain driveTrain;
 	private PoseEstimator poseEstimator;
@@ -24,8 +24,8 @@ public class DriveSplineByEncoder extends Command{
 	public double angle;
 	private double finishedTime;
 	private boolean motionFinished;
-	
-	public DriveSplineByEncoder(boolean isDashboard,double distance, double speed, double acceleration, double angle) {
+
+	public DriveSplineByEncoder(boolean isDashboard, double distance, double speed, double acceleration, double angle) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
 		poseEstimator = Robot.poseEstimator;
@@ -34,13 +34,14 @@ public class DriveSplineByEncoder extends Command{
 		this.speed = speed;
 		this.acceleration = acceleration;
 		this.angle = angle;
-		
-		//RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created DriveStraightByEncoder");
+
+		// RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created
+		// DriveStraightByEncoder");
 	}
-	
+
 	@Override
-	protected void initialize() {	
-		if(isDashboard){
+	protected void initialize() {
+		if (isDashboard) {
 			distance = SmartDashboard.getNumber("encoderDistance", 0);
 			speed = SmartDashboard.getNumber("encoderSpeed", 0);
 			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
@@ -51,8 +52,8 @@ public class DriveSplineByEncoder extends Command{
 		motionFinished = false;
 		Pose init = poseEstimator.getPose();
 		Pose final_ = new Pose(new Point2D(init.X.x + distance, init.X.y + distance), angle);
-		motion = new MotionPathSpline(init, distance / 2, final_, distance/2, speed, acceleration);
-		
+		motion = new MotionPathSpline(init, distance / 2, final_, distance / 2, speed, acceleration);
+
 		driveTrain.addControllerMotion(motion);
 		System.out.println(motion.toString());
 		System.out.println("Command starts: Controller enabled = " + driveTrain.getControllerStatus());
@@ -60,8 +61,8 @@ public class DriveSplineByEncoder extends Command{
 	}
 
 	@Override
-	protected void execute() {		
-		if(!motionFinished && driveTrain.isControllerFinished()){
+	protected void execute() {
+		if (!motionFinished && driveTrain.isControllerFinished()) {
 			finishedTime = Timer.getFPGATimestamp();
 			motionFinished = true;
 		}
@@ -73,18 +74,45 @@ public class DriveSplineByEncoder extends Command{
 	}
 
 	@Override
-	protected void end() {		
+	protected void end() {
 		System.out.print("Command ends: Controller enabled = " + driveTrain.getControllerStatus());
 		driveTrain.cancelMotion();
 	}
 
 	@Override
-	protected void interrupted() {	
+	protected void interrupted() {
 		end();
+	}
+	
+	public static Command driveToPeg() {
+		double startTime = Timer.getFPGATimestamp();
+		boolean found = false;
+		while ((!SmartDashboard.getString("status peg", "").equals("too few contours")
+				|| Timer.getFPGATimestamp() - startTime < 2) && (found = true));
+
+		if (found && SmartDashboard.getBoolean("Valid angle peg", false))
+			return new DriveSplineByEncoder(false, SmartDashboard.getNumber("Camera distance peg", 0) * 2.54 / 100, 0.25,
+					0.25, SmartDashboard.getNumber("Target angle peg", 0));
+
+		return new DriveTurnByEncoder(false, 0, 0, 0);
+	}
+
+
+	public static Command driveToBoiler() {
+		double startTime = Timer.getFPGATimestamp();
+		boolean found = false;
+		while ((!SmartDashboard.getString("status goal", "").equals("too few contours")
+				|| Timer.getFPGATimestamp() - startTime < 2) && (found = true));
+
+		if (found)
+			return new DriveSplineByEncoder(false, SmartDashboard.getNumber("To Flush goal", 0) * 2.54 / 100, 0.25,
+					0.25, SmartDashboard.getNumber("Camera angle goal", 0));
+
+		return new DriveTurnByEncoder(false, 0, 0, 0);
 	}
 
 	@Override
-	public String toString(){
-		return String.format("acceleration = %f,distance = %f,speed = %f",acceleration, distance, speed);
+	public String toString() {
+		return String.format("acceleration = %f,distance = %f,speed = %f", acceleration, distance, speed);
 	}
 }

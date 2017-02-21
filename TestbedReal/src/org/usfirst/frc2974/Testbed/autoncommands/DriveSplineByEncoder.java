@@ -82,6 +82,11 @@ public class DriveSplineByEncoder extends Command{
 	protected void interrupted() {	
 		end();
 	}
+	
+	public static DriveSplineByEncoder driveToBoiler(){
+		return new DriveSplineByEncoder(false, SmartDashboard.getNumber("Camera distance goal", 0), 0.25, 0.25, 
+				SmartDashboard.getNumber("Camera angle goal", 0));
+	}
 
 	@Override
 	public String toString(){
