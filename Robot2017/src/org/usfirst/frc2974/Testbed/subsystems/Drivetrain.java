@@ -6,6 +6,7 @@ import org.usfirst.frc2974.Testbed.commands.*;
 import org.usfirst.frc2974.Testbed.controllers.MotionProfileController;
 import org.usfirst.frc2974.Testbed.controllers.MotionProvider;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
@@ -21,12 +22,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends Subsystem {
 	
 	private final double PERIOD = .005;
-	public final double DEFAULTKV = 0;
-	public final double DEFAULTKK = 0;
-	public final double DEFAULTKA = 0;
-	public final double DEFAULTKP = 0;
+	public final double DEFAULTKV = 0.368;
+	public final double DEFAULTKK = 0.215;
+	public final double DEFAULTKA = 0.025;
+	public final double DEFAULTKP = 20;
 	
-	
+	private Encoder encoderLeft = RobotMap.encoderLeft;
+	private Encoder encoderRight = RobotMap.encoderRight;
 	
 	private Talon right = RobotMap.right;
 	private Talon left = RobotMap.left;
@@ -36,6 +38,8 @@ public class Drivetrain extends Subsystem {
 	private MotionProfileController controller;
 
 	public synchronized void setSpeeds(double leftSpeed, double rightSpeed) {
+//		System.out.println(String.format("%f, %f", ( leftSpeed + rightSpeed) /2 , (encoderLeft.getRate() + encoderLeft.getRate()) /2));
+		
 		right.set(rightSpeed);
 		left.set(-leftSpeed);
 	}

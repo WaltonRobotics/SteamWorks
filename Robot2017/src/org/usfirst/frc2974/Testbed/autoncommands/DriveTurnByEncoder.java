@@ -47,7 +47,7 @@ public class DriveTurnByEncoder extends Command{
 
 		System.out.println(String.format("Angle=%f, Speed=%f, Accel=%f", angle, speed, acceleration));
 		motionFinished = false;
-		motion = new MotionPathTurn(poseEstimator.getPose(), angle - angle/3, speed, acceleration);
+		motion = new MotionPathTurn(poseEstimator.getPose(), angle, speed, acceleration);
 
 		driveTrain.addControllerMotion(motion);
 		System.out.println(motion.toString());

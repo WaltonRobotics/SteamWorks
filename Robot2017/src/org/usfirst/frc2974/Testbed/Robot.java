@@ -34,6 +34,7 @@ import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveTurnByEncoder;
 import org.usfirst.frc2974.Testbed.commands.ReadMotionControllerConstants;
 import org.usfirst.frc2974.Testbed.commands.SetMotionControllerConstants;
+import org.usfirst.frc2974.Testbed.commands.TestShooterPower;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerDriver;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
@@ -136,8 +137,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	poseEstimator.updatePose();
+    	//poseEstimator.updatePose();
         Scheduler.getInstance().run();
+        
     }
     
     private void createAutonomousChooser(){
@@ -169,9 +171,11 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	poseEstimator.updatePose();
+    	//poseEstimator.updatePose();
         Scheduler.getInstance().run();
-        Robot.drivetrain.dumpSmartdashboardValues();
+        drivetrain.dumpSmartdashboardValues();
+        poseEstimator.dumpSmartdashboardValues();
+        shooter.dumpValuesToSamrtDashboard();
 //        createTestButtons();
     }
     
@@ -203,10 +207,12 @@ public class Robot extends IterativeRobot {
 		
 		SmartDashboard.putData("TurnByEncoder", new DriveTurnByEncoder(true, 0, 0, 0));
 		SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true, 0, 0, 0, 0));
+		
+		SmartDashboard.putData("testShooterPower", new TestShooterPower());
 
 
 		//The command before concatenates two different splines together
-		SmartDashboard.putData("testSplineEncoder", command);
+		//SmartDashboard.putData("testSplineEncoder", command);
     }
 
     @Override

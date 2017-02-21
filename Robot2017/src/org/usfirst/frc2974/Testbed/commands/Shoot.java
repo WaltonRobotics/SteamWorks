@@ -25,7 +25,7 @@ public class Shoot extends Command {
 		MotorSpeedsUp {
 			@Override
 			public void run(Shoot shoot) {
-				SmartDashboard.putBoolean("isShooterAtSpeed", false);
+				
 				if (Robot.shooter.isAtSpeed() || Robot.oi.atSpeed.get()) {
 					shoot.state = Aiming;
 				}
@@ -45,7 +45,7 @@ public class Shoot extends Command {
 		ReadyToShoot {
 			@Override
 			public void run(Shoot shoot) {
-				SmartDashboard.putBoolean("isShooterAtSpeed", true);
+				
 				if (Robot.oi.shoot.get()) {
 					shoot.state = Firing;
 				}
@@ -106,7 +106,7 @@ public class Shoot extends Command {
 	protected void execute() {
 		//Robot.shooter.index(true);
 		SmartDashboard.putString("Shooter State", state.name());
-		SmartDashboard.putNumber("Flywheel Speed", Robot.shooter.getSpeed());
+		
 		state.run(this);
 		if(Robot.oi.right.getRawButton(5)){
 			if(!pressed){

@@ -1,3 +1,4 @@
+
 package org.usfirst.frc2974.Testbed.subsystems;
 
 import org.usfirst.frc2974.Testbed.RobotMap;
@@ -65,6 +66,26 @@ public class Shooter extends Subsystem {
 		//System.out.println(1/encoderToRpm(rpm));
 		return 1/encoderToRpm(rpm);
 		//return(SmartDashboard.getNumber("ShootSpeed",fSPEED)/5000);
+	}
+	
+	public void setPowerMode(double power)
+	{
+		disable();
+		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
+		flywheelMotor.set(power);
+	}
+	
+	public void endPowerMode()
+	{
+		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.Speed);
+		enable();
+	}
+	
+	public void dumpValuesToSamrtDashboard()
+	{
+		SmartDashboard.putNumber("currentRPM", getSpeed());
+		SmartDashboard.putBoolean("isShooterAtSpeed", isAtSpeed());
+		
 	}
 
 	public void index(boolean on) {
