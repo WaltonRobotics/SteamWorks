@@ -21,7 +21,8 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	
 	private RobotPair wheelPositions;
 	private double angle;
-	public static final double wheelDistance = .6477;
+	public static final double distancePerPulse = 0.0005652; //Pracice bot
+	public static final double wheelDistance = .70485; //practice bot
 	private Point2D X;
 	
 	public PoseEstimator() {
@@ -30,8 +31,8 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 			//0.0024936392
 			X = new Point2D(0, 0);
 			angle = 0;
-			encoderLeft.setDistancePerPulse(0.0003979673);
-			encoderRight.setDistancePerPulse(-0.0003979673);
+			encoderLeft.setDistancePerPulse(distancePerPulse);
+			encoderRight.setDistancePerPulse(-distancePerPulse);
 			reset();
 			wheelPositions =  new RobotPair(encoderLeft.getDistance(), encoderRight.getDistance());
 
@@ -41,7 +42,7 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	}
 	
 	public synchronized void updatePose() {
-		wheelPositions =  new RobotPair(encoderLeft.getDistance(), encoderRight.getDistance());
+	
 		
 		/*double sr = encoderRight.getDistance() - positionRightWheel;
 		double sl = encoderLeft.getDistance() - positionLeftWheel;
@@ -77,7 +78,7 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	}
 
 	public synchronized RobotPair getWheelPositions() {
-		return wheelPositions;
+		return  new RobotPair(encoderLeft.getDistance(), encoderRight.getDistance());
 	}
 	
 	public synchronized void reset() {
@@ -91,6 +92,8 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	}
 	
 	public synchronized void dumpSmartdashboardValues() {
+//		System.out.printf("Right:%d\tLeft:%d%n",  encoderRight.getRaw() ,encoderLeft.getRaw());
+		
 		SmartDashboard.putNumber("EncoderLeft", encoderLeft.getDistance());
 		SmartDashboard.putNumber("EncoderRight", encoderRight.getDistance());
 		

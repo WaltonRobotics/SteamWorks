@@ -25,7 +25,7 @@ public class Shoot extends Command {
 		MotorSpeedsUp {
 			@Override
 			public void run(Shoot shoot) {
-				SmartDashboard.putBoolean("isShooterAtSpeed", false);
+				
 				if (Robot.shooter.isAtSpeed() || Robot.oi.atSpeed.get()) {
 					shoot.state = Aiming;
 				}
@@ -34,17 +34,18 @@ public class Shoot extends Command {
 		Aiming {
 			@Override
 			public void run(Shoot shoot) {
-				SmartDashboard.putBoolean("isShooterAtSpeed", true);
-				if (Robot.aim.aimed() || Robot.oi.aimOverride.get()) {
-					shoot.state = ReadyToShoot;
-				}
+//				SmartDashboard.putBoolean("isShooterAtSpeed", true);
+//				if (Robot.aim.aimed() || Robot.oi.aimOverride.get()) {
+//					shoot.state = ReadyToShoot;
+//				}
+				shoot.state = ReadyToShoot;
 			}
 
 		},
 		ReadyToShoot {
 			@Override
 			public void run(Shoot shoot) {
-				SmartDashboard.putBoolean("isShooterAtSpeed", true);
+				
 				if (Robot.oi.shoot.get()) {
 					shoot.state = Firing;
 				}
@@ -53,19 +54,33 @@ public class Shoot extends Command {
 		},
 		Firing {
 			double time = -1;
-			final double duration = 0.2;
+			final double duration = 0.75;
 			@Override
 			public void run(Shoot shoot) {
-				if(time == -1) time = Timer.getFPGATimestamp();
+				if(time == -1) {time = Timer.getFPGATimestamp();}
 				if (Timer.getFPGATimestamp() - time < duration) {
 					Robot.shooter.index(true);
 				} else {
 					time = -1;
 					Robot.shooter.index(false);
-					shoot.state = MotorSpeedsUp;
+					if(SmartDashboard.getBoolean("ShootTraps",true)){
+						shoot.state = Trap;
+					}else{
+						shoot.state = MotorSpeedsUp;
+					}
 				}
 			}
 
+		},
+		Trap {
+			double trapTime = 0.5;
+			double startTrap = Timer.getFPGATimestamp();
+			@Override
+			public void run(Shoot shoot){
+				if(Timer.getFPGATimestamp() - startTrap > trapTime){
+					shoot.state = MotorSpeedsUp;
+				}
+			}
 		};
 		public void run(Shoot shoot) {
 		}
@@ -78,6 +93,7 @@ public class Shoot extends Command {
 
 	public Shoot() {
 		requires(Robot.shooter);
+		SmartDashboard.putBoolean("ShootTraps", false);
 	}
 
 	// Called just before this Command runs the first time
@@ -88,17 +104,18 @@ public class Shoot extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	boolean pressed = false;
 	protected void execute() {
+		//Robot.shooter.index(true);
 		SmartDashboard.putString("Shooter State", state.name());
-		SmartDashboard.putNumber("Flywheel Speed", Robot.shooter.getSpeed());
+		
 		state.run(this);
 		if(Robot.oi.right.getRawButton(5)){
 			if(!pressed){
-				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-20);
+				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-2.5);
 				pressed = true;
 			}
 		}else if(Robot.oi.right.getRawButton(4)){
 			if(!pressed){
-				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)+20);
+				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)+2.5);
 				pressed = true;
 			}
 		}else{
@@ -109,6 +126,7 @@ public class Shoot extends Command {
 		}else{
 			Robot.shooter.disable();
 			state = State.Rest;
+			Robot.shooter.index(false);
 		}
 	}
 

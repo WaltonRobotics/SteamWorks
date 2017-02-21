@@ -67,6 +67,7 @@ public class Drive extends Command {
 	}
 
 	// Called repeatedly when this Command is scheduled to run
+	//change
 	protected void execute() {
 		if (SmartDashboard.getBoolean("Tank", true)) {
 			Robot.drivetrain.setSpeeds(-getLeftThrottle(), -getRightThrottle());
@@ -76,7 +77,7 @@ public class Drive extends Command {
 			double turn = getTurn()*2-1;
 
 			Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));
-			System.out.println("Cheesy Error Stuff: throttle: "+throttle+"; forward: "+forward+"; turn: "+turn+"; speeds: ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");
+			//System.out.println("Cheesy Error Stuff: throttle: "+throttle+"; forward: "+forward+"; turn: "+turn+"; speeds: ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");
 		}
 		if (Robot.oi.shiftDown.get())
 			Robot.drivetrain.shiftDown();

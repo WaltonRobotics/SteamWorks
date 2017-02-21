@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Kinematics {
 	
-	  private final double robotWidth = 0.64135; // Practice bot
+	public static final double robotWidth = .70485; //practice bot
 	
 	  private MotionProvider motion;
 	  private KinematicPose lastPose;
