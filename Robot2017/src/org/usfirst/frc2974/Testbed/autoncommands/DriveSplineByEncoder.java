@@ -45,7 +45,7 @@ public class DriveSplineByEncoder extends Command {
 			distance = SmartDashboard.getNumber("encoderDistance", 0);
 			speed = SmartDashboard.getNumber("encoderSpeed", 0);
 			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
-			angle = SmartDashboard.getNumber("encoderAngle", 0) * 180 / Math.PI;
+			angle = SmartDashboard.getNumber("encoderAngle", 0) * Math.PI / 180;
 		}
 
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
@@ -83,33 +83,7 @@ public class DriveSplineByEncoder extends Command {
 	protected void interrupted() {
 		end();
 	}
-	
-	public static Command driveToPeg() {
-		double startTime = Timer.getFPGATimestamp();
-		boolean found = false;
-		while ((!SmartDashboard.getString("status peg", "").equals("too few contours")
-				|| Timer.getFPGATimestamp() - startTime < 2) && (found = true));
 
-		if (found && SmartDashboard.getBoolean("Valid angle peg", false))
-			return new DriveSplineByEncoder(false, SmartDashboard.getNumber("Camera distance peg", 0) * 2.54 / 100, 0.25,
-					0.25, SmartDashboard.getNumber("Target angle peg", 0));
-
-		return new DriveTurnByEncoder(false, 0, 0, 0);
-	}
-
-
-	public static Command driveToBoiler() {
-		double startTime = Timer.getFPGATimestamp();
-		boolean found = false;
-		while ((!SmartDashboard.getString("status goal", "").equals("too few contours")
-				|| Timer.getFPGATimestamp() - startTime < 2) && (found = true));
-
-		if (found)
-			return new DriveSplineByEncoder(false, SmartDashboard.getNumber("To Flush goal", 0) * 2.54 / 100, 0.25,
-					0.25, SmartDashboard.getNumber("Camera angle goal", 0));
-
-		return new DriveTurnByEncoder(false, 0, 0, 0);
-	}
 
 	@Override
 	public String toString() {
