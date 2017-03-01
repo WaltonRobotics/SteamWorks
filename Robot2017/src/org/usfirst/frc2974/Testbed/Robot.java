@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
+import org.usfirst.frc2974.Testbed.auton.AutonEncoderWithVision;
 import org.usfirst.frc2974.Testbed.autoncommands.Aim;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveSplineByEncoder;
@@ -158,6 +159,8 @@ public class Robot extends IterativeRobot {
     	autoChooser.addObject("DiffLeft (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT, false));
     	autoChooser.addObject("DiffMiddle (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.CENTER, false));
     	autoChooser.addObject("DiffRight (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, false));
+    	autoChooser.addObject("Auton move to peg and boiler", new AutonEncoderWithVision(true));
+    	autoChooser.addObject("Auton move forward past line", new AutonEncoderWithVision(false));
     	SmartDashboard.putData("Auto", autoChooser);
     }
 
@@ -218,7 +221,6 @@ public class Robot extends IterativeRobot {
 
 //		SmartDashboard.putData("Test peg with vision", peg);
 //		SmartDashboard.putData("Test boiler with vision", boiler);
-		//The command before concatenates two different splines together
 		//SmartDashboard.putData("testSplineEncoder", command);
     }
 
