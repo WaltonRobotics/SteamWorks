@@ -18,8 +18,8 @@ public class Shooter extends Subsystem {
 	private Talon indexer;
 	boolean enabled = false;
 
-	public static final double fSPEED = -2235; // rpm
-	public static final double ACCEPTED_ERROR = 50;
+	public static final double fSPEED = -8000; // rpm
+	public static final double ACCEPTED_ERROR = 250;
 
 	public Shooter() {
 		flywheelMotor = RobotMap.flywheelMotor;
@@ -36,8 +36,8 @@ public class Shooter extends Subsystem {
 
 	public void enable() {
 		//flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional Coefficient", flywheelMotor.getP()), 0, 0);
-		flywheelMotor.setPID(0.25, 0, 0);
-		flywheelMotor.set(SmartDashboard.getNumber("ShootSpeed", fSPEED)*8);
+//		flywheelMotor.setPID(0.25, 0, 0);
+		flywheelMotor.set(SmartDashboard.getNumber("ShootSpeed", fSPEED));
 		enabled = true;
 	}
 
@@ -51,7 +51,7 @@ public class Shooter extends Subsystem {
 	}
 
 	public boolean isAtSpeed() {
-		return Math.abs(getSpeed() - Math.abs(SmartDashboard.getNumber("ShootSpeed", 0))) < ACCEPTED_ERROR;
+		return Math.abs(flywheelMotor.getSpeed() - SmartDashboard.getNumber("ShootSpeed", 0)) < ACCEPTED_ERROR;
 	}
 	
 	public double getSpeed(){
@@ -63,7 +63,7 @@ public class Shooter extends Subsystem {
 		// 60 sec/min * 10 ticks/sec * 1 rev/1024 ticks * 1 tick/4 quarterTicks= rpm
 	}
 	public double rpmToEncoder(double rpm){
-		//System.out.println(1/encoderToRpm(rpm));
+//		System.out.println(1/encoderToRpm(rpm));
 		return 1/encoderToRpm(rpm);
 		//return(SmartDashboard.getNumber("ShootSpeed",fSPEED)/5000);
 	}
@@ -83,13 +83,16 @@ public class Shooter extends Subsystem {
 	
 	public void dumpValuesToSamrtDashboard()
 	{
-		SmartDashboard.putNumber("currentRPM", getSpeed());
 		SmartDashboard.putBoolean("isShooterAtSpeed", isAtSpeed());
+		SmartDashboard.putNumber("ShooterRPM", flywheelMotor.getSpeed());
+		SmartDashboard.putNumber("ShooterCurrentTrue", flywheelMotor.getOutputCurrent());
+		SmartDashboard.putNumber("ShooterVoltageTrue", flywheelMotor.getOutputVoltage());
+		
 		
 	}
 
 	public void index(boolean on) {
-		indexer.setSpeed(on ? -.75 : 0);
+		indexer.setSpeed(on ? -.4 : 0);
 	}
 
 }

@@ -21,7 +21,7 @@ public class TestShooterPower extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	
-    	
+    	System.out.println("Setting power = " + SmartDashboard.getNumber("testPower", 0.1));
     	Robot.shooter.setPowerMode(SmartDashboard.getNumber("testPower", 0.1));
     }
 
