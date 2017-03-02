@@ -1,6 +1,7 @@
 
 package org.usfirst.frc2974.Testbed.subsystems;
 
+import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.Shoot;
 
@@ -25,7 +26,6 @@ public class Shooter extends Subsystem {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
 		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.Speed);
-		SmartDashboard.putNumber("ShootSpeed", fSPEED);
 		flywheelMotor.setPID(0.3, 0, 0);
 	}
 	
@@ -37,7 +37,7 @@ public class Shooter extends Subsystem {
 	public void enable() {
 		//flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional Coefficient", flywheelMotor.getP()), 0, 0);
 //		flywheelMotor.setPID(0.25, 0, 0);
-		flywheelMotor.set(SmartDashboard.getNumber("ShootSpeed", fSPEED));
+		flywheelMotor.set(Robot.pref.getDouble("ShootSpeed", fSPEED));
 		enabled = true;
 	}
 
