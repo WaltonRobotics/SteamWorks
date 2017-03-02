@@ -89,14 +89,14 @@ public class OI {
 		shiftUpAlt = new JoystickButton(left, 11);
 		shiftDownAlt = new JoystickButton(left, 10);
 
-		shoot = new JoystickButton(right, 1);
+		shoot = new JoystickButton(left, 1);
 
 		intake = new JoystickButton(gamepad, 1);
 		outtake = new JoystickButton(gamepad, 3);
 		stoptake = new JoystickButton(gamepad, 2);
 		dumptake = new JoystickButton(gamepad,4);
 
-		hopperControl = new JoystickButton(left, 1);
+		hopperControl = new JoystickButton(right, 1);
 		hopperAltControl = new JoystickButton(gamepad,8);
 
 		aimOverride = new JoystickButton(right, 7);
