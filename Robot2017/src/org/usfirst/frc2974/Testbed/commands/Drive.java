@@ -58,7 +58,7 @@ public class Drive extends Command {
 	}
 	
 	public double getTurn() {
-		if (Math.abs(Robot.oi.right.getX()) < 0.3) {
+		if (Math.abs(Robot.oi.right.getX()) < 0.1) {
 			return 0;
 		}
 		return Robot.oi.right.getX();
@@ -66,7 +66,7 @@ public class Drive extends Command {
 	}
 
 	public double getLeftTurn() {
-		if (Math.abs(Robot.oi.left.getX()) < 0.3) {
+		if (Math.abs(Robot.oi.left.getX()) < 0.1) {
 			return 0;
 		}
 		return Robot.oi.left.getX();
