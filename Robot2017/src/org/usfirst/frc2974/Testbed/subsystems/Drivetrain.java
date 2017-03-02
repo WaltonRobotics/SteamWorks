@@ -27,8 +27,6 @@ public class Drivetrain extends Subsystem {
 	public final double DEFAULTKA = 0.025;
 	public final double DEFAULTKP = 20;
 	
-	private Encoder encoderLeft = RobotMap.encoderLeft;
-	private Encoder encoderRight = RobotMap.encoderRight;
 	
 	private Talon right = RobotMap.right;
 	private Talon left = RobotMap.left;
