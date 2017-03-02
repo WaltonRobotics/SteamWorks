@@ -60,6 +60,8 @@ public class OI {
 
 	public Button shiftUp;
 	public Button shiftDown;
+	public Button shiftUpAlt;
+	public Button shiftDownAlt;
 
 	public Button shoot;
 
@@ -84,6 +86,8 @@ public class OI {
 
 		shiftUp = new JoystickButton(left, 3);
 		shiftDown = new JoystickButton(left, 2);
+		shiftUpAlt = new JoystickButton(left, 11);
+		shiftDownAlt = new JoystickButton(left, 10);
 
 		shoot = new JoystickButton(right, 1);
 
