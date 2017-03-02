@@ -65,11 +65,11 @@ public final class CSVWriter {
 
 	/**
 	 * Creates the directory if it does not exist already and the .csv file for
-	 * the specific instance. Initialises the FileChannel to target the file
+	 * the specific instance. Initializes the FileChannel to target the file
 	 * wanted.
 	 *
 	 * @param instanceName
-	 *            Sets the name fo the file to be the same as its instance name.
+	 *            Sets the name for the file to be the same as its instance name.
 	 */
 	private CSVWriter(final String instanceName) {
 		final Time time = new Time(System.currentTimeMillis());
@@ -137,7 +137,6 @@ public final class CSVWriter {
 							.setFileHandlerInstance(Mode.LOGGING, "robot.logging.CSVWriter", RobotLoggerLevel.CRITICAL)
 							.severe("Could not write to file. Will skip line and continue. Error: " + e1);
 					e1.printStackTrace();
-
 				}
 			else
 				RobotLoggerManager

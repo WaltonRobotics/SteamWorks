@@ -2,7 +2,7 @@ package org.usfirst.frc2974.Testbed.logging;
 
 import java.util.logging.Level;
 
-public class RobotLoggerLevel {
+public final class RobotLoggerLevel {
 	// Level.FINEST includes FINEST FINER FINE INFO WARNING SEVERE
 	public static final Level COMPETITION = Level.FINEST;
 	// Level.WARNING includes WARNING SEVERE
