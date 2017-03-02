@@ -112,7 +112,7 @@ public class OI {
 	}
 
 	public boolean hold() {
-		return Gamepad.Button.L.getPressed(gamepad);
+		return gamepad.getRawButton(7);
 	}
 
 	public double climbY() {

@@ -15,19 +15,20 @@ public class Climber extends Subsystem {
 
 	private static final double CLIMBER_HOLD = .1;
 
-	private Spark climberMotor;
+	private Talon climberMotor;
 
 	public Climber() {
 		climberMotor = RobotMap.climber;
+		SmartDashboard.putNumber("ClimberHold", CLIMBER_HOLD);
 	}
 
 	public void initDefaultCommand() {
-		// setDefaultCommand(new Climb());
+		setDefaultCommand(new Climb());
 	}
 
 	public void hold() {
 		// climberMotor.set(CLIMBER_HOLD);
-		climberMotor.set(SmartDashboard.getNumber("Climber Hold", 0));
+		climberMotor.set(SmartDashboard.getNumber("ClimberHold", CLIMBER_HOLD));
 	}
 
 	public void set(double power) {

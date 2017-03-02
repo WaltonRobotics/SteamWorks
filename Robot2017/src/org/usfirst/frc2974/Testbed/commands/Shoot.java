@@ -1,9 +1,12 @@
 package org.usfirst.frc2974.Testbed.commands;
 
 import org.usfirst.frc2974.Testbed.Gamepad;
+import org.usfirst.frc2974.Testbed.OI;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.subsystems.Shooter;
+
+import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -17,98 +20,146 @@ public class Shoot extends Command {
 	public enum State {
 		Rest{
 			@Override
-			public void run(Shoot shoot) {
+			public State run(Shoot shoot) {
 				if(Robot.oi.shoot.get()){
-					shoot.state = MotorSpeedsUp;
+					shoot.motor.setP(SmartDashboard.getNumber("ShootP", 0));
+					shoot.motor.setI(SmartDashboard.getNumber("ShootI", 0));
+					shoot.motor.setD(SmartDashboard.getNumber("ShootD", 0));
+					shoot.motor.setF(SmartDashboard.getNumber("ShootF", 0));
+					SmartDashboard.putNumber("ShootPRead", shoot.motor.getP());
+					SmartDashboard.putNumber("ShootIRead", shoot.motor.getI());
+					SmartDashboard.putNumber("ShootDRead", shoot.motor.getD());
+					SmartDashboard.putNumber("ShootFRead", shoot.motor.getF());
+					Robot.shooter.enable();
+					return MotorSpeedsUp;
 				}
+				return this;
+			}
+
+			@Override
+			public void init(Shoot shoot) {
+				Robot.shooter.disable();
+				Robot.shooter.index(false); // FIXME Should be in disable()	
 			}
 		},
 		MotorSpeedsUp {
 			@Override
-			public void run(Shoot shoot) {
-				
-				if (Robot.shooter.isAtSpeed() || Robot.oi.atSpeed.get()) {
-					shoot.state = Aiming;
+			public State run(Shoot shoot) {
+				if (!Robot.oi.shoot.get()) {
+					return Rest;
 				}
+				else if (Robot.shooter.isAtSpeed() || Robot.oi.atSpeed.get()) {
+					return Aiming;
+				}
+				return this;
+			}
+
+			@Override
+			public void init(Shoot shoot) {
+				Robot.shooter.index(false);
 			}
 		},
 		Aiming {
 			@Override
-			public void run(Shoot shoot) {
-				SmartDashboard.putBoolean("isShooterAtSpeed", true);
-//				if (Robot.aim.aimed() || Robot.oi.aimOverride.get()) {
-//					shoot.state = ReadyToShoot;
-//				}
-				shoot.state = ReadyToShoot;
+			public State run(Shoot shoot) {
+				if (!Robot.oi.shoot.get()) {
+					return Rest;
+				}
+				return Firing;
 			}
 
-		},
-		ReadyToShoot {
 			@Override
-			public void run(Shoot shoot) {
-				
-				if (Robot.oi.shoot.get()) {
-					shoot.state = Firing;
-				}
+			public void init(Shoot shoot) {
 			}
 
 		},
 		Firing {
 			double time = -1;
 			final double duration = 0.75;
+			
 			@Override
-			public void run(Shoot shoot) {
-				if(time == -1) {time = Timer.getFPGATimestamp();}
-				if (Timer.getFPGATimestamp() - time < duration) {
-					Robot.shooter.index(true);
-				} else {
-					time = -1;
-					Robot.shooter.index(false);
+			public State run(Shoot shoot) {
+				if (!Robot.oi.shoot.get()) {
+					return Rest;
+				}
+				else if ((Timer.getFPGATimestamp() - time) > duration) {
 					if(SmartDashboard.getBoolean("ShootTraps",true)){
-						shoot.state = Trap;
+						return Trap;
 					}else{
-						shoot.state = MotorSpeedsUp;
+						return MotorSpeedsUp;
 					}
 				}
+				return this;
+			}
+
+			@Override
+			public void init(Shoot shoot) {
+				Robot.shooter.index(true);
+				time = Timer.getFPGATimestamp();
 			}
 
 		},
 		Trap {
-			double trapTime = 0.5;
-			double startTrap = Timer.getFPGATimestamp();
+			final double duration = 0.5;
+			double time;
 			@Override
-			public void run(Shoot shoot){
-				if(Timer.getFPGATimestamp() - startTrap > trapTime){
-					shoot.state = MotorSpeedsUp;
+			public State run(Shoot shoot){
+				if (!Robot.oi.shoot.get()) {
+					return Rest;
 				}
+				else if((Timer.getFPGATimestamp() - time)> duration){
+					return MotorSpeedsUp;
+				}
+				return this;
+			}
+			
+			@Override
+			public void init(Shoot shoot) {
+				time = Timer.getFPGATimestamp();
 			}
 		};
-		public void run(Shoot shoot) {
-		}
+		
+		public abstract void init(Shoot shoot);
+		public abstract State run(Shoot shoot);
 		public String toString(){
 			return name();
 		}
 	}
 
 	private State state;
+	private CANTalon motor;
 
 	public Shoot() {
 		requires(Robot.shooter);
+		motor = RobotMap.flywheelMotor;
 		SmartDashboard.putBoolean("ShootTraps", false);
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		state = State.Rest;
+		SmartDashboard.putNumber("ShootP", 0.2);
+		SmartDashboard.putNumber("ShootI", 0);
+		SmartDashboard.putNumber("ShootD", 1);
+		SmartDashboard.putNumber("ShootF", 0.075);
+		SmartDashboard.putString("Shooter State", state.name());
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	boolean pressed = false;
+	boolean isShootStart = false;
+	
 	protected void execute() {
 		//Robot.shooter.index(true);
-		SmartDashboard.putString("Shooter State", state.name());
+		//System.out.println("Get?: "+ Robot.oi.shoot.get());
 		
-		state.run(this);
+		State newState = state.run(this);
+		if (newState != state) {
+			state = newState;
+			SmartDashboard.putString("Shooter State", state.name());
+			state.init(this);
+		}
+		/*
 		if(Robot.oi.right.getRawButton(5)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.E)){
 			if(!pressed){
 				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-2.5);
@@ -123,12 +174,22 @@ public class Shoot extends Command {
 			pressed = false;
 		}
 		if(Robot.oi.shoot.get()){
+			if(!isShootStart){
+				motor.setP(SmartDashboard.getNumber("ShootP", 0));
+				motor.setI(SmartDashboard.getNumber("ShootI", 0));
+				motor.setD(SmartDashboard.getNumber("ShootD", 0));
+				motor.setF(SmartDashboard.getNumber("ShootF", 0));
+				System.out.println(String.format("FlywheelMotor P=%f I=%f D=%f F=%f", motor.getP(), motor.getI(), motor.getD(), motor.getF() ));
+				isShootStart = true;
+			}
 			Robot.shooter.enable();
 		}else{
 			Robot.shooter.disable();
 			state = State.Rest;
 			Robot.shooter.index(false);
+			isShootStart=false;
 		}
+		*/
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

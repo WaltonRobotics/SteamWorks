@@ -79,11 +79,17 @@ public class Drive extends Command {
 			Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));
 			//System.out.println("Cheesy Error Stuff: throttle: "+throttle+"; forward: "+forward+"; turn: "+turn+"; speeds: ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");
 		}
-		if (Robot.oi.shiftDown.get())
-			Robot.drivetrain.shiftDown();
-		if (Robot.oi.shiftUp.get())
-			Robot.drivetrain.shiftUp();
-
+		if(SmartDashboard.getBoolean("IsCompBot",true)){
+			if (Robot.oi.shiftDown.get())
+				Robot.drivetrain.shiftUp();
+			if (Robot.oi.shiftUp.get())
+				Robot.drivetrain.shiftDown();
+		}else{
+			if (Robot.oi.shiftDown.get())
+				Robot.drivetrain.shiftDown();
+			if (Robot.oi.shiftUp.get())
+				Robot.drivetrain.shiftUp();
+		}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

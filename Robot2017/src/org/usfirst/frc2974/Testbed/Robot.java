@@ -35,6 +35,7 @@ import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveTurnByEncoder;
 import org.usfirst.frc2974.Testbed.commands.ReadMotionControllerConstants;
 import org.usfirst.frc2974.Testbed.commands.SetMotionControllerConstants;
+import org.usfirst.frc2974.Testbed.commands.TestShooterPower;
 import org.usfirst.frc2974.Testbed.logging.CSVWriter;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerDriver;
 import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
@@ -216,7 +217,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("TurnByEncoder", new DriveTurnByEncoder(true, 0, 0, 0));
 		SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true, 0, 0, 0, 0));
 		
-		//SmartDashboard.putData("testShooterPower", new TestShooterPower());
+		SmartDashboard.putData("testShooterPower", new TestShooterPower());
 
 //		SmartDashboard.putData("Test peg with vision", peg);
 //		SmartDashboard.putData("Test boiler with vision", boiler);
