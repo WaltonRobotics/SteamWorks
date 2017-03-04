@@ -8,7 +8,6 @@ import org.usfirst.frc2974.Testbed.controllers.MotionPathTurn;
 import org.usfirst.frc2974.Testbed.controllers.MotionProvider;
 import org.usfirst.frc2974.Testbed.controllers.Point2D;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
-import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 import org.usfirst.frc2974.Testbed.subsystems.Drivetrain;
 import org.usfirst.frc2974.Testbed.subsystems.PoseEstimator;
 

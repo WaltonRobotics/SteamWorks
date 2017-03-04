@@ -6,8 +6,6 @@ import org.usfirst.frc2974.Testbed.controllers.Point2D;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.controllers.PoseProvider;
 import org.usfirst.frc2974.Testbed.controllers.RobotPair;
-import org.usfirst.frc2974.Testbed.logging.CSVWriter;
-import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;

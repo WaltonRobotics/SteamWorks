@@ -1,8 +1,6 @@
 package org.usfirst.frc2974.Testbed.autoncommands;
 
 import org.usfirst.frc2974.Testbed.Robot;
-import org.usfirst.frc2974.Testbed.logging.Mode;
-import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -30,13 +28,9 @@ public class DriveDiffTrapezoid extends Command {
 			public void run(DriveDiffTrapezoid d) {
 				if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
 					d.state = State.DEC;
-					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-							.info("Changing state to Deceleration because half time was reached");
 					return;
 				} else if (Timer.getFPGATimestamp() >= d.t1) {
 					d.state = State.CONST;
-					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-							.info("Changing sate to Constant because max speed reached");
 					return;
 				}
 
@@ -57,9 +51,6 @@ public class DriveDiffTrapezoid extends Command {
 			public void run(DriveDiffTrapezoid d) {
 				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
 					d.state = State.DEC;
-					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands").info(
-							"Changing state to Deceleration beacuse there is a need to start decerating to reach 0 before end");
-
 					return;
 				}
 
@@ -79,9 +70,6 @@ public class DriveDiffTrapezoid extends Command {
 			public void run(DriveDiffTrapezoid d) {
 				if (d.duration < Timer.getFPGATimestamp() - d.t0) {
 					d.state = END;
-					RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-							.info("Changing state to End beacuse the robot has reached time limit");
-
 					return;
 				}
 
@@ -100,8 +88,6 @@ public class DriveDiffTrapezoid extends Command {
 		END {
 			@Override // Sets speed to 0 and ends program
 			public void run(DriveDiffTrapezoid d) {
-				RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-						.info("Stopping the robot. Setting speeds to 0");
 				Robot.drivetrain.setSpeeds(0, 0);
 				d.end();
 			}
@@ -155,8 +141,6 @@ public class DriveDiffTrapezoid extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		RobotLoggerManager.setFileHandlerInstance(Mode.AUTONOMOUS, "robot.autoncommands")
-				.info("Drive straight for a duration of " + duration + " finished. Setting speeds to 0");
 		Robot.drivetrain.setSpeeds(0, 0);
 	}
 

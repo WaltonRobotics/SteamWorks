@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed.subsystems;
 
+import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.IntakeCommand;
 
@@ -21,7 +22,6 @@ public class Intake extends Subsystem {
 
 	public Intake() {
 		intakeTalon = RobotMap.intake;
-		SmartDashboard.putBoolean("IsCompBot", true);
 	}
 
 	public void initDefaultCommand() {
@@ -29,7 +29,7 @@ public class Intake extends Subsystem {
 	}
 
 	public void setIntake(double intakeSpeed) {
-		if(SmartDashboard.getBoolean("IsCompBot",true)){
+		if(Robot.isCompBot){
 			intakeTalon.set(-intakeSpeed);
 		}else{
 			intakeTalon.set(intakeSpeed);

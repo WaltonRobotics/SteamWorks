@@ -20,13 +20,11 @@ public class HopperControl extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		//if (Robot.hopper.noBallsInLeft() || Robot.oi.hopperControl.get()) {
 		if (Robot.oi.hopperControl.get()||Robot.oi.hopperAltControl.get()) {
-			Robot.hopper.setPiston(!SmartDashboard.getBoolean("IsCompBot",true));
+			Robot.hopper.setPiston(false);
 		} else {
-			Robot.hopper.setPiston(SmartDashboard.getBoolean("IsCompBot",true));
+			Robot.hopper.setPiston(true);
 		}
-		//SmartDashboard.putBoolean("areBallsLeftInLeftAccordingToLaser", Robot.hopper.noBallsInLeft());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

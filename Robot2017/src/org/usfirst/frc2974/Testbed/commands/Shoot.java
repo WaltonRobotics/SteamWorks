@@ -22,14 +22,6 @@ public class Shoot extends Command {
 			@Override
 			public State run(Shoot shoot) {
 				if(Robot.oi.shoot.get()){
-					shoot.motor.setP(SmartDashboard.getNumber("ShootP", 0));
-					shoot.motor.setI(SmartDashboard.getNumber("ShootI", 0));
-					shoot.motor.setD(SmartDashboard.getNumber("ShootD", 0));
-					shoot.motor.setF(SmartDashboard.getNumber("ShootF", 0));
-					SmartDashboard.putNumber("ShootPRead", shoot.motor.getP());
-					SmartDashboard.putNumber("ShootIRead", shoot.motor.getI());
-					SmartDashboard.putNumber("ShootDRead", shoot.motor.getD());
-					SmartDashboard.putNumber("ShootFRead", shoot.motor.getF());
 					Robot.shooter.enable();
 					return MotorSpeedsUp;
 				}
@@ -127,21 +119,17 @@ public class Shoot extends Command {
 	}
 
 	private State state;
-	private CANTalon motor;
+	private Shooter shooter;
 
 	public Shoot() {
-		requires(Robot.shooter);
-		motor = RobotMap.flywheelMotor;
+		shooter = Robot.shooter;
+		requires(shooter);
 		SmartDashboard.putBoolean("ShootTraps", false);
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		state = State.Rest;
-		SmartDashboard.putNumber("ShootP", 0.2);
-		SmartDashboard.putNumber("ShootI", 0);
-		SmartDashboard.putNumber("ShootD", 1);
-		SmartDashboard.putNumber("ShootF", 0.075);
 		SmartDashboard.putString("Shooter State", state.name());
 	}
 
@@ -150,46 +138,25 @@ public class Shoot extends Command {
 	boolean isShootStart = false;
 	
 	protected void execute() {
-		//Robot.shooter.index(true);
-		//System.out.println("Get?: "+ Robot.oi.shoot.get());
-		
 		State newState = state.run(this);
 		if (newState != state) {
 			state = newState;
 			SmartDashboard.putString("Shooter State", state.name());
 			state.init(this);
 		}
-		/*
 		if(Robot.oi.right.getRawButton(5)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.E)){
 			if(!pressed){
-				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)-2.5);
+				shooter.incrementSpeed(50);
 				pressed = true;
 			}
 		}else if(Robot.oi.right.getRawButton(4)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.W)){
 			if(!pressed){
-				SmartDashboard.putNumber("ShootSpeed", SmartDashboard.getNumber("ShootSpeed",Shooter.fSPEED)+2.5);
+				shooter.decrementSpeed(50);
 				pressed = true;
 			}
 		}else{
 			pressed = false;
 		}
-		if(Robot.oi.shoot.get()){
-			if(!isShootStart){
-				motor.setP(SmartDashboard.getNumber("ShootP", 0));
-				motor.setI(SmartDashboard.getNumber("ShootI", 0));
-				motor.setD(SmartDashboard.getNumber("ShootD", 0));
-				motor.setF(SmartDashboard.getNumber("ShootF", 0));
-				System.out.println(String.format("FlywheelMotor P=%f I=%f D=%f F=%f", motor.getP(), motor.getI(), motor.getD(), motor.getF() ));
-				isShootStart = true;
-			}
-			Robot.shooter.enable();
-		}else{
-			Robot.shooter.disable();
-			state = State.Rest;
-			Robot.shooter.index(false);
-			isShootStart=false;
-		}
-		*/
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

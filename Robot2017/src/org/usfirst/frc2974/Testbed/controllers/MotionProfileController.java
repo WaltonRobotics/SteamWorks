@@ -1,21 +1,15 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
-import java.util.ArrayDeque;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.usfirst.frc2974.Testbed.Robot;
-import org.usfirst.frc2974.Testbed.logging.RobotLoggerManager;
 
 import edu.wpi.first.wpilibj.Timer;
 
 public class MotionProfileController{
-	//kV = 0.4
-	//kK = 0
-	//KA = 0.1
-	//kP = 20
-	private double kV, kK, kA, kP;
+	private double kV=0, kK=0, kA=0, kP=0;
 	private Kinematics currentKinematics = null;
 	private KinematicPose staticKinematicPose;
 	private BlockingDeque<MotionProvider> motions = new LinkedBlockingDeque<MotionProvider>();
@@ -34,14 +28,9 @@ public class MotionProfileController{
 		
 	}
 	
-	public MotionProfileController(double kV, double kK, double kA, double kP,
-			PoseProvider poseProvider, double period){
+	public MotionProfileController(PoseProvider poseProvider, double period){
 		
 		this.poseProvider = poseProvider;
-		this.kV = kV;
-		this.kK = kK;
-		this.kA = kA;
-		this.kP = kP;
 		this.period = period;
 		
 		controller = new java.util.Timer();

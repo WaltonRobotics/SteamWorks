@@ -27,10 +27,7 @@ public class AutonShoot extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.flywheelMotor.set(Robot.shooter.rpmToEncoder(SmartDashboard.getNumber("ShootSpeed", Shooter.fSPEED)));
-    	if(Math.abs(Robot.shooter.getSpeed() - SmartDashboard.getNumber("ShootSpeed", Shooter.fSPEED)) < Shooter.ACCEPTED_ERROR) { //reference Shooter for math notes
-    		RobotMap.indexer.set(0.5);
-    	}
+    	// FIXME: Add logic to shoot
     }
 
     // Make this return true when this Command no longer needs to run execute()

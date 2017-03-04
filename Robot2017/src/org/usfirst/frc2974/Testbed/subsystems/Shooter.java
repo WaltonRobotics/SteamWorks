@@ -9,6 +9,7 @@ import com.ctre.CANTalon;
 import com.ctre.CANTalon.TrajectoryPoint;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,16 +18,46 @@ public class Shooter extends Subsystem {
 
 	private CANTalon flywheelMotor;
 	private Talon indexer;
-	boolean enabled = false;
+	private boolean enabled = false;
 
-	public static final double fSPEED = -8000; // rpm
-	public static final double ACCEPTED_ERROR = 250;
+	private static final double fSPEED = 13500; // rpm
+	private static final double ACCEPTED_ERROR = 250;
+	private static final double KP = 0.1;
+	private static final double KI = 0.0;
+	private static final double KD = 1.0;
+	private static final double KF = 0.041;
 
+	private double speed = fSPEED;
+	private double error = ACCEPTED_ERROR;
+	
 	public Shooter() {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
 		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.Speed);
-		flywheelMotor.setPID(0.3, 0, 0);
+		flywheelMotor.reverseOutput(true);
+		flywheelMotor.setPID(0, 0, 0);
+	}
+	
+	public static void declarePrefs(boolean reset) {
+		Preferences pref = Preferences.getInstance();
+		if (reset || !pref.containsKey("shooter.speed")) {
+			pref.putDouble("shooter.speed", fSPEED);
+		}
+		if (reset || !pref.containsKey("shooter.kP")) {
+			pref.putDouble("shooter.kP", KP);
+		}
+		if (reset || !pref.containsKey("shooter.kI")) {
+			pref.putDouble("shooter.kI", KI);
+		}
+		if (reset || !pref.containsKey("shooter.kD")) {
+			pref.putDouble("shooter.kD", KD);
+		}
+		if (reset || !pref.containsKey("shooter.kF")) {
+			pref.putDouble("shooter.kF", KF);
+		}
+		if (reset || !pref.containsKey("shooter.error")) {
+			pref.putDouble("shooter.error", ACCEPTED_ERROR);
+		}
 	}
 	
 	@Override
@@ -37,7 +68,13 @@ public class Shooter extends Subsystem {
 	public void enable() {
 		//flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional Coefficient", flywheelMotor.getP()), 0, 0);
 //		flywheelMotor.setPID(0.25, 0, 0);
-		flywheelMotor.set(Robot.pref.getDouble("ShootSpeed", fSPEED));
+		Preferences pref = Preferences.getInstance();
+		flywheelMotor.set(pref.getDouble("shooter.speed", fSPEED));
+		flywheelMotor.setF(pref.getDouble("shooter.kF", KF));
+		flywheelMotor.setP(pref.getDouble("shooter.kP", KP));
+		flywheelMotor.setI(pref.getDouble("shooter.kI", KI));
+		flywheelMotor.setD(pref.getDouble("shooter.kD", KD));
+		error = pref.getDouble("shooter.error", ACCEPTED_ERROR);
 		enabled = true;
 	}
 
@@ -51,21 +88,7 @@ public class Shooter extends Subsystem {
 	}
 
 	public boolean isAtSpeed() {
-		return Math.abs(flywheelMotor.getSpeed() - SmartDashboard.getNumber("ShootSpeed", 0)) < ACCEPTED_ERROR;
-	}
-	
-	public double getSpeed(){
-		return encoderToRpm(-flywheelMotor.getSpeed());
-	}
-	
-	public double encoderToRpm(double encoder){
-		return 60. * (10. / 1024.) * (encoder / 4.);
-		// 60 sec/min * 10 ticks/sec * 1 rev/1024 ticks * 1 tick/4 quarterTicks= rpm
-	}
-	public double rpmToEncoder(double rpm){
-//		System.out.println(1/encoderToRpm(rpm));
-		return 1/encoderToRpm(rpm);
-		//return(SmartDashboard.getNumber("ShootSpeed",fSPEED)/5000);
+		return Math.abs(flywheelMotor.getSpeed() - speed) < error;
 	}
 	
 	public void setPowerMode(double power)
@@ -87,12 +110,18 @@ public class Shooter extends Subsystem {
 		SmartDashboard.putNumber("ShooterRPM", flywheelMotor.getSpeed());
 		SmartDashboard.putNumber("ShooterCurrentTrue", flywheelMotor.getOutputCurrent());
 		SmartDashboard.putNumber("ShooterVoltageTrue", flywheelMotor.getOutputVoltage());
-		
-		
+		SmartDashboard.putNumber("TargetSpeed", speed);
 	}
 
 	public void index(boolean on) {
 		indexer.setSpeed(on ? -.4 : 0);
 	}
-
+	
+	public void incrementSpeed(double increment){
+		speed += increment;
+	}
+	
+	public void decrementSpeed(double increment){
+		speed -= increment;
+	}
 }
