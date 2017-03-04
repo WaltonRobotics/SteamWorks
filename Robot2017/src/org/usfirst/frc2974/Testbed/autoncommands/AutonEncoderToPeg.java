@@ -17,7 +17,7 @@ public class AutonEncoderToPeg extends Command {
 	public static final double MOVING_DISTANCE = -2.1082;
 
 	// 70 degrees
-	public static final double PEG_ANGLE = 1.222;
+	public static final double PEG_ANGLE = 1.134464;
 	public static final double BOILER_ANGLE = 1.57;
 
 	public static final double MAX_SPEED = 1;
@@ -59,10 +59,10 @@ public class AutonEncoderToPeg extends Command {
 		case CENTER:
 			addDriveParameters(0);
 			break;
-		case LEFT:
+		case RIGHT:
 			addDriveParameters(PEG_ANGLE);
 			break;
-		case RIGHT:
+		case LEFT:
 			addDriveParameters(-PEG_ANGLE);
 			break;
 		}
