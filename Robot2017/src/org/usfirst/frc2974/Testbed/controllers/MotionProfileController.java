@@ -66,6 +66,7 @@ public class MotionProfileController{
 		MotionProvider newMotion = motions.poll();
 		if (newMotion != null) {
 			currentKinematics = new Kinematics(newMotion, poseProvider.getWheelPositions(), Timer.getFPGATimestamp(), 0, 0, nPoints);
+//			System.out.println("starting new motion:" + currentKinematics.toString());
 			isEnabled = true;
 		}
 	}
@@ -150,18 +151,18 @@ public class MotionProfileController{
 			leftPower = Math.max(-1, Math.min(1, leftPower));
 			rightPower = Math.max(-1, Math.min(1, rightPower));
 			
-			System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f", leftPower,rightPower, 
-					kinematicPose.left.l - wheelPositions.left,
-					kinematicPose.right.l - wheelPositions.right));
+//			System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f", leftPower,rightPower, 
+//					kinematicPose.left.l - wheelPositions.left,
+//					kinematicPose.right.l - wheelPositions.right));
 		
 			Robot.drivetrain.setSpeeds(leftPower, rightPower);
-			System.out.println("starting motion");
-
+			
 			if(kinematicPose.isFinished) {
 				MotionProvider newMotion = motions.pollFirst();
 				if (newMotion != null) {
 					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(), 
 							                           currentKinematics.getTime(), 0, 0, nPoints);
+//					System.out.println("starting new motion:" + currentKinematics.toString());
 				}
 				else {
 					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(), currentKinematics.getWheelPositions(), 

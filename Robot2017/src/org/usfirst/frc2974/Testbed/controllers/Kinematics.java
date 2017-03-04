@@ -33,22 +33,20 @@ public class Kinematics {
 	  }
 	  
 	  private void evaluateFirstPose(RobotPair wheelPosition, double t) {
-		  System.out.println("evaluating first pose");
 		  Pose pose = motion.evaluatePose(0);
 		  KinematicState left = new KinematicState(wheelPosition.left, v0, 0);
 		  KinematicState right = new KinematicState(wheelPosition.right, v0, 0);
 		  
 		  lastPose = nextPose = new KinematicPose(pose, left, right, t, false);
-//		  System.out.println(lastPose.toString());
+		  System.out.println("First Pose: " + lastPose.toString());
 	  }
 	  private void evaluateLastPose(){
-		  System.out.println("evaluating last pose");
 		  Pose pose = motion.evaluatePose(1.0);
 		  KinematicState left = new KinematicState(lastPose.left.l, v1, 0);
 		  KinematicState right = new KinematicState(lastPose.right.l, v1, 0);
 		  
-		  lastPose = nextPose = new KinematicPose(pose, left, right, Double.POSITIVE_INFINITY, true);
-//		  System.out.println(lastPose.toString());
+		  lastPose = nextPose = new KinematicPose(pose, left, right, lastPose.t, true);
+		  System.out.println("Last Pose: " + lastPose.toString());
 	  }
 	  
 	  private void evaluateNextPose(double ds) {
@@ -58,7 +56,6 @@ public class Kinematics {
 			  evaluateLastPose();
 			  return;
 		  }
-		  System.out.println("evaluating next pose");
 
 		  boolean isFinished = false;
 		  if(s + ds > 1.0) {
@@ -71,9 +68,10 @@ public class Kinematics {
 		  
 		  //calculate the next pose from given motion
 		  Pose pose = motion.evaluatePose(s);
+		  double direction = Math.signum(motion.getLength());
 		  
 		  //estimate angle to turn s
-		  double dl = lastPose.X.distance(pose.X);
+		  double dl = lastPose.X.distance(pose.X) * direction;
 		  double dAngle = MotionProvider.boundAngle(pose.angle - lastPose.angle);
 		  
 		  //estimate lengths each wheel will turn
@@ -81,27 +79,30 @@ public class Kinematics {
 		  double dlRight = (dl + dAngle * robotWidth / 2);
 		  
 		  //assuming one of the wheels will limit motion, calculate time this step will take
-		  double dt = Math.max(dlLeft, dlRight) / motion.vCruise;
+		  double dt = Math.max(Math.abs(dlLeft), Math.abs(dlRight)) / motion.vCruise;
 		  double a = 0.0; //acceleration doesn't matter if following steady motion
-		  System.out.println(String.format("s=%f, dlLeft=%f, dlRight=%f, dt=%f", s, dlLeft, dlRight, dt));
+		  //System.out.println(String.format("s=%f, dl=%f, dlLeft=%f, dlRight=%f, dt=%f, direction=%f", s, dl, dlLeft, dlRight, dt, direction));
 		  //bound time steps for initial/final acceleration
 		  switch(motion.getLimitMode()) {
 		  case LimitLinearAcceleration:
 			  //assuming constant linear acceleration from initial/to final speeds
-			  double v = dl/dt;
+			  double v = Math.abs(dl)/dt;
 			  double lMidpoint = lastPose.getLCenter() + .5 * dl;
 			  
-			  double vAccel = Math.sqrt(v0 * v0 + motion.aMax * lMidpoint);
-			  if(vAccel < v) {
+			  double vAccel = Math.sqrt(v0 * v0 + motion.aMax * Math.abs(lMidpoint));
+			  double vDecel = Math.sqrt(v1 * v1 + motion.aMax * (Math.abs(motion.getLength() - lMidpoint)));
+			  
+			  if(vAccel < v && vAccel < vDecel) {
 				  a = motion.aMax;
-				  dt = dl / vAccel;
+				  dt = Math.abs(dl) / vAccel;
 			  }
 			  
-			  double vDecel = Math.sqrt(v1 * v1 + motion.aMax * (motion.getLength() - lMidpoint));
-			  if(vDecel < v) {
+			  if(vDecel < v && vDecel < vAccel) {
 				  a = -motion.aMax;
-				  dt = dl / vDecel;
+				  dt = Math.abs(dl) / vDecel;
 			  }
+			  
+			  //System.out.println(String.format("v=%f, vaccel=%f, vdecel=%f", v, vAccel, vDecel));
 			  break;
 		  case LimitRotationalAcceleration:
 			  //assuming constant angular acceleration from/to zero angular speed
@@ -109,39 +110,45 @@ public class Kinematics {
 			  double thetaMidpoint = lastPose.angle + .5 * dAngle;
 			  
 			  double omegaAccel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getInitialTheta())));
+			  double omegaDecel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getFinalTheta())));
 		//	  System.out.println("OmegaAccel=" + omegaAccel);
-			  if(omegaAccel < omega) {
+			  if(omegaAccel < omega&&omegaAccel < omegaDecel) {
 				  dt = Math.abs(dlRight - dlLeft) / omegaAccel / robotWidth;
 			  }
 			  
-			  double omegaDecel = Math.sqrt(motion.aMax * Math.abs(MotionProvider.boundAngle(thetaMidpoint - motion.getFinalTheta())));
 		//	  System.out.println("OmegaDecel=" + omegaDecel);
-			  if(omegaDecel < omega) {
+			  if(omegaDecel < omega&&omegaDecel < omegaAccel) {
 				  dt = Math.abs(dlRight - dlLeft) / omegaDecel / robotWidth;
 			  }
 			  break;
 		  }
 		  
 		  //create new kinematic state. Old state is retained to interpolate positions, new state contains estimate for speed and accel
-		  KinematicState left = new KinematicState(lastPose.left.l + dlLeft, dlLeft / dt, a);
-		  KinematicState right = new KinematicState(lastPose.right.l + dlRight, dlRight / dt, a);
+		  KinematicState left = new KinematicState(lastPose.left.l + dlLeft, dlLeft / dt, a * direction);
+		  KinematicState right = new KinematicState(lastPose.right.l + dlRight, dlRight / dt, a * direction);
 		  
 		  nextPose = new KinematicPose(pose, left, right, lastPose.t + dt, isFinished);
-//		  System.out.println(nextPose.toString());
+		  System.out.println("Next Pose " + nextPose.toString());
 	  }
 
 	  //calculates the path to follow within a particular distance
 	  public KinematicPose interpolatePose(double t) {
+		  
+		  //System.out.println(String.format("Last t=%3.1f Next t=%3.1f Now t=%3.1f", lastPose.t, nextPose.t, t));
+		  
 		  if(t <= lastPose.t) {
+			  return lastPose;
+		  }
+		  
+		  if(lastPose.isFinished) {
 			  return lastPose;
 		  }
 		  
 		  while(t > nextPose.t) {
 			  evaluateNextPose(1.0 / nPoints);
-		  }
-		  
-		  if(lastPose.isFinished) {
-			  return lastPose;
+			  if (lastPose.isFinished) {
+				  return lastPose;
+			  }
 		  }
 		  
 		  double dt = nextPose.t - lastPose.t;
@@ -161,5 +168,9 @@ public class Kinematics {
 	  
 	  public double getTime(){
 		  return nextPose.t;
+	  }
+	  
+	  public String toString() {
+		  return String.format("Last pose = %s Next pose = %s", lastPose, nextPose);
 	  }
 }

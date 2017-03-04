@@ -11,7 +11,12 @@ public abstract class MotionProvider{
 	protected double aMax;
 	
 	protected MotionProvider(double vCruise, double aMax) {
+		if(vCruise == 0)
+			throw new IllegalArgumentException("vCruise cannot be 0");
 		this.vCruise = vCruise;
+		
+		if(aMax == 0)
+			throw new IllegalArgumentException("aMax cannot be 0");
 		this.aMax = aMax;
 	}
 		

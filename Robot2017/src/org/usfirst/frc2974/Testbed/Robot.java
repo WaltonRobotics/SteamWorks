@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
 //import org.usfirst.frc2974.Testbed.auton.AutonEncoderWithVision;
 import org.usfirst.frc2974.Testbed.autoncommands.Aim;
+import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPeg;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveSplineByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightByEncoder;
@@ -73,6 +74,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
     RobotMap.init();
+    pref =Preferences.getInstance();
     if(!pref.containsKey("ShootSpeed")){
     	pref.putDouble("ShootSpeed", Shooter.fSPEED);
     }
@@ -226,7 +228,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true, 0, 0, 0, 0));
 		
 		SmartDashboard.putData("testShooterPower", new TestShooterPower());
-
+		SmartDashboard.putData("testToPegCenter", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
+		SmartDashboard.putData("testToPegLeft", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
+		SmartDashboard.putData("testToPegRight", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
 //		SmartDashboard.putData("Test peg with vision", peg);
 //		SmartDashboard.putData("Test boiler with vision", boiler);
 		//SmartDashboard.putData("testSplineEncoder", command);

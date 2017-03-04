@@ -107,7 +107,7 @@ public class Drive extends Command {
 			Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));
 			//System.out.println("Cheesy Error Stuff: throttle: "+throttle+"; forward: "+forward+"; turn: "+turn+"; speeds: ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");
 		}else{
-			double throttle = (Robot.oi.left.getAxis(Joystick.AxisType.kZ) + 1)/2;
+			double throttle = Math.pow((Robot.oi.left.getAxis(Joystick.AxisType.kZ) + 1)/2,2);
 			double forward = -getLeftThrottle();
 			double turn = getLeftTurn();
 			if(SmartDashboard.getBoolean("IsCompBot",true)){

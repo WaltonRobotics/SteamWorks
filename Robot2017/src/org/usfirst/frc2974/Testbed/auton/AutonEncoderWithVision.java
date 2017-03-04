@@ -37,10 +37,10 @@ public class AutonEncoderWithVision extends CommandGroup {
 		boolean found = false;
 
 		Robot.drivetrain
-				.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE, MAX_SPEED, MAX_ACCELERATION));
+				.addControllerMotion(new MotionPathStraight(pose, -MOVING_DISTANCE, MAX_SPEED, MAX_ACCELERATION));
 
 		if (!(found = hasFoundPeg())) {
-			Robot.drivetrain.addControllerMotion(new MotionPathTurn(pose, -PEG_ANGLE, MAX_SPEED, MAX_ACCELERATION));
+			Robot.drivetrain.addControllerMotion(new MotionPathTurn(pose, PEG_ANGLE, MAX_SPEED, MAX_ACCELERATION));
 
 			if (!(found = hasFoundPeg())) {
 				Robot.drivetrain
