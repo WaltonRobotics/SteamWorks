@@ -1,7 +1,6 @@
 package org.usfirst.frc2974.Testbed.autoncommands;
 
 import org.usfirst.frc2974.Testbed.Robot;
-import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable.Position;
 import org.usfirst.frc2974.Testbed.controllers.MotionPathStraight;
 import org.usfirst.frc2974.Testbed.controllers.MotionPathTurn;
 import org.usfirst.frc2974.Testbed.controllers.Point2D;
@@ -14,10 +13,12 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class AutonEncoderToPeg extends Command {
-	public static final double MOVING_DISTANCE = -2.1082;
-
-	// 70 degrees
-	public static final double PEG_ANGLE = 1.222;
+	public static final double MOVING_DISTANCE_LINE = -2.1082 + .055; 
+	public static final double MOVING_DISTANCE_PEG = -1.397 - .381;
+	
+	public static final double MOVING_DISTANCE_BASELINE = 2.3622;
+	// 61.26 degrees
+	public static final double PEG_ANGLE = 1.08026;
 	public static final double BOILER_ANGLE = 1.57;
 
 	public static final double MAX_SPEED = 1;
@@ -48,22 +49,36 @@ public class AutonEncoderToPeg extends Command {
 		
 	}
 
-	private void addDriveParameters(double angle) {
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE, MAX_SPEED, MAX_ACCELERATION));
+	private void addDriveParameters(double angle, double distance) {
+		driveTrain.cancelMotion();
+		
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+	}
+	
+	private void crossBaseline(double angle , double distance) {
+		
+		
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+		
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_BASELINE, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	@Override
 	public void initialize(){
 		switch (position) {
 		case CENTER:
-			addDriveParameters(0);
-			break;
-		case LEFT:
-			addDriveParameters(PEG_ANGLE);
+			addDriveParameters(0,0);
 			break;
 		case RIGHT:
-			addDriveParameters(-PEG_ANGLE);
+			addDriveParameters(PEG_ANGLE, MOVING_DISTANCE_PEG);
+			crossBaseline(PEG_ANGLE - Math.PI, MOVING_DISTANCE_PEG);
+			break;
+		case LEFT:
+			addDriveParameters(-PEG_ANGLE, MOVING_DISTANCE_PEG);
+			crossBaseline(Math.PI - PEG_ANGLE , MOVING_DISTANCE_PEG);
 			break;
 		}
 		
