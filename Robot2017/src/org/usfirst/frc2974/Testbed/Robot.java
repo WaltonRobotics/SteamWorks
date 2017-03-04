@@ -84,15 +84,15 @@ public class Robot extends IterativeRobot {
     	boolean reset;
 	    Preferences pref = Preferences.getInstance();
 	    reset = pref.getBoolean("reset", false);
-	    if(!pref.containsKey("ClimberHold")){
-	    	pref.putDouble("ClimberHold", Climber.CLIMBER_HOLD);
-	    }
-	    if(!pref.containsKey("isCompBot")) {
+	    
+	    if(reset || !pref.containsKey("isCompBot")) {
 	    	pref.putBoolean("isCompBot", true);
 	    }
 	    
 	    Drivetrain.declarePrefs(reset);
 	    Shooter.declarePrefs(reset);
+	    Climber.declarePrefs(reset);
+	    
 	    pref.putBoolean("reset", false);
     }
 	    
@@ -105,7 +105,7 @@ public class Robot extends IterativeRobot {
 
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
-        Robot.drivetrain.dumpSmartdashboardValues();
+        dumpSmartDashboardValues();
     }
 
     public void autonomousInit() {
@@ -118,6 +118,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
     	//poseEstimator.updatePose();
+    	dumpSmartDashboardValues();
         Scheduler.getInstance().run();
         
     }
@@ -154,10 +155,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	//poseEstimator.updatePose();
+    	dumpSmartDashboardValues();
         Scheduler.getInstance().run();
-        drivetrain.dumpSmartdashboardValues();
-        poseEstimator.dumpSmartdashboardValues();
-        shooter.dumpValuesToSamrtDashboard();
     }
     
     public void createTestButtons(){
@@ -203,6 +202,13 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
+    }
+    
+    private void dumpSmartDashboardValues () {
+        drivetrain.dumpSmartdashboardValues();
+        poseEstimator.dumpSmartdashboardValues();
+        shooter.dumpValuesToSamrtDashboard();
+        climber.dumpSmartdashboardValues();
     }
 }
 

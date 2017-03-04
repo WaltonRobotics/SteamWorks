@@ -55,7 +55,7 @@ public class Climber extends Subsystem {
 	}
 
 	public void set(double power) {
-		climberMotor.set(power);
+		climberMotor.set(-power);
 	}
 	
 	public double getCurrent() {
