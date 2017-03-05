@@ -1,0 +1,19 @@
+Commands
+
+Disable wifi: "sudo iwconfig txpower off" in startup script
+
+Disable bluetooth: add "dtoverlay= pi3-disable-bt" in /boot/config.txt
+
+Ensure script runs: add "sh~/picamera/startup.sh" to .profile
+
+Ensure networktables run (raspberry pi needs internet) "pip install pynetworktables"
+
+Turn ethernet on: sudo ifconfig eth0 up
+
+Turn ethernet off: sudo ifconfig eth0 down
+
+Test vision: bash ~/picamera/startup.sh
+
+Configure shooter: Set P,I,and D to 0, tune F by testing a the speed you think it should go at and see if it gets there,
+retry F values until it does, then add a large amount of P for each small amount of D until it rises quickly and does not
+vacillate.
