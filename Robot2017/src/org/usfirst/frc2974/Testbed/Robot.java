@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
     Command autonomousCommand;
 
     public static OI oi;
-    private SendableChooser<CommandGroup> autoChooser;
+    private SendableChooser<Command> autoChooser;
     public static Drivetrain drivetrain;
     public static PoseEstimator poseEstimator;
     public static Shooter shooter;
@@ -125,14 +125,11 @@ public class Robot extends IterativeRobot {
     
     private void createAutonomousChooser(){
     	
-    	autoChooser = new SendableChooser<CommandGroup>();
+    	autoChooser = new SendableChooser<Command>();
     	autoChooser.addDefault("Do Nothing", null);
-    	autoChooser.addObject("DiffLeft (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT, true));
-    	autoChooser.addObject("DiffMiddle (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.CENTER, true));
-    	autoChooser.addObject("DiffRight (Shoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, true));
-    	autoChooser.addObject("DiffLeft (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.LEFT, false));
-    	autoChooser.addObject("DiffMiddle (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.CENTER, false));
-    	autoChooser.addObject("DiffRight (NoShoot)", new AutonDiffRunnable(AutonDiffRunnable.Position.RIGHT, false));
+    	autoChooser.addObject("ToPegRight", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
+    	autoChooser.addObject("ToPegLeft", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
+    	autoChooser.addObject("ToPegMiddle", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
     	//autoChooser.addObject("Auton move to peg and boiler", new AutonEncoderWithVision(true));
     	//autoChooser.addObject("Auton move forward past line", new AutonEncoderWithVision(false));
     	SmartDashboard.putData("Auto", autoChooser);

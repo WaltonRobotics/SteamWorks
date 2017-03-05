@@ -21,19 +21,22 @@ public class Shooter extends Subsystem {
 	private boolean enabled = false;
 
 	private static final double fSPEED = 13500; // rpm
-	private static final double ACCEPTED_ERROR = 250;
+	private static final double ACCEPTED_ERROR = 400;
 	private static final double KP = 0.1;
 	private static final double KI = 0.0;
 	private static final double KD = 1.0;
-	private static final double KF = 0.041;
+	private static final double KF = 0.039;
+	private static final double iPOWER = -0.6;
 
 	private double speed = fSPEED;
 	private double error = ACCEPTED_ERROR;
+	private double iPower = iPOWER;
 	
 	public Shooter() {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
 		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.Speed);
+		flywheelMotor.reverseSensor(true);
 		flywheelMotor.reverseOutput(true);
 		flywheelMotor.setPID(0, 0, 0);
 	}
@@ -58,6 +61,9 @@ public class Shooter extends Subsystem {
 		if (reset || !pref.containsKey("shooter.error")) {
 			pref.putDouble("shooter.error", ACCEPTED_ERROR);
 		}
+		if (reset || !pref.containsKey("shooter.indexer.power")) {
+			pref.putDouble("shooter.indexer.power", iPOWER);
+		}
 	}
 	
 	@Override
@@ -74,6 +80,7 @@ public class Shooter extends Subsystem {
 		flywheelMotor.setP(pref.getDouble("shooter.kP", KP));
 		flywheelMotor.setI(pref.getDouble("shooter.kI", KI));
 		flywheelMotor.setD(pref.getDouble("shooter.kD", KD));
+		iPower = pref.getDouble("shooter.indexer.power", iPOWER);
 		error = pref.getDouble("shooter.error", ACCEPTED_ERROR);
 		enabled = true;
 	}
@@ -114,7 +121,7 @@ public class Shooter extends Subsystem {
 	}
 
 	public void index(boolean on) {
-		indexer.setSpeed(on ? -.4 : 0);
+		indexer.setSpeed(on ? iPower: 0);
 	}
 	
 	public void incrementSpeed(double increment){

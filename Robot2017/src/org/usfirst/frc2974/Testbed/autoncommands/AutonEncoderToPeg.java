@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class AutonEncoderToPeg extends Command {
-	public static final double MOVING_DISTANCE_LINE = -2.1082 + .055; 
-	public static final double MOVING_DISTANCE_PEG = -1.397 - .381;
+	public static final double MOVING_DISTANCE_LINE = -2.0532; 
+	public static final double MOVING_DISTANCE_PEG = -1.778;
 	
 	public static final double MOVING_DISTANCE_BASELINE = 2.3622;
 	// 61.26 degrees
@@ -56,35 +56,22 @@ public class AutonEncoderToPeg extends Command {
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
-	
-	private void crossBaseline(double angle , double distance) {
-		
-		
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
-		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
-		
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_BASELINE, MAX_SPEED, MAX_ACCELERATION));
-	}
 
 	@Override
 	public void initialize(){
 		switch (position) {
 		case CENTER:
-			addDriveParameters(0,0);
+			addDriveParameters(0,-0.7535);
 			break;
 		case RIGHT:
 			addDriveParameters(PEG_ANGLE, MOVING_DISTANCE_PEG);
-			crossBaseline(PEG_ANGLE - Math.PI, MOVING_DISTANCE_PEG);
 			break;
 		case LEFT:
 			addDriveParameters(-PEG_ANGLE, MOVING_DISTANCE_PEG);
-			crossBaseline(Math.PI - PEG_ANGLE , MOVING_DISTANCE_PEG);
 			break;
 		}
 		
 		this.driveTrain.startMotion();
-		
-		
 	}
 	
 	@Override

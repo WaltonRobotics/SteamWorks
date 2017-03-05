@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Climber extends Subsystem {
 
-	public static final double CLIMBER_HOLD = .1;
+	public static final double CLIMBER_HOLD = .3;
 
 	private Talon climberMotor;
 	private double hold;
@@ -55,7 +55,7 @@ public class Climber extends Subsystem {
 	}
 
 	public void set(double power) {
-		climberMotor.set(-power);
+		climberMotor.set(power);
 	}
 	
 	public double getCurrent() {

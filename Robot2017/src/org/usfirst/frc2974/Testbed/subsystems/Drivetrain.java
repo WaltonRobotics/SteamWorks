@@ -98,7 +98,7 @@ public class Drivetrain extends Subsystem {
  		if (reset || !pref.containsKey("drivetrain.kP")) {
  			pref.putDouble("drivetrain.kP", DEFAULTKP);
  		}
- 		if (reset || !pref.containsKey("drivetrain.kP")) {
+ 		if (reset || !pref.containsKey("drivetrain.driver")) {
  			pref.putString("drivetrain.driver", DEFAULTDRIVER.getName());
  		}
  	}
