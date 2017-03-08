@@ -43,7 +43,7 @@ public class Climber extends Subsystem {
 	}
 
 	public void hold() {
-		climberMotor.set(hold);
+		set(hold);
 	}
 	
 	public void incrementHold(){
@@ -55,7 +55,7 @@ public class Climber extends Subsystem {
 	}
 
 	public void set(double power) {
-		climberMotor.set(power);
+		climberMotor.set(-power);
 	}
 	
 	public double getCurrent() {

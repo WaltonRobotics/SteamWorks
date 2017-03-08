@@ -32,7 +32,7 @@ public class Climb extends Command {
 		if (Robot.oi.isHold()) {
 			Robot.climber.hold();
 		}else{
-			Robot.climber.set(Robot.oi.climbY());
+			Robot.climber.set(-Robot.oi.climbY());
 		}
 		if(Robot.oi.gamepad.getPOVButton(Gamepad.POV.N)){
 			if(!pressed){

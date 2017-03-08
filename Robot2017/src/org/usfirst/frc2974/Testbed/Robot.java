@@ -127,9 +127,9 @@ public class Robot extends IterativeRobot {
     	autoChooser = new SendableChooser<Command>();
     	autoChooser.addDefault("Do Nothing", null);
     	autoChooser.addObject("CrossLine", new DriveStraightTrapezoid(false,1,0.6,DriveStraightTrapezoid.Direction.ANTIFORWARD));
-    	autoChooser.addObject("ToPegRight", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
-    	autoChooser.addObject("ToPegLeft", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
-    	autoChooser.addObject("ToPegMiddle", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
+    	autoChooser.addObject("Station 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
+    	autoChooser.addObject("Station 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
+    	autoChooser.addObject("Station 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
     	//autoChooser.addObject("Auton move to peg and boiler", new AutonEncoderWithVision(true));
     	//autoChooser.addObject("Auton move forward past line", new AutonEncoderWithVision(false));
     	SmartDashboard.putData("Auto", autoChooser);

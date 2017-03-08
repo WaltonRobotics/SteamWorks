@@ -32,6 +32,7 @@ public class AutonEncoderToPeg extends Command {
 	private final static Pose pose = new Pose(point, 0);
 	public Position position;
 	public boolean doesShoot;
+	private boolean hold;
 	final double speed = 0.25;
 	final double accel = 0.25;
 
@@ -74,6 +75,7 @@ public class AutonEncoderToPeg extends Command {
 	@Override
 	public void initialize(){
 		Robot.poseEstimator.reset();
+		hold = false;
 		switch (position) {
 		case CENTER:
 			addDriveParametersCenter();
@@ -90,16 +92,29 @@ public class AutonEncoderToPeg extends Command {
 	}
 	
 	@Override
-	public boolean isFinished() {
-		if(driveTrain.isControllerFinished()){
-			return true;
+	public void execute() {
+		if (!hold && driveTrain.isControllerFinished()) {
+			driveTrain.cancelMotion();
+			driveTrain.setSpeeds(-0.15, -0.15);
+			hold = true;
 		}
+		else if (hold) {
+			driveTrain.setSpeeds(-0.25, -0.25);
+		}
+	}
+	
+	@Override
+	public boolean isFinished() {
+//		if(driveTrain.isControllerFinished()){
+//			return true;
+//		}
 		return false;
 	}
 	
 	@Override
 	public void end(){
 		driveTrain.cancelMotion();
+		driveTrain.setSpeeds(0, 0);
 	}
 	@Override
 	public void interrupted(){
