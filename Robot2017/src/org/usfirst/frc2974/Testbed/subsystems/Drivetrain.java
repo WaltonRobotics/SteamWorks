@@ -23,9 +23,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends Subsystem {
 	
 	private static final double PERIOD = .005;
-	private static final double DEFAULTKV = 0.368;
-	private static final double DEFAULTKK = 0.215;
-	private static final double DEFAULTKA = 0.025;
+	private static final double DEFAULTKV = 0.5;
+	private static final double DEFAULTKK = 0;
+	private static final double DEFAULTKA = 0.1;
 	private static final double DEFAULTKP = 20;
 	private static final Driver DEFAULTDRIVER = Driver.Robert;
 		
@@ -125,18 +125,21 @@ public class Drivetrain extends Subsystem {
  	
  	
 	public void shiftUp() {
-		if (!shifter.get()) {
-			shifter.set(true);
-		}
-	}
-
-	public void shiftDown() {
 		if (shifter.get()) {
 			shifter.set(false);
 		}
 	}
 
+	public void shiftDown() {
+		if (!shifter.get()) {
+			shifter.set(true);
+		}
+	}
+
 	public void dumpSmartdashboardValues() {
+		SmartDashboard.putNumber("Power Left", left.get());
+		SmartDashboard.putNumber("Power Right", right.get());
+
 	}
 
 	public void initDefaultCommand() {

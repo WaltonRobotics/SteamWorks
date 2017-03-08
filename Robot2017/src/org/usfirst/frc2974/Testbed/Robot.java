@@ -42,7 +42,6 @@ public class Robot extends IterativeRobot {
     public static Intake intake;
     public static Climber climber;
     public static Aim aim;
-    public static boolean isCompBot;
     
     /**
      * This function is run when the robot is first started up and should be
@@ -51,7 +50,6 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
 	    RobotMap.init();
 	    declarePrefs();
-		isCompBot = Preferences.getInstance().getBoolean("isCompBot", true);
 
     	poseEstimator = new PoseEstimator();
         drivetrain = new Drivetrain();
@@ -109,6 +107,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
+    	drivetrain.shiftDown();
         autonomousCommand = autoChooser.getSelected();
         autonomousCommand.start();
     }
@@ -127,6 +126,7 @@ public class Robot extends IterativeRobot {
     	
     	autoChooser = new SendableChooser<Command>();
     	autoChooser.addDefault("Do Nothing", null);
+    	autoChooser.addObject("CrossLine", new DriveStraightTrapezoid(false,1,0.6,DriveStraightTrapezoid.Direction.ANTIFORWARD));
     	autoChooser.addObject("ToPegRight", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
     	autoChooser.addObject("ToPegLeft", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
     	autoChooser.addObject("ToPegMiddle", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));

@@ -20,12 +20,12 @@ public class Shooter extends Subsystem {
 	private Talon indexer;
 	private boolean enabled = false;
 
-	private static final double fSPEED = 13500; // rpm
+	private static final double fSPEED = 14500; // rpm
 	private static final double ACCEPTED_ERROR = 400;
 	private static final double KP = 0.1;
 	private static final double KI = 0.0;
 	private static final double KD = 1.0;
-	private static final double KF = 0.039;
+	private static final double KF = 0.041;
 	private static final double iPOWER = -0.6;
 
 	private double speed = fSPEED;
@@ -75,13 +75,14 @@ public class Shooter extends Subsystem {
 		//flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional Coefficient", flywheelMotor.getP()), 0, 0);
 //		flywheelMotor.setPID(0.25, 0, 0);
 		Preferences pref = Preferences.getInstance();
-		flywheelMotor.set(pref.getDouble("shooter.speed", fSPEED));
 		flywheelMotor.setF(pref.getDouble("shooter.kF", KF));
 		flywheelMotor.setP(pref.getDouble("shooter.kP", KP));
 		flywheelMotor.setI(pref.getDouble("shooter.kI", KI));
 		flywheelMotor.setD(pref.getDouble("shooter.kD", KD));
 		iPower = pref.getDouble("shooter.indexer.power", iPOWER);
 		error = pref.getDouble("shooter.error", ACCEPTED_ERROR);
+		speed = pref.getDouble("shooter.speed", fSPEED);
+		flywheelMotor.set(speed);
 		enabled = true;
 	}
 

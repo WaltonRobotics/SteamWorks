@@ -25,12 +25,7 @@ public class Hopper extends Subsystem {
 		setDefaultCommand(new HopperControl());
 	}
 
-	public void setPiston(boolean on) {
-		if (Robot.isCompBot) {
-			piston.set(on);
-		}
-		else {
-			piston.set(!on);
-		}
+	public void setPistonDown(boolean down) {
+		piston.set(down);
 	}
 }

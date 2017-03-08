@@ -126,7 +126,7 @@ public class MotionProfileController{
 				kinematicPose = staticKinematicPose;
 			}
 			
-			//System.out.println("time:" + time+ " " + wheelPositions + " " + kinematicPose);
+//			System.out.println("time:" + time+ " " + wheelPositions + " " + kinematicPose);
 			synchronized (this) {
 				//feed forward
 				leftPower += (kV * kinematicPose.left.v + kK) + kA * kinematicPose.left.a;

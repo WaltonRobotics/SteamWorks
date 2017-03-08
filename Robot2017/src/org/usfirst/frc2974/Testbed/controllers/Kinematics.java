@@ -14,6 +14,7 @@ public class Kinematics {
 	  private double v0;
 	  private double v1;
 	  private int nPoints;
+	  private double l0;
 	  
 	  public Kinematics(MotionProvider motion, RobotPair wheelPosition, double t, double v0, double v1, int nPoints) {
 		  this.motion = motion;
@@ -38,6 +39,7 @@ public class Kinematics {
 		  KinematicState right = new KinematicState(wheelPosition.right, v0, 0);
 		  
 		  lastPose = nextPose = new KinematicPose(pose, left, right, t, false);
+		  l0 = lastPose.getLCenter();
 		  System.out.println("First Pose: " + lastPose.toString());
 	  }
 	  private void evaluateLastPose(){
@@ -87,7 +89,7 @@ public class Kinematics {
 		  case LimitLinearAcceleration:
 			  //assuming constant linear acceleration from initial/to final speeds
 			  double v = Math.abs(dl)/dt;
-			  double lMidpoint = lastPose.getLCenter() + .5 * dl;
+			  double lMidpoint = lastPose.getLCenter() + .5 * dl - l0;
 			  
 			  double vAccel = Math.sqrt(v0 * v0 + motion.aMax * Math.abs(lMidpoint));
 			  double vDecel = Math.sqrt(v1 * v1 + motion.aMax * (Math.abs(motion.getLength() - lMidpoint)));

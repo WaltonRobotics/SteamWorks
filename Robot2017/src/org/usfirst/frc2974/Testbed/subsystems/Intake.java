@@ -29,10 +29,6 @@ public class Intake extends Subsystem {
 	}
 
 	public void setIntake(double intakeSpeed) {
-		if(Robot.isCompBot){
-			intakeTalon.set(-intakeSpeed);
-		}else{
-			intakeTalon.set(intakeSpeed);
-		}
+		intakeTalon.set(-intakeSpeed);
 	}
 }

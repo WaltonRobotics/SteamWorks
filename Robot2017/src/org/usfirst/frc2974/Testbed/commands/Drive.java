@@ -87,17 +87,10 @@ public class Drive extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	//change
 	protected void execute() {
-		if(Robot.isCompBot){
-			if (Robot.oi.shiftUp.get()||Robot.oi.shiftUpAlt.get())
+		if (Robot.oi.shiftUp.get()||Robot.oi.shiftUpAlt.get())
 				drivetrain.shiftUp();
-			if (Robot.oi.shiftDown.get()||Robot.oi.shiftDownAlt.get())
+		if (Robot.oi.shiftDown.get()||Robot.oi.shiftDownAlt.get())
 				drivetrain.shiftDown();
-		}else{
-			if (Robot.oi.shiftDown.get()||Robot.oi.shiftDownAlt.get())
-				drivetrain.shiftDown();
-			if (Robot.oi.shiftUp.get()||Robot.oi.shiftUpAlt.get())
-				drivetrain.shiftUp();
-		}
 		
 		switch (drivetrain.getDriver()) {
 		case Tank: 

@@ -48,8 +48,22 @@ public class AutonEncoderToPeg extends Command {
 		this.position = position;
 		
 	}
-
-	private void addDriveParameters(double angle, double distance) {
+	
+	private void addDriveParametersCenter() {
+		driveTrain.cancelMotion();
+		
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, -2.00, MAX_SPEED, MAX_ACCELERATION));
+	}
+	
+	private void addDriveParametersLeft(double angle, double distance) {
+		driveTrain.cancelMotion();
+		
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+	}
+	
+	private void addDriveParametersRight(double angle, double distance) {
 		driveTrain.cancelMotion();
 		
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
@@ -59,15 +73,16 @@ public class AutonEncoderToPeg extends Command {
 
 	@Override
 	public void initialize(){
+		Robot.poseEstimator.reset();
 		switch (position) {
 		case CENTER:
-			addDriveParameters(0,-0.7535);
+			addDriveParametersCenter();
 			break;
 		case RIGHT:
-			addDriveParameters(PEG_ANGLE, MOVING_DISTANCE_PEG);
+			addDriveParametersRight(PEG_ANGLE, MOVING_DISTANCE_PEG);
 			break;
 		case LEFT:
-			addDriveParameters(-PEG_ANGLE, MOVING_DISTANCE_PEG);
+			addDriveParametersLeft(-PEG_ANGLE, MOVING_DISTANCE_PEG);
 			break;
 		}
 		
