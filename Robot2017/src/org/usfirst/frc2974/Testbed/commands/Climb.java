@@ -5,8 +5,10 @@ import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.IntakeCommand.State;
 import org.usfirst.frc2974.Testbed.subsystems.Climber;
+import org.usfirst.frc2974.Testbed.subsystems.Intake;
 import org.usfirst.frc2974.Testbed.subsystems.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,32 +23,37 @@ public class Climb extends Command {
 		climber = Robot.climber;
 		requires(climber);
 	}
-
+	public enum State {
+		Holding {
+			@Override
+			public void run(Climb climb) {
+				//if 2 buttons are pressed go normal
+				if(Robot.oi.climbY() != 0) {
+					Robot.climber.set(Robot.oi.climbY());
+				}
+				Robot.climber.setHold();
+			}
+		},
+		NormalClimbing {
+			@Override
+			public void run(Climb climb) {
+				Robot.climber.set(Robot.oi.climbY());
+			}
+		};
+		public void run(Climb climb) {
+		}
+	}
+	
+	private State state;
 	// Called just before this Command runs the first time
 	protected void initialize() {
+		state = State.NormalClimbing;
 		climber.setHold();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (Robot.oi.isHold()) {
-			Robot.climber.hold();
-		}else{
-			Robot.climber.set(Robot.oi.climbY());
-		}
-		if(Robot.oi.gamepad.getPOVButton(Gamepad.POV.N)){
-			if(!pressed){
-				climber.incrementHold();
-				pressed = true;
-			}
-		}else if(Robot.oi.gamepad.getPOVButton(Gamepad.POV.S)){
-			if(!pressed){
-				climber.decrementHold();
-				pressed = true;
-			}
-		}else{
-			pressed = false;
-		}
+		
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

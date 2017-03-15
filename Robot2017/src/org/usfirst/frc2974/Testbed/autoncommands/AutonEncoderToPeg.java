@@ -22,7 +22,9 @@ public class AutonEncoderToPeg extends Command {
 	public static final double BOILER_ANGLE = 1.57;
 
 	public static final double MAX_SPEED = 1;
-	public static final double MAX_ACCELERATION = .7;
+	public static final double MAX_ACCELERATION = .8;
+	public static final double MAX_CHARGE_ACCELERATION = .9;
+	
 
 	public static final double MAX_SPEED_TURN = 1;
 	public static final double MAX_ACCELERATION_TURN = .5;
@@ -61,7 +63,7 @@ public class AutonEncoderToPeg extends Command {
 		
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_CHARGE_ACCELERATION));
 	}
 	
 	private void addDriveParametersRight(double angle, double distance) {
@@ -69,7 +71,7 @@ public class AutonEncoderToPeg extends Command {
 		
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_CHARGE_ACCELERATION));
 	}
 
 	@Override

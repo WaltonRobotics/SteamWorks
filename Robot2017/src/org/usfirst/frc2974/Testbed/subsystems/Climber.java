@@ -41,17 +41,13 @@ public class Climber extends Subsystem {
 		Preferences pref = Preferences.getInstance();
 		hold = pref.getDouble("climber.hold", CLIMBER_HOLD);
 	}
+	
+	public void changeHoldTo(double newHold){
+		hold = newHold;
+	}
 
 	public void hold() {
 		set(hold);
-	}
-	
-	public void incrementHold(){
-		hold += 0.05;
-	}
-	
-	public void decrementHold(){
-		hold -= 0.05;
 	}
 
 	public void set(double power) {
@@ -60,5 +56,9 @@ public class Climber extends Subsystem {
 	
 	public double getCurrent() {
 		return RobotMap.powerPanel.getCurrent(RobotMap.CLIMBER_MOTOR_POWER_CHANNEL);
+	}
+	
+	public double getHold(){
+		return hold;
 	}
 }
