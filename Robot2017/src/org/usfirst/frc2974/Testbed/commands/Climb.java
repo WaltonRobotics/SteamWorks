@@ -40,7 +40,7 @@ public class Climb extends Command {
 				
 				if(Robot.climber.isHolding) 
 				{
-					Robot.climber.set(Math.min(Climber.CLIMBER_HOLD + Robot.oi.climbY(),1));
+					Robot.climber.set(Math.max(Math.min(climb.climber.getCurrentHoldValue() + Robot.oi.climbY(),1), 0 ));
 				} else {
 					Robot.climber.set(Robot.oi.climbY());
 				}

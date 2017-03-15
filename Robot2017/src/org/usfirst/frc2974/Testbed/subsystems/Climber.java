@@ -45,6 +45,11 @@ public class Climber extends Subsystem {
 		set(hold);
 	}
 	
+	public double getCurrentHoldValue()
+	{
+		return hold;
+	}
+	
 	public void startHold(){
 		isHolding = true;
 	}
