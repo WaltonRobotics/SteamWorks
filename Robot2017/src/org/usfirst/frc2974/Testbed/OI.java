@@ -71,8 +71,16 @@ public class OI {
 		atSpeed = new JoystickButton(right, 6);
 	}
 
-	public boolean isHold() {
+	public boolean startHold() {
 		return gamepad.getRawButton(7);
+	}
+	
+	public boolean stopHold() {
+		return gamepad.getRawButton(5) && gamepad.getRawButton(7);
+	}
+	
+	public boolean startClimb() {
+		return gamepad.getRawButton(5);
 	}
 
 	public double climbY() {

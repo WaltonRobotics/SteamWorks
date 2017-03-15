@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Climber extends Subsystem {
 
 	public static final double CLIMBER_HOLD = .3;
+	
+	public boolean isHolding = false;
 
 	private Talon climberMotor;
 	private double hold;
@@ -37,21 +39,18 @@ public class Climber extends Subsystem {
 		
 	}
 	
-	public void setHold(){
+	public void hold(){
 		Preferences pref = Preferences.getInstance();
 		hold = pref.getDouble("climber.hold", CLIMBER_HOLD);
-	}
-
-	public void hold() {
 		set(hold);
 	}
 	
-	public void incrementHold(){
-		hold += 0.05;
+	public void startHold(){
+		isHolding = true;
 	}
 	
-	public void decrementHold(){
-		hold -= 0.05;
+	public void endHold() {
+		isHolding = false;
 	}
 
 	public void set(double power) {
