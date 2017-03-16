@@ -41,8 +41,7 @@ public class Climber extends Subsystem {
 	
 	public void hold(){
 		Preferences pref = Preferences.getInstance();
-		hold = pref.getDouble("climber.hold", CLIMBER_HOLD);
-		set(hold);
+		hold = pref.getDouble("climber.hold", CLIMBER_HOLD) * -1;
 	}
 	
 	public double getCurrentHoldValue()
@@ -59,7 +58,7 @@ public class Climber extends Subsystem {
 	}
 
 	public void set(double power) {
-		climberMotor.set(-power);
+		climberMotor.set(power);
 	}
 	
 	public double getCurrent() {

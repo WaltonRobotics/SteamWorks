@@ -31,16 +31,14 @@ public class Climb extends Command {
 			@Override
 			public void init(Climb climb) {
 				Robot.climber.set(0);
-				Robot.climber.endHold();
 			}
 
 			@Override
 			public State run(Climb climb) {
 				climb.changed = false;
 				
-				if(Robot.climber.isHolding) 
-				{
-					Robot.climber.set(Math.max(Math.min(climb.climber.getCurrentHoldValue() + Robot.oi.climbY(),1), 0 ));
+				if(Robot.climber.isHolding){
+					Robot.climber.set(Math.max(Robot.climber.getCurrentHoldValue()+Robot.oi.climbY(),-1));
 				} else {
 					Robot.climber.set(Robot.oi.climbY());
 				}
@@ -49,7 +47,7 @@ public class Climb extends Command {
 					Robot.climber.startHold();
 				}
 				
-				else if(Robot.oi.stopHold()) {
+				if(Robot.oi.endHold()) {
 					Robot.climber.endHold();
 				}
 				
@@ -64,12 +62,11 @@ public class Climb extends Command {
 	
 	private State state;	
 	private Climber climber;
-	private boolean changed;
+	private boolean changed = true;
 	
 	public Climb() {
 		// Use requires() here to declare subsystem dependencies
 		climber = Robot.climber;
-		changed = true;
 		requires(climber);
 	}
 

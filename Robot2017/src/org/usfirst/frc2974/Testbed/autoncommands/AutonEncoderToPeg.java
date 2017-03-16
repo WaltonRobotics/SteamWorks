@@ -53,22 +53,29 @@ public class AutonEncoderToPeg extends Command {
 	private void addDriveParametersCenter() {
 		driveTrain.cancelMotion();
 		
+//		Robot.drivetrain.shiftUp();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, -2.00, MAX_SPEED, MAX_ACCELERATION));
+		Robot.drivetrain.shiftDown();
 	}
 	
 	private void addDriveParametersLeft(double angle, double distance) {
 		driveTrain.cancelMotion();
 		
+//		Robot.drivetrain.shiftUp();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+		
+		Robot.drivetrain.shiftDown();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
 	
 	private void addDriveParametersRight(double angle, double distance) {
 		driveTrain.cancelMotion();
-		
+//		Robot.drivetrain.shiftUp();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+		
+		Robot.drivetrain.shiftDown();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
 
@@ -76,6 +83,9 @@ public class AutonEncoderToPeg extends Command {
 	public void initialize(){
 		Robot.poseEstimator.reset();
 		hold = false;
+		
+		Robot.drivetrain.shiftUp();
+		
 		switch (position) {
 		case CENTER:
 			addDriveParametersCenter();

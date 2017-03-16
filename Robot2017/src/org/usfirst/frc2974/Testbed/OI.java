@@ -75,8 +75,8 @@ public class OI {
 		return gamepad.getRawButton(7);
 	}
 	
-	public boolean stopHold() {
-		return gamepad.getRawButton(5) && gamepad.getRawButton(7);
+	public boolean endHold() {
+		return gamepad.getRawButton(5);
 	}
 	
 	public boolean startClimb() {
