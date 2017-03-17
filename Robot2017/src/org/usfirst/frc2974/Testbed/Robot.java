@@ -76,6 +76,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("encoderAccel", 0);
         SmartDashboard.putNumber("encoderSpeed", 0);
         SmartDashboard.putNumber("encoderAngle", 0);
+        SmartDashboard.putBoolean("isForwards", true);
     }
     
     private void declarePrefs() {

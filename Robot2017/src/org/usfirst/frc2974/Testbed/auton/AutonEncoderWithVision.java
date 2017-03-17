@@ -24,7 +24,7 @@ public class AutonEncoderWithVision extends CommandGroup {
 	private final static Point2D point = new Point2D(0, 0);
 
 	private final static Pose pose = new Pose(point, 0);
-
+/*
 	public AutonEncoderWithVision(boolean command) {
 		if (command)
 			autonSequence();
@@ -115,5 +115,6 @@ public class AutonEncoderWithVision extends CommandGroup {
 		Robot.drivetrain.addControllerMotion(new MotionPathSpline(pose, distance * Math.cos(angle), final_,
 				distance * Math.sin(angle), MAX_SPEED, MAX_ACCELERATION));
 	}
+	*/
 
 }

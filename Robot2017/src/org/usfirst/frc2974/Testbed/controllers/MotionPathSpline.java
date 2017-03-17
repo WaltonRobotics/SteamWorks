@@ -8,12 +8,13 @@ public class MotionPathSpline extends MotionProvider{
 	private double length;
 	private double angle0;
 	private double angle1;
+	private boolean isForwards;
 	
-	public MotionPathSpline(Pose initial, double l0, Pose final_, double l1, double vCruise, double aMax) {
+	public MotionPathSpline(Pose initial, double l0, Pose final_, double l1, double vCruise, double aMax, boolean isForwards) {
 		super(vCruise, aMax);
 		this.controlPoints[0] = initial.X;
-		this.controlPoints[1] = initial.offsetPoint(l0);
-		this.controlPoints[2] = initial.offsetPoint(l1);
+		this.controlPoints[1] = initial.offsetPoint(isForwards? l0:-l0);
+		this.controlPoints[2] = final_.offsetPoint(isForwards? -l1:l1);
 		this.controlPoints[3] = final_.X;
 		
 		Point2D Xprev = evaluate(B(0));
@@ -28,14 +29,26 @@ public class MotionPathSpline extends MotionProvider{
 		this.length = length;
 		this.angle0 = initial.angle;
 		this.angle1 = final_.angle;
+		this.isForwards = isForwards;
+		System.out.println(initial.toString());
+		System.out.println(controlPoints[1].toString());
+		System.out.println(controlPoints[2].toString());
+		System.out.println(final_.toString());
+
 	}
 
 
 	@Override
 	public Pose evaluatePose(double s) {
 		Point2D X = evaluate(B(s));
-		Point2D dXds = evaluate(dBds(s));	
-		double theta = Math.atan2(dXds.y, dXds.x);
+		Point2D dXds = evaluate(dBds(s));
+		double theta;
+		if(isForwards){
+			theta = Math.atan2(dXds.y, dXds.x);
+		}
+		else{
+			theta = Math.atan2(-dXds.y, -dXds.x);
+		}
 		return new Pose(X, theta); //Find the values for v and a and position	
 	}
 	
@@ -75,7 +88,7 @@ public class MotionPathSpline extends MotionProvider{
 
 	@Override
 	public double getLength() {
-		return length;
+		return isForwards? length: -length;
 	}
 
 	@Override

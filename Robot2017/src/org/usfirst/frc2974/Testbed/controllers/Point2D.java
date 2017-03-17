@@ -19,4 +19,8 @@ public class Point2D {
 	public static Point2D interpolate(Point2D pose0, double p, Point2D pose1, double q) {
 		return new Point2D(pose0.x * p + pose1.x * q, pose0.y * p + pose1.y * q);
 	}
+	
+	public String toString(){
+		return String.format("x=%f, y=%f", this.x, this.y);
+	}
 }
