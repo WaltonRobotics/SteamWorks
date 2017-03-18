@@ -109,6 +109,8 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
+    	SmartDashboard.putBoolean("captureImage", true);
+    	
     	drivetrain.shiftDown();
         autonomousCommand = autoChooser.getSelected();
         autonomousCommand.start();
@@ -142,6 +144,8 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
+    	 SmartDashboard.putBoolean("captureImage", false);
+    	
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -151,6 +155,8 @@ public class Robot extends IterativeRobot {
         createTestButtons();
 
         Scheduler.getInstance().add(aim);	//TODO add other commands
+        
+       
     }
 
     /**

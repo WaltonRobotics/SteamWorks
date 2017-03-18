@@ -24,6 +24,8 @@ public class Climb extends Command {
 				if(Robot.oi.startHold() || Robot.oi.toggleHold()) {
 					return Climbing;	
 				}
+				Robot.climber.set(Robot.oi.climbY());
+				
 				return Disabled;
 			}
 			
@@ -48,6 +50,8 @@ public class Climb extends Command {
 					Robot.climber.endHold();
 					return Disabled;
 				}
+				
+				Robot.climber.set(Robot.oi.climbY());
 				
 				return Climbing;
 			}
