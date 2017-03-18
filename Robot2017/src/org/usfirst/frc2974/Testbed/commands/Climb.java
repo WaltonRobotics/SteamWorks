@@ -19,9 +19,9 @@ public class Climb extends Command {
 
 			@Override
 			public State run(Climb climb) {
-				climb.changed = false;
+
 				
-				if(Robot.oi.startClimb()) {	climb.changed = true;	return Climbing;	}
+				if(Robot.oi.startClimb()) {		return Climbing;	}
 				return Disabled;
 			}
 			
@@ -35,7 +35,7 @@ public class Climb extends Command {
 
 			@Override
 			public State run(Climb climb) {
-				climb.changed = false;
+
 				
 				if(Robot.climber.isHolding){
 					Robot.climber.set(Math.max(Robot.climber.getCurrentHoldValue()+Robot.oi.climbY(),-1));
@@ -62,7 +62,6 @@ public class Climb extends Command {
 	
 	private State state;	
 	private Climber climber;
-	private boolean changed = true;
 	
 	public Climb() {
 		// Use requires() here to declare subsystem dependencies
@@ -73,13 +72,17 @@ public class Climb extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		state = State.Disabled;
+		state.init(this);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		
-		if(changed) {	state.init(this);	}
-		state = state.run(this);
+		State newState = state.run(this);
+		if(newState != state) {
+			newState.init(this);
+			state = newState;
+			}
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

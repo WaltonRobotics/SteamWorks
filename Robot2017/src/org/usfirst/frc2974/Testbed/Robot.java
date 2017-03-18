@@ -77,6 +77,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("encoderSpeed", 0);
         SmartDashboard.putNumber("encoderAngle", 0);
         SmartDashboard.putBoolean("isForwards", true);
+        SmartDashboard.putBoolean("captureImage", false);
     }
     
     private void declarePrefs() {
@@ -128,9 +129,13 @@ public class Robot extends IterativeRobot {
     	autoChooser = new SendableChooser<Command>();
     	autoChooser.addDefault("Do Nothing", null);
     	autoChooser.addObject("CrossLine", new DriveStraightTrapezoid(false,1,0.6,DriveStraightTrapezoid.Direction.ANTIFORWARD));
-    	autoChooser.addObject("Station 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
-    	autoChooser.addObject("Station 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
-    	autoChooser.addObject("Station 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
+    	autoChooser.addObject("Red 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1));
+    	autoChooser.addObject("Red 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2));
+    	autoChooser.addObject("Red 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED3));
+    	autoChooser.addObject("Blue 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE1));
+    	autoChooser.addObject("Blue 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE2));
+    	autoChooser.addObject("Blue 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE3));
+    	
     	//autoChooser.addObject("Auton move to peg and boiler", new AutonEncoderWithVision(true));
     	//autoChooser.addObject("Auton move forward past line", new AutonEncoderWithVision(false));
     	SmartDashboard.putData("Auto", autoChooser);
@@ -186,9 +191,9 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true, 0, 0, 0, 0));
 		
 		SmartDashboard.putData("testShooterPower", new TestShooterPower());
-		SmartDashboard.putData("testToPegCenter", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
-		SmartDashboard.putData("testToPegLeft", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
-		SmartDashboard.putData("testToPegRight", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
+//		SmartDashboard.putData("testToPegCenter", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
+//		SmartDashboard.putData("testToPegLeft", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED));
+//		SmartDashboard.putData("testToPegRight", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
     }
 
     @Override

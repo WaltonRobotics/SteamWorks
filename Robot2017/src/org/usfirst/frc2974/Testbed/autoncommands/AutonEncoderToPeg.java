@@ -1,8 +1,10 @@
 package org.usfirst.frc2974.Testbed.autoncommands;
 
 import org.usfirst.frc2974.Testbed.Robot;
+import org.usfirst.frc2974.Testbed.controllers.MotionPathSpline;
 import org.usfirst.frc2974.Testbed.controllers.MotionPathStraight;
 import org.usfirst.frc2974.Testbed.controllers.MotionPathTurn;
+import org.usfirst.frc2974.Testbed.controllers.MotionProvider;
 import org.usfirst.frc2974.Testbed.controllers.Point2D;
 import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.subsystems.Drivetrain;
@@ -21,15 +23,18 @@ public class AutonEncoderToPeg extends Command {
 	public static final double PEG_ANGLE = 1.08026;
 	public static final double BOILER_ANGLE = 1.57;
 
-	public static final double MAX_SPEED = 1;
-	public static final double MAX_ACCELERATION = .7;
+	public static final double MAX_SPEED = 2;
+	public static final double MAX_ACCELERATION = 2;
+	
+	public static final double PEG_SPEED = 1;
+	public static final double PEG_ACCELERATION = 1;
 
-	public static final double MAX_SPEED_TURN = 1;
-	public static final double MAX_ACCELERATION_TURN = .5;
+//	public static final double MAX_SPEED_TURN = 1;
+//	public static final double MAX_ACCELERATION_TURN = .5;
 	
 	private final static Point2D point = new Point2D(0, 0);
 
-	private final static Pose pose = new Pose(point, 0);
+	private final static Pose zero = new Pose(point, 0);
 	public Position position;
 	public boolean doesShoot;
 	private boolean hold;
@@ -39,7 +44,7 @@ public class AutonEncoderToPeg extends Command {
 	public Command toGoalCommand;
 
 	public enum Position {
-		LEFT, RIGHT, CENTER
+		RED1, RED2, RED3, BLUE1, BLUE2,BLUE3
 	}
 
 	private Drivetrain driveTrain;
@@ -50,51 +55,118 @@ public class AutonEncoderToPeg extends Command {
 		
 	}
 	
-	private void addDriveParametersCenter() {
+	private void addDriveParametersRed2() {
 		driveTrain.cancelMotion();
 		
-//		Robot.drivetrain.shiftUp();
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, -2.00, MAX_SPEED, MAX_ACCELERATION));
-		Robot.drivetrain.shiftDown();
+		driveTrain.addControllerMotion(new MotionPathStraight(zero, -2.00, MAX_SPEED, MAX_ACCELERATION));
+
 	}
 	
-	private void addDriveParametersLeft(double angle, double distance) {
+	private void addDriveParametersRed1(double angle, double distance) {
 		driveTrain.cancelMotion();
 		
-//		Robot.drivetrain.shiftUp();
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
-		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+		Pose peg = new Pose(new Point2D(-2.64, 1.32), -Math.PI / 3.0);
 		
-		Robot.drivetrain.shiftDown();
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+		MotionProvider toPeg = new MotionPathSpline(zero, 1.78, peg, 1.05, MAX_SPEED, MAX_ACCELERATION, false);
+		
+		driveTrain.addControllerMotion(toPeg);
+		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED , PEG_ACCELERATION));
+		
+		
+		
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
+//		driveTrain.addControllerMotion(new MotionPathTurn(zero, angle, MAX_SPEED, MAX_ACCELERATION));
+
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
 	
-	private void addDriveParametersRight(double angle, double distance) {
+	private void addDriveParametersRed3(double angle, double distance) {
 		driveTrain.cancelMotion();
-//		Robot.drivetrain.shiftUp();
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
-		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
+
+		Pose peg = new Pose(new Point2D(-2.28, -1.67), Math.PI / 3.0 + 0.15);
 		
-		Robot.drivetrain.shiftDown();
-		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
+		MotionProvider toPeg = new MotionPathSpline(zero, 1.58, peg, .95, MAX_SPEED, MAX_ACCELERATION, false);
+		
+		driveTrain.addControllerMotion(toPeg);
+		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED , PEG_ACCELERATION));
+		
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
+//		driveTrain.addControllerMotion(new MotionPathTurn(zero, angle, MAX_SPEED, MAX_ACCELERATION));
+		
+
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, distance, MAX_SPEED, MAX_ACCELERATION));
+	}
+	
+	private void addDriveParametersBlue2() {
+		driveTrain.cancelMotion();
+		
+		driveTrain.addControllerMotion(new MotionPathStraight(zero, -2.00, MAX_SPEED, MAX_ACCELERATION));
+
+	}
+	
+	
+	
+	private void addDriveParametersBlue1(double angle, double distance) {
+		driveTrain.cancelMotion();
+		
+		Pose peg = new Pose(new Point2D(-2.64, 1.47), -Math.PI / 3.0);
+		
+		MotionProvider toPeg = new MotionPathSpline(zero, 1.78, peg, 1.05, MAX_SPEED, MAX_ACCELERATION, false);
+		
+		driveTrain.addControllerMotion(toPeg);
+		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED , PEG_ACCELERATION));
+		
+		
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
+//		driveTrain.addControllerMotion(new MotionPathTurn(zero, angle, MAX_SPEED, MAX_ACCELERATION));
+		
+
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, distance, MAX_SPEED, MAX_ACCELERATION));
+	}
+	
+	private void addDriveParametersBlue3(double angle, double distance) {
+		driveTrain.cancelMotion();
+		
+		Pose peg = new Pose(new Point2D(-2.28, -1.52), Math.PI / 3.0 + 0.15);
+		
+		MotionProvider toPeg = new MotionPathSpline(zero, 1.58, peg, .95, MAX_SPEED, MAX_ACCELERATION, false);
+		
+		driveTrain.addControllerMotion(toPeg);
+		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED , PEG_ACCELERATION));
+		
+		
+
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
+//		driveTrain.addControllerMotion(new MotionPathTurn(zero, angle, MAX_SPEED, MAX_ACCELERATION));
+		
+
+//		driveTrain.addControllerMotion(new MotionPathStraight(zero, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	@Override
 	public void initialize(){
 		Robot.poseEstimator.reset();
 		hold = false;
-		
-		Robot.drivetrain.shiftUp();
+		Robot.drivetrain.shiftDown();
 		
 		switch (position) {
-		case CENTER:
-			addDriveParametersCenter();
+		case RED2:
+			addDriveParametersRed2();
 			break;
-		case RIGHT:
-			addDriveParametersRight(PEG_ANGLE, MOVING_DISTANCE_PEG);
+		case RED3:
+			addDriveParametersRed3(PEG_ANGLE, MOVING_DISTANCE_PEG);
 			break;
-		case LEFT:
-			addDriveParametersLeft(-PEG_ANGLE, MOVING_DISTANCE_PEG);
+		case RED1:
+			addDriveParametersRed1(-PEG_ANGLE, MOVING_DISTANCE_PEG);
+			break;
+		case BLUE2:
+			addDriveParametersBlue2();
+			break;
+		case BLUE3:
+			addDriveParametersBlue3(PEG_ANGLE, MOVING_DISTANCE_PEG);
+			break;
+		case BLUE1:
+			addDriveParametersBlue1(-PEG_ANGLE, MOVING_DISTANCE_PEG);
 			break;
 		}
 		
