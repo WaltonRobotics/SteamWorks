@@ -21,7 +21,9 @@ public class Climb extends Command {
 			public State run(Climb climb) {
 
 				
-				if(Robot.oi.startClimb()) {		return Climbing;	}
+				if(Robot.oi.startHold() || Robot.oi.toggleHold()) {
+					return Climbing;	
+				}
 				return Disabled;
 			}
 			
@@ -30,25 +32,21 @@ public class Climb extends Command {
 
 			@Override
 			public void init(Climb climb) {
-				Robot.climber.set(0);
+				Robot.climber.hold();
+				Robot.climber.startHold();
 			}
 
 			@Override
 			public State run(Climb climb) {
 
-				
-				if(Robot.climber.isHolding){
-					Robot.climber.set(Math.max(Robot.climber.getCurrentHoldValue()+Robot.oi.climbY(),-1));
-				} else {
-					Robot.climber.set(Robot.oi.climbY());
-				}
-				
 				if(Robot.oi.startHold()) {
-					Robot.climber.startHold();
+					Robot.climber.hold();
+					return Climbing;
 				}
 				
-				if(Robot.oi.endHold()) {
+				if(Robot.oi.toggleHold()) {
 					Robot.climber.endHold();
+					return Disabled;
 				}
 				
 				return Climbing;
