@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
@@ -102,6 +103,8 @@ public class Robot extends IterativeRobot {
      */
     public void disabledInit(){
     	SmartDashboard.putBoolean("captureImage", false);
+    	
+    	CameraServer.getInstance().removeCamera("USB Camera 0");
     }
 
     public void disabledPeriodic() {
@@ -158,7 +161,7 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().add(aim);	//TODO add other commands
         
        
-      
+        CameraServer.getInstance().startAutomaticCapture();
     }
 
     /**
