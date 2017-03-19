@@ -101,6 +101,7 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
+    	SmartDashboard.putBoolean("captureImage", false);
     }
 
     public void disabledPeriodic() {
@@ -157,6 +158,7 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().add(aim);	//TODO add other commands
         
        
+      
     }
 
     /**
