@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSplineByEncoder extends Command {
+	public static double stateX;
+	public static double stateY;
+	public static double stateAngle;
+	
 	public final double SETTLE_TIME = 1;
 	private Drivetrain driveTrain;
 	private PoseEstimator poseEstimator;
@@ -45,8 +49,8 @@ public class DriveSplineByEncoder extends Command {
 	protected void initialize() {
 		if (isDashboard) {
 			distance = SmartDashboard.getNumber("encoderDistance", 0);
-			speed = SmartDashboard.getNumber("encoderSpeed", 0);
-			acceleration = SmartDashboard.getNumber("encoderAccel", 0);
+			speed = SmartDashboard.getNumber("encoderSpeed", 2);
+			acceleration = SmartDashboard.getNumber("encoderAccel", 2);
 			angle = SmartDashboard.getNumber("encoderAngle", 0) * Math.PI / 180;
 			isForwards = SmartDashboard.getBoolean("isForwards", true);
 		}
@@ -64,8 +68,8 @@ public class DriveSplineByEncoder extends Command {
 		System.out.println(final_.toString()
 		*/
 		Pose init = poseEstimator.getPose();
-		Pose final_ = new Pose(new Point2D(-2.28, -1.522), (Math.PI / 3 + 0.15));
-		motion = new MotionPathSpline(init, 1.58, final_, 0.95, speed, acceleration, false);
+		Pose final_ = new Pose(new Point2D(stateX, stateY), stateAngle);
+		motion = new MotionPathSpline(init, 1.58, final_, 0.95, 2, 2, false);
 
 		driveTrain.addControllerMotion(motion);
 		System.out.println(motion.toString());

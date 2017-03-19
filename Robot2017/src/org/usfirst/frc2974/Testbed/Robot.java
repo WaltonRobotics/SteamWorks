@@ -13,11 +13,14 @@ import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
 //import org.usfirst.frc2974.Testbed.auton.AutonEncoderWithVision;
 import org.usfirst.frc2974.Testbed.autoncommands.Aim;
 import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPeg;
+import org.usfirst.frc2974.Testbed.autoncommands.BotPosition;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveSplineByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveTurnByEncoder;
+import org.usfirst.frc2974.Testbed.autoncommands.RedBoiler;
+import org.usfirst.frc2974.Testbed.autoncommands.RedFar;
 import org.usfirst.frc2974.Testbed.commands.SetMotionControllerConstants;
 import org.usfirst.frc2974.Testbed.commands.TestShooterPower;
 import org.usfirst.frc2974.Testbed.subsystems.*;
@@ -158,6 +161,9 @@ public class Robot extends IterativeRobot {
     }
     
     public void createTestButtons(){
+    	
+    	SmartDashboard.putData("RedBoiler", new BotPosition(BotPosition.Position.RedBoiler));
+    	SmartDashboard.putData("RedFar", new BotPosition(BotPosition.Position.RedFar));
     	
       	SmartDashboard.putData("MoveTimeForward",new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0), DriveStraightTrapezoid.Direction.FORWARD));
