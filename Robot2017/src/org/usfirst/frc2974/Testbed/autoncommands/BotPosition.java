@@ -7,7 +7,7 @@ public class BotPosition extends Command{
 	public Position position;
 	
 	public enum Position {
-		RedBoiler, RedFar, BlueBoiler, BlueFar
+		RedBoiler, RedCenter, RedFar, BlueBoiler, BlueCenter, BlueFar
 	}
 	
 	public BotPosition(Position position) {
@@ -19,14 +19,20 @@ public class BotPosition extends Command{
 		case RedBoiler:
 			new RedBoiler();
 			break;
+		case RedCenter:
+			new RedCenter();
+			break;
 		case RedFar:
 			new RedFar();
 			break;
 		case BlueBoiler:
+			new BlueBoiler();
+			break;
+		case BlueCenter:
+			new BlueCenter();
 			break;
 		case BlueFar:
-			break;
-		default:
+			new BlueFar();
 			break;
 		}
 	}

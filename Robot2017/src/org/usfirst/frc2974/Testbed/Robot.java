@@ -131,11 +131,18 @@ public class Robot extends IterativeRobot {
     	autoChooser = new SendableChooser<Command>();
     	autoChooser.addDefault("Do Nothing", null);
     	autoChooser.addObject("CrossLine", new DriveStraightTrapezoid(false,1,0.6,DriveStraightTrapezoid.Direction.ANTIFORWARD));
-    	autoChooser.addObject("Station 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
-    	autoChooser.addObject("Station 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
-    	autoChooser.addObject("Station 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
-    	//autoChooser.addObject("Auton move to peg and boiler", new AutonEncoderWithVision(true));
-    	//autoChooser.addObject("Auton move forward past line", new AutonEncoderWithVision(false));
+//    	autoChooser.addObject("Station 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
+//    	autoChooser.addObject("Station 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
+//    	autoChooser.addObject("Station 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
+//    	autoChooser.addObject("Auton move to peg and boiler", new AutonEncoderWithVision(true));
+//    	autoChooser.addObject("Auton move forward past line", new AutonEncoderWithVision(false));
+    	autoChooser.addObject("Red1", new BotPosition(BotPosition.Position.RedFar));
+    	autoChooser.addObject("Red2", new BotPosition(BotPosition.Position.RedCenter));
+    	autoChooser.addObject("Red3", new BotPosition(BotPosition.Position.RedBoiler));
+    	autoChooser.addObject("Blue1", new BotPosition(BotPosition.Position.BlueFar));
+    	autoChooser.addObject("Blue2", new BotPosition(BotPosition.Position.BlueCenter));
+    	autoChooser.addObject("Blue3", new BotPosition(BotPosition.Position.BlueBoiler));
+    	
     	SmartDashboard.putData("Auto", autoChooser);
     }
 
@@ -161,9 +168,6 @@ public class Robot extends IterativeRobot {
     }
     
     public void createTestButtons(){
-    	
-    	SmartDashboard.putData("RedBoiler", new BotPosition(BotPosition.Position.RedBoiler));
-    	SmartDashboard.putData("RedFar", new BotPosition(BotPosition.Position.RedFar));
     	
       	SmartDashboard.putData("MoveTimeForward",new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax",0)
     			,SmartDashboard.getNumber("Duration",0), DriveStraightTrapezoid.Direction.FORWARD));
