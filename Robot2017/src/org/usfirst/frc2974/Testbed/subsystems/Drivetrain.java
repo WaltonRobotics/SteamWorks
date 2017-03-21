@@ -139,6 +139,9 @@ public class Drivetrain extends Subsystem {
 	public void dumpSmartdashboardValues() {
 		SmartDashboard.putNumber("Power Left", left.get());
 		SmartDashboard.putNumber("Power Right", right.get());
+		
+		SmartDashboard.putNumber("Raw Left", left.getRaw());
+		SmartDashboard.putNumber("Raw Right", right.getRaw());
 
 	}
 

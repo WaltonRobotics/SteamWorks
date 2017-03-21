@@ -55,6 +55,10 @@ public class DriveSplineByEncoder extends Command {
 			angle = SmartDashboard.getNumber("encoderAngle", 0) * Math.PI / 180;
 			isForwards = SmartDashboard.getBoolean("isForwards", true);
 		}
+		
+		stateX = stateX - SmartDashboard.getNumber("autonXOffset", 0);
+		stateY = (stateY > 0) ? stateY + SmartDashboard.getNumber("autonYOffsetLeft", 0) : 
+				stateY - SmartDashboard.getNumber("autonYOffsetRight", 0);
 /*
 		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
 		motionFinished = false;

@@ -80,6 +80,10 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("encoderSpeed", 0);
         SmartDashboard.putNumber("encoderAngle", 0);
         SmartDashboard.putBoolean("isForwards", true);
+        
+        SmartDashboard.putNumber("autonXOffset", 0);
+        SmartDashboard.putNumber("autonYOffsetRight", 0);
+        SmartDashboard.putNumber("autonYOffsetLeft", 0);
     }
     
     private void declarePrefs() {
@@ -130,7 +134,7 @@ public class Robot extends IterativeRobot {
     	
     	autoChooser = new SendableChooser<Command>();
     	autoChooser.addDefault("Do Nothing", null);
-    	autoChooser.addObject("CrossLine", new DriveStraightTrapezoid(false,1,0.6,DriveStraightTrapezoid.Direction.ANTIFORWARD));
+//    	autoChooser.addObject("CrossLine", new DriveStraightTrapezoid(false,1,0.6,DriveStraightTrapezoid.Direction.ANTIFORWARD));
 //    	autoChooser.addObject("Station 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.LEFT));
 //    	autoChooser.addObject("Station 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
 //    	autoChooser.addObject("Station 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
