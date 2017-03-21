@@ -14,6 +14,12 @@ Turn ethernet off: sudo ifconfig eth0 down
 
 Test vision: bash ~/picamera/startup.sh
 
+Find all processes running: ps aux
+
+Find all processes and find only the python processes: ps aux | grep python
+
+Kill a running process: kill -9 (PID number)
+
 Configure shooter: Set P,I,and D to 0, tune F by testing a the speed you think it should go at and see if it gets there,
 retry F values until it does, then add a large amount of P for each small amount of D until it rises quickly and does not
 vacillate.

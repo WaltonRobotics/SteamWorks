@@ -65,9 +65,9 @@ public class AutonEncoderToPeg extends Command {
 	private void addDriveParametersRed1(double angle, double distance) {
 		driveTrain.cancelMotion();
 		
-		Pose peg = new Pose(new Point2D(-2.41, 1.32), -Math.PI / 3.0);
+		Pose peg = new Pose(new Point2D(-2.44, 1.32), -Math.PI / 3.0);
 		
-		MotionProvider toPeg = new MotionPathSpline(zero, 1.55, peg, 1.05, MAX_SPEED, MAX_ACCELERATION, false);
+		MotionProvider toPeg = new MotionPathSpline(zero, 1.58, peg, 1.05, MAX_SPEED, MAX_ACCELERATION, false);
 		
 		driveTrain.addControllerMotion(toPeg);
 		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED , PEG_ACCELERATION));

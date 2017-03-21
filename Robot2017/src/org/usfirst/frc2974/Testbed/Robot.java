@@ -104,7 +104,8 @@ public class Robot extends IterativeRobot {
     public void disabledInit(){
     	SmartDashboard.putBoolean("captureImage", false);
     	
-    	CameraServer.getInstance().removeCamera("USB Camera 0");
+//    	CameraServer.getInstance().removeCamera("cam0");
+    	
     }
 
     public void disabledPeriodic() {
@@ -116,8 +117,14 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putBoolean("captureImage", true);
     	
     	drivetrain.shiftDown();
-        autonomousCommand = autoChooser.getSelected();
-        autonomousCommand.start();
+    	try {
+    		autonomousCommand = autoChooser.getSelected();
+    		autonomousCommand.start();
+    	}
+    	catch (NullPointerException e){    	
+    		autonomousCommand =  new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1);
+    		autonomousCommand.start();
+    	}
     }
 
     /**
@@ -160,8 +167,9 @@ public class Robot extends IterativeRobot {
 
         Scheduler.getInstance().add(aim);	//TODO add other commands
         
-       
-        CameraServer.getInstance().startAutomaticCapture();
+//        CameraServer.getInstance().addServer("server");
+//        CameraServer.getInstance().startAutomaticCapture("cam0", 0);
+//        CameraServer.getInstance().startAutomaticCapture();
     }
 
     /**
