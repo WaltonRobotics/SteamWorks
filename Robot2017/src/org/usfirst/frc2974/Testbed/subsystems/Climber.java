@@ -1,4 +1,5 @@
 package org.usfirst.frc2974.Testbed.subsystems;
+import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.RobotMap;
 import org.usfirst.frc2974.Testbed.commands.Climb;
 
@@ -41,12 +42,7 @@ public class Climber extends Subsystem {
 	
 	public void hold(){
 		Preferences pref = Preferences.getInstance();
-		hold = pref.getDouble("climber.hold", CLIMBER_HOLD) * -1;
-	}
-	
-	public double getCurrentHoldValue()
-	{
-		return hold;
+		hold = pref.getDouble("climber.hold", CLIMBER_HOLD);
 	}
 	
 	public void startHold(){
@@ -58,7 +54,12 @@ public class Climber extends Subsystem {
 	}
 
 	public void set(double power) {
-		climberMotor.set(power);
+		if(isHolding){
+			climberMotor.set(power + hold);
+		}
+		else{
+			climberMotor.set(power);
+		}
 	}
 	
 	public double getCurrent() {

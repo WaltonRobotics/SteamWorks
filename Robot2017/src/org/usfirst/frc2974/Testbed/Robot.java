@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
@@ -101,6 +102,10 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
+    	SmartDashboard.putBoolean("captureImage", false);
+    	
+//    	CameraServer.getInstance().removeCamera("cam0");
+    	
     }
 
     public void disabledPeriodic() {
@@ -109,9 +114,17 @@ public class Robot extends IterativeRobot {
     }
 
     public void autonomousInit() {
+    	SmartDashboard.putBoolean("captureImage", true);
+    	
     	drivetrain.shiftDown();
-        autonomousCommand = autoChooser.getSelected();
-        autonomousCommand.start();
+    	try {
+    		autonomousCommand = autoChooser.getSelected();
+    		autonomousCommand.start();
+    	}
+    	catch (NullPointerException e){    	
+    		autonomousCommand =  new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1);
+    		autonomousCommand.start();
+    	}
     }
 
     /**
@@ -142,6 +155,8 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
+    	 SmartDashboard.putBoolean("captureImage", false);
+    	
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove
@@ -151,6 +166,10 @@ public class Robot extends IterativeRobot {
         createTestButtons();
 
         Scheduler.getInstance().add(aim);	//TODO add other commands
+        
+//        CameraServer.getInstance().addServer("server");
+//        CameraServer.getInstance().startAutomaticCapture("cam0", 0);
+//        CameraServer.getInstance().startAutomaticCapture();
     }
 
     /**

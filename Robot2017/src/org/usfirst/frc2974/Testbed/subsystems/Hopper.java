@@ -26,6 +26,7 @@ public class Hopper extends Subsystem {
 	}
 
 	public void setPistonDown(boolean down) {
-		piston.set(down);
+		//FIXME: Disabled for Ashville as solenoid removed
+//		piston.set(down);
 	}
 }
