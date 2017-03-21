@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class BotPosition extends Command{
 	
+	/**
+	 * Selects the command sequence that runs when autonomous starts
+	 */
+	
 	public Position position;
 	
 	public enum Position {

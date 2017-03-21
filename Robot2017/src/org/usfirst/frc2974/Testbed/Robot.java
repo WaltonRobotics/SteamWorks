@@ -139,9 +139,9 @@ public class Robot extends IterativeRobot {
     	autoChooser.addObject("Red1", new BotPosition(BotPosition.Position.RedFar));
     	autoChooser.addObject("Red2", new BotPosition(BotPosition.Position.RedCenter));
     	autoChooser.addObject("Red3", new BotPosition(BotPosition.Position.RedBoiler));
-    	autoChooser.addObject("Blue1", new BotPosition(BotPosition.Position.BlueFar));
+    	autoChooser.addObject("Blue1", new BotPosition(BotPosition.Position.BlueBoiler));
     	autoChooser.addObject("Blue2", new BotPosition(BotPosition.Position.BlueCenter));
-    	autoChooser.addObject("Blue3", new BotPosition(BotPosition.Position.BlueBoiler));
+    	autoChooser.addObject("Blue3", new BotPosition(BotPosition.Position.BlueFar));
     	
     	SmartDashboard.putData("Auto", autoChooser);
     }

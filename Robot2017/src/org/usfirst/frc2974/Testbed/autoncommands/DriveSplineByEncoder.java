@@ -13,9 +13,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSplineByEncoder extends Command {
-	public static double stateX;
-	public static double stateY;
-	public static double stateAngle;
 	
 	public final double SETTLE_TIME = 1;
 	private Drivetrain driveTrain;
@@ -29,7 +26,11 @@ public class DriveSplineByEncoder extends Command {
 	private double finishedTime;
 	private boolean motionFinished;
 	private boolean isForwards;
-
+	
+	public static double stateX;
+	public static double stateY;		//The variables that define the spline
+	public static double stateAngle;
+	
 	public DriveSplineByEncoder(boolean isDashboard, double distance, double speed, double acceleration, double angle) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
