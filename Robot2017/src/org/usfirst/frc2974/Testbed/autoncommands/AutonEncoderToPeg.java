@@ -40,7 +40,7 @@ public class AutonEncoderToPeg extends Command {
 	private static final double HOLD_POWER = 0.25;
 
 	public enum Position {
-		RED1, RED2, RED3, BLUE1, BLUE2, BLUE3
+		RED1, RED2, RED3, BLUE1, BLUE2, BLUE3, RED1GF, RED3GF, BLUE1GF, BLUE3GF
 	}
 
 	private Drivetrain driveTrain;
@@ -126,7 +126,36 @@ public class AutonEncoderToPeg extends Command {
 
 		driveTrain.addControllerMotion(toPeg);
 		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED, PEG_ACCELERATION));
+		
+	}
+	
+	private void addDriveParametersRed1GF() {
+		driveTrain.cancelMotion();
 
+		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0);
+
+		Pose peg = new Pose(PEG_POINT_RED1, -PEG_ANGLE);
+		peg.offsetPoint(-offset);
+
+		MotionProvider toPeg = new MotionPathSpline(ZERO, PEG_START_LENGTH + offset, peg, PEG_END_LENGTH, MAX_SPEED,
+				MAX_ACCELERATION, false);
+
+		driveTrain.addControllerMotion(toPeg);
+		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED, PEG_ACCELERATION));
+		
+		
+	}
+	
+	private void addDriveParametersRed3GF() {
+		
+	}
+	
+	private void addDriveParametersBlue1GF() {
+		
+	}
+	
+	private void addDriveParametersBlue3GF() {
+		
 	}
 
 	@Override
@@ -153,6 +182,18 @@ public class AutonEncoderToPeg extends Command {
 			break;
 		case BLUE1:
 			addDriveParametersBlue1();
+			break;
+		case RED1GF:
+			addDriveParametersRed1GF();
+			break;
+		case RED3GF:
+			addDriveParametersRed3GF();
+			break;
+		case BLUE1GF:
+			addDriveParametersBlue1GF();
+			break;
+		case BLUE3GF:
+			addDriveParametersBlue3GF();
 			break;
 		}
 
