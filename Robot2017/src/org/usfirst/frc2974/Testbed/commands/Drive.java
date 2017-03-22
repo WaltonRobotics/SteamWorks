@@ -26,6 +26,11 @@ public class Drive extends Command {
 	protected void initialize() {
 		drivetrain.setDriver();
 		
+		updateMinThrottle();
+	}
+	
+	private void updateMinThrottle()
+	{
 		minThrottle = Preferences.getInstance().getDouble("drivetrain.minThrottle", 0);
 	}
 
@@ -83,6 +88,7 @@ public class Drive extends Command {
 	private void robertDrive() {
 		double throttle = Math.pow((Robot.oi.left.getAxis(Joystick.AxisType.kZ) + 1)/2,2);
 		
+		updateMinThrottle();
 		throttle = Math.max(minThrottle, throttle);
 		
 		double forward = -getLeftThrottle();

@@ -23,7 +23,7 @@ public class Climb extends Command {
 				if (Robot.oi.startHold()) {
 					return Climbing;
 				}
-				Robot.climber.set(Robot.oi.climbY());
+				Robot.climber.set(Robot.oi.climbY(), false);
 
 				return Disabled;
 			}
@@ -48,12 +48,8 @@ public class Climb extends Command {
 				if (Robot.oi.startHold()) {
 					Robot.climber.hold();
 				}
-
-				if (Robot.oi.climbBoost()) {
-					Robot.climber.set(Math.signum(Robot.oi.climbY()));
-				} else {
-					Robot.climber.set(Robot.oi.climbY());
-				}
+				
+				Robot.climber.set(Robot.oi.climbY(), Robot.oi.climbBoost());
 
 				return Climbing;
 			}

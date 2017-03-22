@@ -53,12 +53,17 @@ public class Climber extends Subsystem {
 		isHolding = false;
 	}
 
-	public void set(double power) {
+	public void set(double power, boolean boost) {
+		if(boost){
+			climberMotor.set(Math.signum(power));
+		}
+		else{
 		if(isHolding){
 			climberMotor.set(power + hold);
 		}
 		else{
 			climberMotor.set(power);
+		}
 		}
 	}
 	
