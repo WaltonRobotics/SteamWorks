@@ -3,15 +3,14 @@ package org.usfirst.frc2974.Testbed.commands;
 import org.usfirst.frc2974.Testbed.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class HopperControl extends Command {
+public class GearIntakeControl extends Command {
 
-	public HopperControl() {
-		requires(Robot.hopper);
+	public GearIntakeControl() {
+		requires(Robot.gearIntake);
 	}
 
 	// Called just before this Command runs the first time
@@ -20,10 +19,10 @@ public class HopperControl extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (Robot.oi.hopperControl.get()) {//||Robot.oi.hopperAltControl.get()) {
-			Robot.hopper.setPistonDown(true);
+		if (Robot.oi.intakeGear.get()) {
+			Robot.gearIntake.setPiston(true);
 		} else {
-			Robot.hopper.setPistonDown(false);
+			Robot.gearIntake.setPiston(false);
 		}
 	}
 
@@ -34,7 +33,7 @@ public class HopperControl extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		
+
 	}
 
 	// Called when another command which requires one or more of the same

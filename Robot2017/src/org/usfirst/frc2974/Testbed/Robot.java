@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,6 +44,8 @@ public class Robot extends IterativeRobot {
     public static Intake intake;
     public static Climber climber;
     public static Aim aim;
+
+	public static GearIntake gearIntake;
     
     /**
      * This function is run when the robot is first started up and should be
@@ -59,7 +62,7 @@ public class Robot extends IterativeRobot {
         intake = new Intake();
         climber = new Climber();
         aim = new Aim();
-
+        gearIntake = new GearIntake();
         
         // OI must be constructed after subsystems. If the OI creates Commands
         //(which it very likely will), subsystems are not guaranteed to be
@@ -122,7 +125,7 @@ public class Robot extends IterativeRobot {
     		autonomousCommand.start();
     	}
     	catch (NullPointerException e){    	
-    		autonomousCommand =  new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1);
+    		autonomousCommand =  new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2);
     		autonomousCommand.start();
     	}
     }
@@ -229,7 +232,7 @@ public class Robot extends IterativeRobot {
     private void dumpSmartDashboardValues () {
         drivetrain.dumpSmartdashboardValues();
         poseEstimator.dumpSmartdashboardValues();
-        shooter.dumpValuesToSamrtDashboard();
+        shooter.dumpValuesToSmartDashboard();
         climber.dumpSmartdashboardValues();
     }
 }

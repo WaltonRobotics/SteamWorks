@@ -43,10 +43,12 @@ public class OI {
 	public Button dumptake;
 
 	public Button hopperControl;
-	public Button hopperAltControl;
+//	public Button hopperAltControl;
 	public Button aimOverride;
 	public Button atSpeed;
-
+	
+	public Button intakeGear;
+	
 	public OI() {
 		right = new Joystick(1);
 		left = new Joystick(0);
@@ -63,12 +65,14 @@ public class OI {
 		outtake = new JoystickButton(gamepad, 3);
 		stoptake = new JoystickButton(gamepad, 2);
 		dumptake = new JoystickButton(gamepad,4);
+		
+		intakeGear = new JoystickButton(gamepad, 8);
 
-		hopperControl = new JoystickButton(right, 1);
-		hopperAltControl = new JoystickButton(gamepad,8);
+//		hopperControl = new JoystickButton(right, 1);
+//		hopperAltControl = new JoystickButton(gamepad,8);
 
-		aimOverride = new JoystickButton(right, 7);
-		atSpeed = new JoystickButton(right, 6);
+//		aimOverride = new JoystickButton(right, 7);
+//		atSpeed = new JoystickButton(right, 6);
 	}
 
 	public boolean startHold() {
@@ -77,6 +81,11 @@ public class OI {
 	
 	public boolean toggleHold() {
 		return gamepad.getRawButton(5);
+	}
+	
+	public boolean climbBoost()
+	{
+		return gamepad.getRawButton(12);
 	}
 
 	public double climbY() {

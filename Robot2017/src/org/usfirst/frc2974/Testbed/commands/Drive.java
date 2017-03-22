@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drive extends Command {
 
 	private Drivetrain drivetrain = Robot.drivetrain;
+	private double minThrottle= 0;
 
 	public Drive() {
 		drivetrain = Robot.drivetrain;
@@ -24,6 +25,8 @@ public class Drive extends Command {
 
 	protected void initialize() {
 		drivetrain.setDriver();
+		
+		minThrottle = Preferences.getInstance().getDouble("drivetrain.minThrottle", 0);
 	}
 
 	public double getLeftThrottle() {
@@ -79,6 +82,9 @@ public class Drive extends Command {
 	
 	private void robertDrive() {
 		double throttle = Math.pow((Robot.oi.left.getAxis(Joystick.AxisType.kZ) + 1)/2,2);
+		
+		throttle = Math.max(minThrottle, throttle);
+		
 		double forward = -getLeftThrottle();
 		double turn = getLeftTurn();
 		Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));		
