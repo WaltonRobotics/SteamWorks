@@ -101,6 +101,9 @@ public class Drivetrain extends Subsystem {
  		if (reset || !pref.containsKey("drivetrain.driver")) {
  			pref.putString("drivetrain.driver", DEFAULTDRIVER.getName());
  		}
+ 		if(reset || !pref.containsKey("drivetrain.minThrottle")){
+ 			pref.putDouble("drivetrain.minThrottle", 0.0); 			
+ 		}
  	}
  	
  	public boolean getControllerStatus(){

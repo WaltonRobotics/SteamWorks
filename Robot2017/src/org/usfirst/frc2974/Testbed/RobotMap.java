@@ -35,6 +35,8 @@ public class RobotMap {
 	public static Compressor compressor;
 	public static Solenoid pneumaticsShifter;
 	public static Solenoid hopperRelease;
+	
+	public static Solenoid flapCylinder;
 
 	public static PowerDistributionPanel powerPanel;
 	
@@ -49,6 +51,8 @@ public class RobotMap {
 		compressor = new Compressor();
 		pneumaticsShifter = new Solenoid(0);
 		hopperRelease = new Solenoid(1);
+		
+		flapCylinder = new Solenoid(2);
 
 		encoderRight = new Encoder(new DigitalInput(0), new DigitalInput(1));
 		encoderLeft = new Encoder(new DigitalInput(2), new DigitalInput(3));
