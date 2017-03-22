@@ -116,6 +116,9 @@ public class Drivetrain extends Subsystem {
 		if (reset || !pref.containsKey("drivetrain.minThrottle")) {
 			pref.putDouble("drivetrain.minThrottle", 0.0);
 		}
+		if (reset || !pref.containsKey("drivetrain.pushToPeg")) {
+			pref.putBoolean("drivetrain.pushToPeg", false);
+		}
 	}
 
 	public boolean getControllerStatus() {

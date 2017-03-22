@@ -36,7 +36,7 @@ public class AutonEncoderToPeg extends Command {
 
 	public Position position;
 
-	private boolean hold;
+	private boolean pushToPeg;
 	private static final double HOLD_POWER = 0.25;
 
 	public enum Position {
@@ -132,7 +132,7 @@ public class AutonEncoderToPeg extends Command {
 	@Override
 	public void initialize() {
 		Robot.poseEstimator.reset();
-		hold = false;
+		pushToPeg = Preferences.getInstance().getBoolean("drivetrain.pushToPeg", false);
 		Robot.drivetrain.shiftDown();
 
 		switch (position) {
@@ -161,11 +161,11 @@ public class AutonEncoderToPeg extends Command {
 
 	@Override
 	public void execute() {
-		if (!hold && driveTrain.isControllerFinished()) {
+		if (!pushToPeg && driveTrain.isControllerFinished()) {
 			driveTrain.cancelMotion();
 			driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
-			hold = true;
-		} else if (hold) {
+			pushToPeg = true;
+		} else if (pushToPeg) {
 			driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
 		}
 	}
