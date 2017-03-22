@@ -63,8 +63,7 @@ public class AutonEncoderToPeg extends Command {
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0);
 
-		Pose peg = new Pose(PEG_POINT_RED1, -PEG_ANGLE);
-		peg.offsetPoint(-offset);
+		Pose peg = new Pose(PEG_POINT_RED1.offsetPoint(-offset, 0), -PEG_ANGLE);
 
 		MotionProvider toPeg = new MotionPathSpline(ZERO, PEG_START_LENGTH + offset, peg, PEG_END_LENGTH, MAX_SPEED,
 				MAX_ACCELERATION, false);
@@ -79,8 +78,7 @@ public class AutonEncoderToPeg extends Command {
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0);
 
-		Pose peg = new Pose(PEG_POINT_RED3, PEG_ANGLE);
-		peg.offsetPoint(-offset);
+		Pose peg = new Pose(PEG_POINT_RED3.offsetPoint(-offset, 0), PEG_ANGLE);
 
 		MotionProvider toPeg = new MotionPathSpline(ZERO, PEG_START_LENGTH + offset, peg, PEG_END_LENGTH, MAX_SPEED,
 				MAX_ACCELERATION, false);
@@ -102,9 +100,8 @@ public class AutonEncoderToPeg extends Command {
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0);
 
-		Pose peg = new Pose(PEG_POINT_BLUE1, -PEG_ANGLE);
-		peg.offsetPoint(-offset);
-
+		Pose peg = new Pose(PEG_POINT_BLUE1.offsetPoint(-offset, 0), -PEG_ANGLE);
+		
 		MotionProvider toPeg = new MotionPathSpline(ZERO, PEG_START_LENGTH + offset, peg, PEG_END_LENGTH, MAX_SPEED,
 				MAX_ACCELERATION, false);
 
@@ -118,8 +115,7 @@ public class AutonEncoderToPeg extends Command {
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0);
 
-		Pose peg = new Pose(PEG_POINT_BLUE3, PEG_ANGLE);
-		peg.offsetPoint(-offset);
+		Pose peg = new Pose(PEG_POINT_BLUE3.offsetPoint(-offset, 0), PEG_ANGLE);
 
 		MotionProvider toPeg = new MotionPathSpline(ZERO, PEG_START_LENGTH + offset, peg, PEG_END_LENGTH, MAX_SPEED,
 				MAX_ACCELERATION, false);

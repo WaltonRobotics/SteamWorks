@@ -15,6 +15,9 @@ public class Point2D {
 		double deltaY = Math.pow(this.y - other.y, 2);
 		return Math.sqrt(deltaX + deltaY);
 	}
+	public Point2D offsetPoint(double l,double angle) {
+		return new Point2D(x + l * Math.cos(angle), y + l * Math.sin(angle));
+	}
 	
 	public static Point2D interpolate(Point2D pose0, double p, Point2D pose1, double q) {
 		return new Point2D(pose0.x * p + pose1.x * q, pose0.y * p + pose1.y * q);
