@@ -101,6 +101,18 @@ public class Drivetrain extends Subsystem {
  		if (reset || !pref.containsKey("drivetrain.driver")) {
  			pref.putString("drivetrain.driver", DEFAULTDRIVER.getName());
  		}
+ 		if (reset || !pref.containsKey("drivetrain.offsetRed1")) {
+ 			pref.putDouble("drivetrain.offsetRed1", 0);
+ 		}
+ 		if (reset || !pref.containsKey("drivetrain.offsetRed3")) {
+ 			pref.putDouble("drivetrain.offsetRed3", 0);
+ 		}
+ 		if (reset || !pref.containsKey("drivetrain.offsetBlue1")) {
+ 			pref.putDouble("drivetrain.offsetBlue1", 0);
+ 		}
+ 		if (reset || !pref.containsKey("drivetrain.offsetBlue3")) {
+ 			pref.putDouble("drivetrain.offsetBlue3", 0);
+ 		}
  	}
  	
  	public boolean getControllerStatus(){
