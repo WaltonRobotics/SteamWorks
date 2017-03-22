@@ -40,7 +40,7 @@ public class Drive extends Command {
 		return Robot.oi.right.getY();
 
 	}
-	
+
 	public double getZThrottle() {
 		if (Math.abs(Robot.oi.left.getZ()) < 0.3) {
 			return 0;
@@ -48,7 +48,7 @@ public class Drive extends Command {
 		return Robot.oi.right.getZ();
 
 	}
-	
+
 	public double getTurn() {
 		if (Math.abs(Robot.oi.right.getX()) < 0.1) {
 			return 0;
@@ -68,32 +68,34 @@ public class Drive extends Command {
 	private void tankDrive() {
 		Robot.drivetrain.setSpeeds(-getLeftThrottle(), -getRightThrottle());
 	}
-	
+
 	private void cheesyDrive() {
-		double throttle = (getLeftThrottle() + 1)/2;
+		double throttle = (getLeftThrottle() + 1) / 2;
 		double forward = -getRightThrottle();
 		double turn = getTurn();
 		Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));
-		//System.out.println("Cheesy Error Stuff: throttle: "+throttle+"; forward: "+forward+"; turn: "+turn+"; speeds: ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");		
+		// System.out.println("Cheesy Error Stuff: throttle: "+throttle+";
+		// forward: "+forward+"; turn: "+turn+"; speeds:
+		// ("+RobotMap.left.get()+", "+(-RobotMap.right.get())+")");
 	}
-	
+
 	private void robertDrive() {
-		double throttle = Math.pow((Robot.oi.left.getAxis(Joystick.AxisType.kZ) + 1)/2,2);
+		double throttle = Math.pow((Robot.oi.left.getAxis(Joystick.AxisType.kZ) + 1) / 2, 2);
 		double forward = -getLeftThrottle();
 		double turn = getLeftTurn();
-		Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));		
+		Robot.drivetrain.setSpeeds(throttle * (forward + turn), throttle * (forward - turn));
 	}
-	
+
 	// Called repeatedly when this Command is scheduled to run
-	//change
+	// change
 	protected void execute() {
-		if (Robot.oi.shiftUp.get()||Robot.oi.shiftUpAlt.get())
-				drivetrain.shiftUp();
-		if (Robot.oi.shiftDown.get()||Robot.oi.shiftDownAlt.get())
-				drivetrain.shiftDown();
-		
+		if (Robot.oi.shiftUp.get() || Robot.oi.shiftUpAlt.get())
+			drivetrain.shiftUp();
+		if (Robot.oi.shiftDown.get() || Robot.oi.shiftDownAlt.get())
+			drivetrain.shiftDown();
+
 		switch (drivetrain.getDriver()) {
-		case Tank: 
+		case Tank:
 			tankDrive();
 			break;
 		case Cheesy:

@@ -40,8 +40,8 @@ public class Aim extends Command {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-//		state = state.AIMING;
-		state = state.AIMED;	//FIXME
+		// state = state.AIMING;
+		state = state.AIMED; // FIXME
 	}
 
 	// Called repeatedly when this Command is scheduled to run

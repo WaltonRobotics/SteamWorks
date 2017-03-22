@@ -13,6 +13,7 @@ public class IntakeCommand extends Command {
 	private State state;
 	private State saveState;
 	public double dumpStart;
+
 	public enum State {
 		IntakeStop {
 			@Override
@@ -21,7 +22,7 @@ public class IntakeCommand extends Command {
 					intakeCommand.state = IntakeIn;
 				} else if (Robot.oi.outtake.get()) {
 					intakeCommand.state = IntakeOut;
-				} else if (Robot.oi.dumptake.get()){
+				} else if (Robot.oi.dumptake.get()) {
 					intakeCommand.dumpStart = Timer.getFPGATimestamp();
 					intakeCommand.saveState = intakeCommand.state;
 					intakeCommand.state = IntakeDump;
@@ -36,7 +37,7 @@ public class IntakeCommand extends Command {
 					intakeCommand.state = IntakeOut;
 				} else if (Robot.oi.stoptake.get()) {
 					intakeCommand.state = IntakeStop;
-				}else if (Robot.oi.dumptake.get()){
+				} else if (Robot.oi.dumptake.get()) {
 					intakeCommand.dumpStart = Timer.getFPGATimestamp();
 					intakeCommand.saveState = intakeCommand.state;
 					intakeCommand.state = IntakeDump;
@@ -51,7 +52,7 @@ public class IntakeCommand extends Command {
 					intakeCommand.state = IntakeIn;
 				} else if (Robot.oi.stoptake.get()) {
 					intakeCommand.state = IntakeStop;
-				}else if (Robot.oi.dumptake.get()){
+				} else if (Robot.oi.dumptake.get()) {
 					intakeCommand.dumpStart = Timer.getFPGATimestamp();
 					intakeCommand.saveState = intakeCommand.state;
 					intakeCommand.state = IntakeDump;
@@ -61,9 +62,9 @@ public class IntakeCommand extends Command {
 		},
 		IntakeDump {
 			@Override
-			public void run(IntakeCommand intakeCommand){
+			public void run(IntakeCommand intakeCommand) {
 				Robot.intake.setIntake(Intake.INTAKE_OUT);
-				if(Timer.getFPGATimestamp()-intakeCommand.dumpStart>0.5){
+				if (Timer.getFPGATimestamp() - intakeCommand.dumpStart > 0.5) {
 					intakeCommand.state = intakeCommand.saveState;
 				}
 			}

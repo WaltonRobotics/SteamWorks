@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class Climb extends Command {
-	private enum State{
-		Disabled{
+	private enum State {
+		Disabled {
 
 			@Override
 			public void init(Climb climb) {
@@ -20,13 +20,16 @@ public class Climb extends Command {
 			@Override
 			public State run(Climb climb) {
 				climb.changed = false;
-				
-				if(Robot.oi.startClimb()) {	climb.changed = true;	return Climbing;	}
+
+				if (Robot.oi.startClimb()) {
+					climb.changed = true;
+					return Climbing;
+				}
 				return Disabled;
 			}
-			
+
 		},
-		Climbing{
+		Climbing {
 
 			@Override
 			public void init(Climb climb) {
@@ -36,34 +39,35 @@ public class Climb extends Command {
 			@Override
 			public State run(Climb climb) {
 				climb.changed = false;
-				
-				if(Robot.climber.isHolding){
-					Robot.climber.set(Math.max(Robot.climber.getCurrentHoldValue()+Robot.oi.climbY(),-1));
+
+				if (Robot.climber.isHolding) {
+					Robot.climber.set(Math.max(Robot.climber.getCurrentHoldValue() + Robot.oi.climbY(), -1));
 				} else {
 					Robot.climber.set(Robot.oi.climbY());
 				}
-				
-				if(Robot.oi.startHold()) {
+
+				if (Robot.oi.startHold()) {
 					Robot.climber.startHold();
 				}
-				
-				if(Robot.oi.endHold()) {
+
+				if (Robot.oi.endHold()) {
 					Robot.climber.endHold();
 				}
-				
+
 				return Climbing;
 			}
-			
+
 		};
-		
+
 		public abstract void init(Climb climb);
+
 		public abstract State run(Climb climb);
 	}
-	
-	private State state;	
+
+	private State state;
 	private Climber climber;
 	private boolean changed = true;
-	
+
 	public Climb() {
 		// Use requires() here to declare subsystem dependencies
 		climber = Robot.climber;
@@ -77,8 +81,10 @@ public class Climb extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		
-		if(changed) {	state.init(this);	}
+
+		if (changed) {
+			state.init(this);
+		}
 		state = state.run(this);
 	}
 

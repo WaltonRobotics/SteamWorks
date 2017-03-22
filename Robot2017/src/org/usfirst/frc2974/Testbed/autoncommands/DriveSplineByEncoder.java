@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveSplineByEncoder extends Command {
-	
+
 	public final double SETTLE_TIME = 1;
 	private Drivetrain driveTrain;
 	private PoseEstimator poseEstimator;
@@ -26,11 +26,11 @@ public class DriveSplineByEncoder extends Command {
 	private double finishedTime;
 	private boolean motionFinished;
 	private boolean isForwards;
-	
+
 	public static double stateX;
-	public static double stateY;		//The variables that define the spline
+	public static double stateY; // The variables that define the spline
 	public static double stateAngle;
-	
+
 	public DriveSplineByEncoder(boolean isDashboard, double distance, double speed, double acceleration, double angle) {
 		requires(Robot.drivetrain);
 		driveTrain = Robot.drivetrain;
@@ -41,7 +41,7 @@ public class DriveSplineByEncoder extends Command {
 		this.acceleration = acceleration;
 		this.angle = angle;
 		this.isForwards = isForwards;
-		
+
 		// RobotLoggerManager.setFileHandlerInstance("robot.autoncommands").info("Created
 		// DriveStraightByEncoder");
 	}
@@ -55,23 +55,19 @@ public class DriveSplineByEncoder extends Command {
 			angle = SmartDashboard.getNumber("encoderAngle", 0) * Math.PI / 180;
 			isForwards = SmartDashboard.getBoolean("isForwards", true);
 		}
-		
+		// Offsets the x and y distances (side-conscious), given that a positive
+		// value makes it go further
 		stateX = stateX - SmartDashboard.getNumber("autonXOffset", 0);
-		stateY = (stateY > 0) ? stateY + SmartDashboard.getNumber("autonYOffsetLeft", 0) : 
-				stateY - SmartDashboard.getNumber("autonYOffsetRight", 0);
-/*
-		System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f", distance, speed, acceleration));
-		motionFinished = false;
-		Pose init = poseEstimator.getPose();
-		Pose final_;
-		if(isForwards){
-			final_ = new Pose(new Point2D(init.X.x + distance, init.X.y + distance), angle);
-		}
-		else{
-			final_ = new Pose(new Point2D(init.X.x - distance, init.X.y - distance), angle);
-		}
-		System.out.println(final_.toString()
-		*/
+		stateY = (stateY > 0) ? stateY + SmartDashboard.getNumber("autonYOffsetLeft", 0)
+				: stateY - SmartDashboard.getNumber("autonYOffsetRight", 0);
+		/*
+		 * System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f",
+		 * distance, speed, acceleration)); motionFinished = false; Pose init =
+		 * poseEstimator.getPose(); Pose final_; if(isForwards){ final_ = new
+		 * Pose(new Point2D(init.X.x + distance, init.X.y + distance), angle); }
+		 * else{ final_ = new Pose(new Point2D(init.X.x - distance, init.X.y -
+		 * distance), angle); } System.out.println(final_.toString()
+		 */
 		Pose init = poseEstimator.getPose();
 		Pose final_ = new Pose(new Point2D(stateX, stateY), stateAngle);
 		motion = new MotionPathSpline(init, 1.58, final_, 0.95, 2, 2, false);
@@ -81,13 +77,13 @@ public class DriveSplineByEncoder extends Command {
 		System.out.println("Command starts: Controller enabled = " + driveTrain.getControllerStatus());
 		driveTrain.startMotion();
 	}
+
 	/*
-	public MotionProvider getAutonMotion(){
-		Pose init = poseEstimator.getPose();
-		Pose final_ = new Pose(new Point2D(-2.34, -1.422), Math.PI / 3);
-		return new MotionPathSpline(init, 1.58, final_, 0.95, false);
-	}
-*/
+	 * public MotionProvider getAutonMotion(){ Pose init =
+	 * poseEstimator.getPose(); Pose final_ = new Pose(new Point2D(-2.34,
+	 * -1.422), Math.PI / 3); return new MotionPathSpline(init, 1.58, final_,
+	 * 0.95, false); }
+	 */
 	@Override
 	protected void execute() {
 		if (!motionFinished && driveTrain.isControllerFinished()) {
@@ -111,7 +107,6 @@ public class DriveSplineByEncoder extends Command {
 	protected void interrupted() {
 		end();
 	}
-
 
 	@Override
 	public String toString() {

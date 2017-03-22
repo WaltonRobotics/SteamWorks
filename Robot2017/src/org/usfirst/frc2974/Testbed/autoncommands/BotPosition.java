@@ -2,22 +2,22 @@ package org.usfirst.frc2974.Testbed.autoncommands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class BotPosition extends Command{
-	
+public class BotPosition extends Command {
+
 	/**
 	 * Selects the command sequence that runs when autonomous starts
 	 */
-	
+
 	public Position position;
-	
+
 	public enum Position {
 		RedBoiler, RedCenter, RedFar, BlueBoiler, BlueCenter, BlueFar
 	}
-	
+
 	public BotPosition(Position position) {
-		this.position = position;		
+		this.position = position;
 	}
-	
+
 	public void initialize() {
 		switch (position) {
 		case RedBoiler:

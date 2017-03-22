@@ -5,34 +5,33 @@ import org.usfirst.frc2974.Testbed.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class HoldPower extends Command{
+public class HoldPower extends Command {
 	private double power;
 	private Drivetrain drivetrain;
-	
-	public HoldPower(double power){
+
+	public HoldPower(double power) {
 		this.power = power;
 		this.drivetrain = Robot.drivetrain;
 
 	}
 
-	
 	@Override
-	public void initialize(){
+	public void initialize() {
 		drivetrain.setSpeeds(power, power);
 	}
-	
+
 	@Override
 	public boolean isFinished() {
 		return false;
 	}
-	
+
 	@Override
-	public void end(){
+	public void end() {
 		drivetrain.setSpeeds(0, 0);
 	}
-	
+
 	@Override
-	public void interrupted(){
+	public void interrupted() {
 		end();
 	}
 }

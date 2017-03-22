@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Shoot extends Command {
 	public enum State {
-		Rest{
+		Rest {
 			@Override
 			public State run(Shoot shoot) {
-				if(Robot.oi.shoot.get()){
+				if (Robot.oi.shoot.get()) {
 					Robot.shooter.enable();
 					return MotorSpeedsUp;
 				}
@@ -31,7 +31,7 @@ public class Shoot extends Command {
 			@Override
 			public void init(Shoot shoot) {
 				Robot.shooter.disable();
-				Robot.shooter.index(false); // FIXME Should be in disable()	
+				Robot.shooter.index(false); // FIXME Should be in disable()
 			}
 		},
 		MotorSpeedsUp {
@@ -39,8 +39,7 @@ public class Shoot extends Command {
 			public State run(Shoot shoot) {
 				if (!Robot.oi.shoot.get()) {
 					return Rest;
-				}
-				else if (Robot.shooter.isAtSpeed() || Robot.oi.atSpeed.get()) {
+				} else if (Robot.shooter.isAtSpeed() || Robot.oi.atSpeed.get()) {
 					return Aiming;
 				}
 				return this;
@@ -68,16 +67,15 @@ public class Shoot extends Command {
 		Firing {
 			double time = -1;
 			final double duration = 0.75;
-			
+
 			@Override
 			public State run(Shoot shoot) {
 				if (!Robot.oi.shoot.get()) {
 					return Rest;
-				}
-				else if ((Timer.getFPGATimestamp() - time) > duration) {
-					if(SmartDashboard.getBoolean("ShootTraps",true)){
+				} else if ((Timer.getFPGATimestamp() - time) > duration) {
+					if (SmartDashboard.getBoolean("ShootTraps", true)) {
 						return Trap;
-					}else{
+					} else {
 						return MotorSpeedsUp;
 					}
 				}
@@ -94,26 +92,28 @@ public class Shoot extends Command {
 		Trap {
 			final double duration = 0.5;
 			double time;
+
 			@Override
-			public State run(Shoot shoot){
+			public State run(Shoot shoot) {
 				if (!Robot.oi.shoot.get()) {
 					return Rest;
-				}
-				else if((Timer.getFPGATimestamp() - time)> duration){
+				} else if ((Timer.getFPGATimestamp() - time) > duration) {
 					return MotorSpeedsUp;
 				}
 				return this;
 			}
-			
+
 			@Override
 			public void init(Shoot shoot) {
 				time = Timer.getFPGATimestamp();
 			}
 		};
-		
+
 		public abstract void init(Shoot shoot);
+
 		public abstract State run(Shoot shoot);
-		public String toString(){
+
+		public String toString() {
 			return name();
 		}
 	}
@@ -136,7 +136,7 @@ public class Shoot extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	boolean pressed = false;
 	boolean isShootStart = false;
-	
+
 	protected void execute() {
 		State newState = state.run(this);
 		if (newState != state) {
@@ -144,17 +144,17 @@ public class Shoot extends Command {
 			SmartDashboard.putString("Shooter State", state.name());
 			state.init(this);
 		}
-		if(Robot.oi.right.getRawButton(5)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.E)){
-			if(!pressed){
+		if (Robot.oi.right.getRawButton(5) || Robot.oi.gamepad.getPOVButton(Gamepad.POV.E)) {
+			if (!pressed) {
 				shooter.incrementSpeed(50);
 				pressed = true;
 			}
-		}else if(Robot.oi.right.getRawButton(4)||Robot.oi.gamepad.getPOVButton(Gamepad.POV.W)){
-			if(!pressed){
+		} else if (Robot.oi.right.getRawButton(4) || Robot.oi.gamepad.getPOVButton(Gamepad.POV.W)) {
+			if (!pressed) {
 				shooter.decrementSpeed(50);
 				pressed = true;
 			}
-		}else{
+		} else {
 			pressed = false;
 		}
 	}

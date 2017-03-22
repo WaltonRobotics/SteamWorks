@@ -1,10 +1,10 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
-public class MotionPathTurn extends MotionProvider{
+public class MotionPathTurn extends MotionProvider {
 	public Pose pose0;
 	public Pose pose1;
-	
-	public MotionPathTurn(Pose pose0, double dAngle, double vCruise, double rotAccelMax){
+
+	public MotionPathTurn(Pose pose0, double dAngle, double vCruise, double rotAccelMax) {
 		super(vCruise, rotAccelMax);
 		this.pose0 = pose0;
 		this.pose1 = new Pose(pose0.X, pose0.angle + boundAngle(dAngle));
@@ -35,5 +35,5 @@ public class MotionPathTurn extends MotionProvider{
 	public double getFinalTheta() {
 		return pose1.angle;
 	}
-	
+
 }

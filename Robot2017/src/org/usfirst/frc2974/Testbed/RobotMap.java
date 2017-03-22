@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  */
 public class RobotMap {
 	public static final int CLIMBER_MOTOR_POWER_CHANNEL = 3;
-	
+
 	public static Talon left;
 	public static Talon right;
 	public static Talon indexer;
@@ -37,7 +37,7 @@ public class RobotMap {
 	public static Solenoid hopperRelease;
 
 	public static PowerDistributionPanel powerPanel;
-	
+
 	public static void init() {
 		left = new Talon(0);
 		right = new Talon(1);
@@ -53,7 +53,7 @@ public class RobotMap {
 		encoderRight = new Encoder(new DigitalInput(0), new DigitalInput(1));
 		encoderLeft = new Encoder(new DigitalInput(2), new DigitalInput(3));
 		encoderFlyWheel = new Encoder(new DigitalInput(4), new DigitalInput(5));
-		
+
 		powerPanel = new PowerDistributionPanel(0);
 	}
 }

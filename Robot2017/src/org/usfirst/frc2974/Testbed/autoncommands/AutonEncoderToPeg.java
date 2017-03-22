@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class AutonEncoderToPeg extends Command {
-	public static final double MOVING_DISTANCE_LINE = -2.0532; 
+	public static final double MOVING_DISTANCE_LINE = -2.0532;
 	public static final double MOVING_DISTANCE_PEG = -1.778;
-	
+
 	public static final double MOVING_DISTANCE_BASELINE = 2.3622;
 	// 61.26 degrees
 	public static final double PEG_ANGLE = 1.08026;
@@ -26,7 +26,7 @@ public class AutonEncoderToPeg extends Command {
 
 	public static final double MAX_SPEED_TURN = 1;
 	public static final double MAX_ACCELERATION_TURN = .5;
-	
+
 	private final static Point2D point = new Point2D(0, 0);
 
 	private final static Pose pose = new Pose(point, 0);
@@ -47,45 +47,45 @@ public class AutonEncoderToPeg extends Command {
 	public AutonEncoderToPeg(Position position) {
 		this.driveTrain = Robot.drivetrain;
 		this.position = position;
-		
+
 	}
-	
+
 	private void addDriveParametersCenter() {
 		driveTrain.cancelMotion();
-		
-//		Robot.drivetrain.shiftUp();
+
+		// Robot.drivetrain.shiftUp();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, -2.00, MAX_SPEED, MAX_ACCELERATION));
 		Robot.drivetrain.shiftDown();
 	}
-	
+
 	private void addDriveParametersLeft(double angle, double distance) {
 		driveTrain.cancelMotion();
-		
-//		Robot.drivetrain.shiftUp();
+
+		// Robot.drivetrain.shiftUp();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
-		
+
 		Robot.drivetrain.shiftDown();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
-	
+
 	private void addDriveParametersRight(double angle, double distance) {
 		driveTrain.cancelMotion();
-//		Robot.drivetrain.shiftUp();
+		// Robot.drivetrain.shiftUp();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, MOVING_DISTANCE_LINE, MAX_SPEED, MAX_ACCELERATION));
 		driveTrain.addControllerMotion(new MotionPathTurn(pose, angle, MAX_SPEED, MAX_ACCELERATION));
-		
+
 		Robot.drivetrain.shiftDown();
 		driveTrain.addControllerMotion(new MotionPathStraight(pose, distance, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	@Override
-	public void initialize(){
+	public void initialize() {
 		Robot.poseEstimator.reset();
 		hold = false;
-		
+
 		Robot.drivetrain.shiftUp();
-		
+
 		switch (position) {
 		case CENTER:
 			addDriveParametersCenter();
@@ -97,37 +97,37 @@ public class AutonEncoderToPeg extends Command {
 			addDriveParametersLeft(-PEG_ANGLE, MOVING_DISTANCE_PEG);
 			break;
 		}
-		
+
 		this.driveTrain.startMotion();
 	}
-	
+
 	@Override
 	public void execute() {
 		if (!hold && driveTrain.isControllerFinished()) {
 			driveTrain.cancelMotion();
 			driveTrain.setSpeeds(-0.15, -0.15);
 			hold = true;
-		}
-		else if (hold) {
+		} else if (hold) {
 			driveTrain.setSpeeds(-0.25, -0.25);
 		}
 	}
-	
+
 	@Override
 	public boolean isFinished() {
-//		if(driveTrain.isControllerFinished()){
-//			return true;
-//		}
+		// if(driveTrain.isControllerFinished()){
+		// return true;
+		// }
 		return false;
 	}
-	
+
 	@Override
-	public void end(){
+	public void end() {
 		driveTrain.cancelMotion();
 		driveTrain.setSpeeds(0, 0);
 	}
+
 	@Override
-	public void interrupted(){
+	public void interrupted() {
 		end();
 	}
 }

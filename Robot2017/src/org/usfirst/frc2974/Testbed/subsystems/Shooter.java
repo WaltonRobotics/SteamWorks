@@ -31,7 +31,7 @@ public class Shooter extends Subsystem {
 	private double speed = fSPEED;
 	private double error = ACCEPTED_ERROR;
 	private double iPower = iPOWER;
-	
+
 	public Shooter() {
 		flywheelMotor = RobotMap.flywheelMotor;
 		indexer = RobotMap.indexer;
@@ -40,7 +40,7 @@ public class Shooter extends Subsystem {
 		flywheelMotor.reverseOutput(true);
 		flywheelMotor.setPID(0, 0, 0);
 	}
-	
+
 	public static void declarePrefs(boolean reset) {
 		Preferences pref = Preferences.getInstance();
 		if (reset || !pref.containsKey("shooter.speed")) {
@@ -65,15 +65,16 @@ public class Shooter extends Subsystem {
 			pref.putDouble("shooter.indexer.power", iPOWER);
 		}
 	}
-	
+
 	@Override
 	protected void initDefaultCommand() {
 		setDefaultCommand(new Shoot());
 	}
 
 	public void enable() {
-		//flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional Coefficient", flywheelMotor.getP()), 0, 0);
-//		flywheelMotor.setPID(0.25, 0, 0);
+		// flywheelMotor.setPID(SmartDashboard.getNumber("Wheel Proportional
+		// Coefficient", flywheelMotor.getP()), 0, 0);
+		// flywheelMotor.setPID(0.25, 0, 0);
 		Preferences pref = Preferences.getInstance();
 		flywheelMotor.setF(pref.getDouble("shooter.kF", KF));
 		flywheelMotor.setP(pref.getDouble("shooter.kP", KP));
@@ -90,30 +91,27 @@ public class Shooter extends Subsystem {
 		flywheelMotor.set(0);
 		enabled = false;
 	}
-	
-	public boolean enabled(){
+
+	public boolean enabled() {
 		return enabled;
 	}
 
 	public boolean isAtSpeed() {
 		return Math.abs(flywheelMotor.getSpeed() - speed) < error;
 	}
-	
-	public void setPowerMode(double power)
-	{
+
+	public void setPowerMode(double power) {
 		disable();
 		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 		flywheelMotor.set(power);
 	}
-	
-	public void endPowerMode()
-	{
+
+	public void endPowerMode() {
 		flywheelMotor.changeControlMode(CANTalon.TalonControlMode.Speed);
 		enable();
 	}
-	
-	public void dumpValuesToSamrtDashboard()
-	{
+
+	public void dumpValuesToSamrtDashboard() {
 		SmartDashboard.putBoolean("isShooterAtSpeed", isAtSpeed());
 		SmartDashboard.putNumber("ShooterRPM", flywheelMotor.getSpeed());
 		SmartDashboard.putNumber("ShooterCurrentTrue", flywheelMotor.getOutputCurrent());
@@ -122,14 +120,14 @@ public class Shooter extends Subsystem {
 	}
 
 	public void index(boolean on) {
-		indexer.setSpeed(on ? iPower: 0);
+		indexer.setSpeed(on ? iPower : 0);
 	}
-	
-	public void incrementSpeed(double increment){
+
+	public void incrementSpeed(double increment) {
 		speed += increment;
 	}
-	
-	public void decrementSpeed(double increment){
+
+	public void decrementSpeed(double increment) {
 		speed -= increment;
 	}
 }

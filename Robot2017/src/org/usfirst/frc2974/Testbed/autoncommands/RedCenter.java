@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class RedCenter extends CommandGroup {
 
-    public RedCenter() {
-//        addSequential(new DriveStraightByEncoder(false, -2.134, 2, 2));
-    	
-    	DriveSplineByEncoder.stateX = -2.134;
-    	DriveSplineByEncoder.stateY = 0;
-    	DriveSplineByEncoder.stateAngle = 0;
-    	
-    	addSequential(new DriveSplineByEncoder(false, 0, 0, 0, 0));
-    }
+	public RedCenter() {
+		addSequential(new DriveStraightByEncoder(false, -2.134, 2, 2));
+//
+//		DriveSplineByEncoder.stateX = -2.134;
+//		DriveSplineByEncoder.stateY = 0;
+//		DriveSplineByEncoder.stateAngle = 0;
+//
+//		addSequential(new DriveSplineByEncoder(false, 0, 0, 0, 0));
+	}
 }
