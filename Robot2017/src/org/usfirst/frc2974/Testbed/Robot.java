@@ -81,8 +81,6 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putBoolean("isForwards", true);
 
 		SmartDashboard.putNumber("autonXOffset", 0);
-		SmartDashboard.putNumber("autonYOffsetRight", 0);
-		SmartDashboard.putNumber("autonYOffsetLeft", 0);
 	}
 
 	private void declarePrefs() {

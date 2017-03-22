@@ -58,8 +58,6 @@ public class DriveSplineByEncoder extends Command {
 		// Offsets the x and y distances (side-conscious), given that a positive
 		// value makes it go further
 		stateX = stateX - SmartDashboard.getNumber("autonXOffset", 0);
-		stateY = (stateY > 0) ? stateY + SmartDashboard.getNumber("autonYOffsetLeft", 0)
-				: stateY - SmartDashboard.getNumber("autonYOffsetRight", 0);
 		/*
 		 * System.out.println(String.format("Distance=%f, Speed=%f, Accel=%f",
 		 * distance, speed, acceleration)); motionFinished = false; Pose init =
