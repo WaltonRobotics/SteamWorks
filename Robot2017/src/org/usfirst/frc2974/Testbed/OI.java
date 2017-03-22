@@ -44,7 +44,7 @@ public class OI {
 
 	public Button hopperControl;
 //	public Button hopperAltControl;
-	public Button aimOverride;
+//	public Button aimOverride;
 	public Button atSpeed;
 	
 	public Button intakeGear;
@@ -68,11 +68,11 @@ public class OI {
 		
 		intakeGear = new JoystickButton(gamepad, 8);
 
-//		hopperControl = new JoystickButton(right, 1);
+		hopperControl = new JoystickButton(left, 9);
 //		hopperAltControl = new JoystickButton(gamepad,8);
 
 //		aimOverride = new JoystickButton(right, 7);
-//		atSpeed = new JoystickButton(right, 6);
+		atSpeed = new JoystickButton(left, 8);
 	}
 
 	public boolean startHold() {
