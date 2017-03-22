@@ -114,7 +114,7 @@ public class Drivetrain extends Subsystem {
 			pref.putDouble("drivetrain.offsetBlue3", 0);
 		}
 		if (reset || !pref.containsKey("drivetrain.minThrottle")) {
-			pref.putDouble("drivetrain.minThrottle", 0.0);
+			pref.putDouble("drivetrain.minThrottle", 0.3);
 		}
 		if (reset || !pref.containsKey("drivetrain.pushToPeg")) {
 			pref.putBoolean("drivetrain.pushToPeg", false);
