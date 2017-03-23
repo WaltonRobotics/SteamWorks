@@ -152,10 +152,10 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Blue 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE1));
 		autoChooser.addObject("Blue 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE2));
 		autoChooser.addObject("Blue 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE3));
-		autoChooser.addObject("Red 1 and Move Forward", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.RED1));
-		autoChooser.addObject("Red 3 and Move Forward", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.RED3));
-		autoChooser.addObject("Blue 1 and Move Forward", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.BLUE1));
-		autoChooser.addObject("Blue 3 and Move Forward", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.BLUE3));
+		autoChooser.addObject("Red 1 and Charge", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.RED1));
+		autoChooser.addObject("Red 3 and Charge", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.RED3));
+		autoChooser.addObject("Blue 1 and Charge", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.BLUE1));
+		autoChooser.addObject("Blue 3 and Charge", new AutonEncoderToPegGF(AutonEncoderToPegGF.Position.BLUE3));
 
 		// autoChooser.addObject("Auton move to peg and boiler", new
 		// AutonEncoderWithVision(true));
