@@ -10,12 +10,13 @@ import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class AutonEncoderToPeg extends Command {
+public class AutonEncoderToPegGF extends Command {
 
 	public static final double MAX_SPEED = 2;
 	public static final double MAX_ACCELERATION = 2;
@@ -35,30 +36,28 @@ public class AutonEncoderToPeg extends Command {
 	private final static Pose ZERO = new Pose(new Point2D(0, 0), 0);
 
 	public Position position;
+	public ChargeState chargeState = ChargeState.PUSH_TO_PEG;
 
-	private boolean pushToPeg;
-	private static final double HOLD_POWER = 0.25;
+	private double delayStart;
+	private double delayGoal;
 
 	public enum Position {
-		RED1, RED2, RED3, BLUE1, BLUE2, BLUE3
+		RED1, RED3, BLUE1, BLUE3
+	}
+
+	public enum ChargeState {
+		PUSH_TO_PEG, DELAY, MOVE_FOWARD
 	}
 
 	private Drivetrain driveTrain;
 
-	public AutonEncoderToPeg(Position position) {
+	public AutonEncoderToPegGF(Position position) {
 		this.driveTrain = Robot.drivetrain;
 		this.position = position;
 
 	}
 
-	private void addDriveParametersRed2() {
-		driveTrain.cancelMotion();
-
-		driveTrain.addControllerMotion(new MotionPathStraight(ZERO, -2.00, MAX_SPEED, MAX_ACCELERATION));
-
-	}
-
-	private void addDriveParametersRed1() {
+	private void addDriveParametersRed1Gear() {
 		driveTrain.cancelMotion();
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0);
@@ -74,7 +73,7 @@ public class AutonEncoderToPeg extends Command {
 
 	}
 
-	private void addDriveParametersRed3() {
+	private void addDriveParametersRed3Gear() {
 		driveTrain.cancelMotion();
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0);
@@ -90,14 +89,7 @@ public class AutonEncoderToPeg extends Command {
 
 	}
 
-	private void addDriveParametersBlue2() {
-		driveTrain.cancelMotion();
-
-		driveTrain.addControllerMotion(new MotionPathStraight(ZERO, -2.00, MAX_SPEED, MAX_ACCELERATION));
-
-	}
-
-	private void addDriveParametersBlue1() {
+	private void addDriveParametersBlue1Gear() {
 		driveTrain.cancelMotion();
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0);
@@ -113,7 +105,7 @@ public class AutonEncoderToPeg extends Command {
 
 	}
 
-	private void addDriveParametersBlue3() {
+	private void addDriveParametersBlue3Gear() {
 		driveTrain.cancelMotion();
 
 		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0);
@@ -129,30 +121,48 @@ public class AutonEncoderToPeg extends Command {
 
 	}
 
+	private void addDriveParameters1Forward() {
+		driveTrain.cancelMotion();
+
+		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
+		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(), PEG_ANGLE, 2, 1);
+
+		driveTrain.addControllerMotion(offPeg);
+		driveTrain.addControllerMotion(turn);
+		driveTrain
+				.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+	}
+
+	private void addDriveParameters3Forward() {
+		driveTrain.cancelMotion();
+
+		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
+		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(), -PEG_ANGLE, 2, 1);
+
+		driveTrain.addControllerMotion(offPeg);
+		driveTrain.addControllerMotion(turn);
+		driveTrain
+				.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+	}
+
 	@Override
 	public void initialize() {
 		Robot.poseEstimator.reset();
-		pushToPeg = Preferences.getInstance().getBoolean("drivetrain.pushToPeg", false);
+		delayGoal = Preferences.getInstance().getDouble("drivetrain.pegDelay", 2.5);
 		Robot.drivetrain.shiftDown();
 
 		switch (position) {
-		case RED2:
-			addDriveParametersRed2();
+		case RED1:
+			addDriveParametersRed1Gear();
 			break;
 		case RED3:
-			addDriveParametersRed3();
-			break;
-		case RED1:
-			addDriveParametersRed1();
-			break;
-		case BLUE2:
-			addDriveParametersBlue2();
-			break;
-		case BLUE3:
-			addDriveParametersBlue3();
+			addDriveParametersRed3Gear();
 			break;
 		case BLUE1:
-			addDriveParametersBlue1();
+			addDriveParametersBlue1Gear();
+			break;
+		case BLUE3:
+			addDriveParametersBlue3Gear();
 			break;
 		}
 
@@ -161,13 +171,36 @@ public class AutonEncoderToPeg extends Command {
 
 	@Override
 	public void execute() {
-		if (!pushToPeg && driveTrain.isControllerFinished()) {
-			driveTrain.cancelMotion();
-			driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
-			pushToPeg = true;
-		} else if (pushToPeg) {
-			driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
+
+		switch (chargeState) {
+		case PUSH_TO_PEG:
+			if (driveTrain.isControllerFinished()) {
+				delayStart = Timer.getFPGATimestamp();
+				chargeState = ChargeState.DELAY;
+			}
+			break;
+		case DELAY:
+			if (Timer.getFPGATimestamp() - delayStart >= delayGoal) {
+				chargeState = ChargeState.MOVE_FOWARD;
+			}
+			break;
+		case MOVE_FOWARD:
+			if (position == Position.RED1 || position == Position.BLUE1) {
+				addDriveParameters1Forward();
+			}
+			if (position == Position.RED3 || position == Position.BLUE3) {
+				addDriveParameters3Forward();
+			}
+			break;
 		}
+
+		// if (!pushToPeg && driveTrain.isControllerFinished()) {
+		// driveTrain.cancelMotion();
+		// driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
+		// pushToPeg = true;
+		// } else if (pushToPeg) {
+		// driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
+		// }
 	}
 
 	@Override
