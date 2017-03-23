@@ -201,7 +201,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersRed1GF() {
 		driveTrain.cancelMotion();
 		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),-Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
+		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
 		driveTrain.addControllerMotion(offPeg);
 		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
 	}
@@ -209,7 +209,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersRed3GF() {
 		driveTrain.cancelMotion();
 		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
+		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),-Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
 		driveTrain.addControllerMotion(offPeg);
 		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
 	}
@@ -217,7 +217,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersBlue1GF() {
 		driveTrain.cancelMotion();
 		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),-Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
+		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
 		driveTrain.addControllerMotion(offPeg);
 		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
 	}
@@ -225,7 +225,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersBlue3GF() {
 		driveTrain.cancelMotion();
 		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
+		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),-Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
 		driveTrain.addControllerMotion(offPeg);
 		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
 	}
