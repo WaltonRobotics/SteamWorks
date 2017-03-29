@@ -194,34 +194,45 @@ public class Robot extends IterativeRobot {
 
 	public void createTestButtons() {
 
-		SmartDashboard.putData("MoveTimeForward", new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-				SmartDashboard.getNumber("Duration", 0), DriveStraightTrapezoid.Direction.FORWARD));
-		SmartDashboard.putData("MoveTimeAntiforward",
-				new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-						SmartDashboard.getNumber("Duration", 0), DriveStraightTrapezoid.Direction.ANTIFORWARD));
-		SmartDashboard.putData("DiffTimeClockWise",
-				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
-						DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
-		SmartDashboard.putData("DiffTimeAntiClockWise",
-				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
-						DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
-		SmartDashboard.putData("DiffTimeClockWiseBack",
-				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
-						DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
-		SmartDashboard.putData("DiffTimeAntiClockWiseBack",
-				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
-						DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));
-		SmartDashboard.putData("SetMotionControllerConstants", new SetMotionControllerConstants());
+		// SmartDashboard.putData("MoveTimeForward", new
+		// DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+		// SmartDashboard.getNumber("Duration", 0),
+		// DriveStraightTrapezoid.Direction.FORWARD));
+		// SmartDashboard.putData("MoveTimeAntiforward",
+		// new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+		// SmartDashboard.getNumber("Duration", 0),
+		// DriveStraightTrapezoid.Direction.ANTIFORWARD));
+		// SmartDashboard.putData("DiffTimeClockWise",
+		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+		// SmartDashboard.getNumber("Duration", 0),
+		// SmartDashboard.getNumber("DiffPercent", 0),
+		// DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
+		// SmartDashboard.putData("DiffTimeAntiClockWise",
+		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+		// SmartDashboard.getNumber("Duration", 0),
+		// SmartDashboard.getNumber("DiffPercent", 0),
+		// DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
+		// SmartDashboard.putData("DiffTimeClockWiseBack",
+		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+		// SmartDashboard.getNumber("Duration", 0),
+		// SmartDashboard.getNumber("DiffPercent", 0),
+		// DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
+		// SmartDashboard.putData("DiffTimeAntiClockWiseBack",
+		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+		// SmartDashboard.getNumber("Duration", 0),
+		// SmartDashboard.getNumber("DiffPercent", 0),
+		// DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));
+		// SmartDashboard.putData("SetMotionControllerConstants", new
+		// SetMotionControllerConstants());
 
-		SmartDashboard.putData("MotionEncoder", new DriveStraightByEncoder(true, 0, 0, 0));
-		SmartDashboard.putData("TurnByEncoder", new DriveTurnByEncoder(true, 0, 0, 0));
-		SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true, 0, 0, 0, 0));
-
-		SmartDashboard.putData("testShooterPower", new TestShooterPower());
+		// SmartDashboard.putData("MotionEncoder", new
+		// DriveStraightByEncoder(true, 0, 0, 0));
+		// SmartDashboard.putData("TurnByEncoder", new DriveTurnByEncoder(true,
+		// 0, 0, 0));
+		// SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true,
+		// 0, 0, 0, 0));
+		//
+		// SmartDashboard.putData("testShooterPower", new TestShooterPower());
 		// SmartDashboard.putData("testToPegCenter", new
 		// AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
 		// SmartDashboard.putData("testToPegLeft", new

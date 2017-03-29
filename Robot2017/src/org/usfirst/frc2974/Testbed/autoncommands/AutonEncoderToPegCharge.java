@@ -34,12 +34,14 @@ public class AutonEncoderToPegCharge extends Command {
 	private final static double PEG_START_LENGTH = 1.58;
 	private final static double PEG_END_LENGTH = 0.95;
 
+	private final static double PEG_OFF_DISPLACEMENT = 0.8;
+
 	private final static Pose ZERO = new Pose(new Point2D(0, 0), 0);
 
 	public Position position;
 	double startTime;
 	double gearDelay;
-	
+
 	private static final double HOLD_POWER = 0.25;
 
 	public enum Position {
@@ -50,21 +52,53 @@ public class AutonEncoderToPegCharge extends Command {
 		ToPeg {
 			@Override
 			public State run(AutonEncoderToPegCharge aetpc) {
-				 if(aetpc.driveTrain.isControllerFinished()){
-				 return Delay;
-				 }
+				if (aetpc.driveTrain.isControllerFinished()) {
+					return WaitForGear;
+				}
 				return this;
 			}
 
 			@Override
 			public void init(AutonEncoderToPegCharge aetpc) {
+				Robot.drivetrain.shiftDown();
+				Robot.poseEstimator.reset();
+
+				switch (aetpc.position) {
+				case RED3:
+					aetpc.addDriveParametersRed3();
+					break;
+				case RED1:
+					aetpc.addDriveParametersRed1();
+					break;
+				case BLUE3:
+					aetpc.addDriveParametersBlue3();
+					break;
+				case BLUE1:
+					aetpc.addDriveParametersBlue1();
+					break;
+				}
 				aetpc.driveTrain.startMotion();
 			}
 		},
-		Delay{
+		WaitForGear {
 			@Override
 			public State run(AutonEncoderToPegCharge aetpc) {
-				if(Timer.getFPGATimestamp() - aetpc.startTime > aetpc.gearDelay){
+				if (true) {
+					return Delay;
+				}
+				return this;  //FIXME: correct the if statement, once we know how to use the sensor
+			}
+
+			@Override
+			public void init(AutonEncoderToPegCharge aetpc) {
+				aetpc.driveTrain.cancelMotion();
+				aetpc.driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
+			}
+		},
+		Delay {
+			@Override
+			public State run(AutonEncoderToPegCharge aetpc) {
+				if (Timer.getFPGATimestamp() - aetpc.startTime > aetpc.gearDelay) {
 					return Charge;
 				}
 				return this;
@@ -77,12 +111,12 @@ public class AutonEncoderToPegCharge extends Command {
 				aetpc.startTime = Timer.getFPGATimestamp();
 			}
 		},
-		Charge{
+		Charge {
 			@Override
 			public State run(AutonEncoderToPegCharge aetpc) {
-				 if(aetpc.driveTrain.isControllerFinished()){
-				 return End;
-				 }
+				if (aetpc.driveTrain.isControllerFinished()) {
+					return End;
+				}
 				return this;
 			}
 
@@ -106,7 +140,7 @@ public class AutonEncoderToPegCharge extends Command {
 				aetpc.driveTrain.startMotion();
 			}
 		},
-		End{
+		End {
 			@Override
 			public State run(AutonEncoderToPegCharge aetpc) {
 				return this;
@@ -121,7 +155,7 @@ public class AutonEncoderToPegCharge extends Command {
 		public State run(AutonEncoderToPegCharge aetpc) {
 			return this;
 		}
-		
+
 		public void init(AutonEncoderToPegCharge aetpc) {
 		}
 	}
@@ -200,59 +234,92 @@ public class AutonEncoderToPegCharge extends Command {
 
 	private void addDriveParametersRed1GF() {
 		driveTrain.cancelMotion();
-		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
-		driveTrain.addControllerMotion(offPeg);
-		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
+		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
+		double displaceY = Math.sin(60) * -PEG_OFF_DISPLACEMENT;
+
+		Point2D displacement = new Point2D(displaceX, displaceY);
+
+		Pose atPeg = new Pose(new Point2D(0, 0), -PEG_ANGLE);
+		Pose displacementPose = new Pose(displacement, 0);
+
+		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
+				MAX_SPEED, MAX_ACCELERATION, false);
+
+		driveTrain.addControllerMotion(chargeBack);
+		driveTrain.addControllerMotion(
+				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	private void addDriveParametersRed3GF() {
 		driveTrain.cancelMotion();
-		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),-Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
-		driveTrain.addControllerMotion(offPeg);
-		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
+		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
+		double displaceY = Math.sin(60) * PEG_OFF_DISPLACEMENT;
+
+		Point2D displacement = new Point2D(displaceX, displaceY);
+
+		Pose atPeg = new Pose(new Point2D(0, 0), PEG_ANGLE);
+		Pose displacementPose = new Pose(displacement, 0);
+
+		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
+				MAX_SPEED, MAX_ACCELERATION, false);
+
+		driveTrain.addControllerMotion(chargeBack);
+		driveTrain.addControllerMotion(
+				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
 	}
 
 	private void addDriveParametersBlue1GF() {
 		driveTrain.cancelMotion();
-		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
-		driveTrain.addControllerMotion(offPeg);
-		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
+		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
+		double displaceY = Math.sin(60) * PEG_OFF_DISPLACEMENT;
+
+		Point2D displacement = new Point2D(displaceX, displaceY);
+
+		Pose atPeg = new Pose(new Point2D(0, 0), PEG_ANGLE);
+		Pose displacementPose = new Pose(displacement, 0);
+
+		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
+				MAX_SPEED, MAX_ACCELERATION, false);
+
+		driveTrain.addControllerMotion(chargeBack);
+		driveTrain.addControllerMotion(
+				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
 	}
 
 	private void addDriveParametersBlue3GF() {
 		driveTrain.cancelMotion();
-		MotionProvider offPeg = new MotionPathStraight(ZERO, 0.8, MAX_SPEED, MAX_ACCELERATION);
-		MotionProvider turn = new MotionPathTurn(offPeg.getFinalPose(),-Math.PI / 3, MAX_SPEED, MAX_ACCELERATION);
-		driveTrain.addControllerMotion(offPeg);
-		driveTrain.addControllerMotion(new MotionPathStraight(turn.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
+		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
+		double displaceY = Math.sin(60) * -PEG_OFF_DISPLACEMENT;
+
+		Point2D displacement = new Point2D(displaceX, displaceY);
+
+		Pose atPeg = new Pose(new Point2D(0, 0), -PEG_ANGLE);
+		Pose displacementPose = new Pose(displacement, 0);
+
+		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
+				MAX_SPEED, MAX_ACCELERATION, false);
+
+		driveTrain.addControllerMotion(chargeBack);
+		driveTrain.addControllerMotion(
+				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
+
 	}
 
 	@Override
 	public void initialize() {
-		Robot.poseEstimator.reset();
 		gearDelay = Preferences.getInstance().getDouble("drivetrain.pegDelay", 2.5);
-		Robot.drivetrain.shiftDown();
-
-		switch (position) {
-		case RED3:
-			addDriveParametersRed3();
-			break;
-		case RED1:
-			addDriveParametersRed1();
-			break;
-		case BLUE3:
-			addDriveParametersBlue3();
-			break;
-		case BLUE1:
-			addDriveParametersBlue1();
-			break;
-		}
+		state = State.ToPeg;
+		state.init(this);
 	}
 
 	State state = State.ToPeg;
+
 	@Override
 	public void execute() {
 		State newState = state.run(this);
