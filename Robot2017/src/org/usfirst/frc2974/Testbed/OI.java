@@ -56,8 +56,8 @@ public class OI {
 
 		shiftUp = new JoystickButton(left, 3);
 		shiftDown = new JoystickButton(left, 2);
-		shiftUpAlt = new JoystickButton(left, 11);
-		shiftDownAlt = new JoystickButton(left, 10);
+		shiftUpAlt = new JoystickButton(left, 10);
+		shiftDownAlt = new JoystickButton(left, 11);
 
 		shoot = new JoystickButton(left, 1);
 

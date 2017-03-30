@@ -1,5 +1,6 @@
 package org.usfirst.frc2974.Testbed;
 
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
@@ -107,7 +108,12 @@ public class Robot extends IterativeRobot {
     public void disabledInit(){
     	SmartDashboard.putBoolean("captureImage", false);
     	
-//    	CameraServer.getInstance().removeCamera("cam0");
+    	
+//    	if(!cameraName.isEmpty()){
+//    	CameraServer.getInstance().removeCamera(cameraName);
+//    	CameraServer.getInstance().removeServer(CameraServer.getInstance().getServer().getName());
+//    	cameraName = "";
+//    	}
     	
     }
 
@@ -168,13 +174,22 @@ public class Robot extends IterativeRobot {
       //  RobotMap.compressor.start();
         createTestButtons();
 
-        Scheduler.getInstance().add(aim);	//TODO add other commands
+        Scheduler.getInstance().add(aim);
         
 //        CameraServer.getInstance().addServer("server");
-//        CameraServer.getInstance().startAutomaticCapture("cam0", 0);
+        UsbCamera usbCamera = CameraServer.getInstance().startAutomaticCapture("cam0",0);
+        
+        
+        cameraName = usbCamera.getName();
+        usbCamera.setFPS(15);
+        usbCamera.setResolution(320, 240);
+        
+        CameraServer.getInstance().addCamera(usbCamera);
 //        CameraServer.getInstance().startAutomaticCapture();
     }
-
+    
+    String cameraName = "";
+//
     /**
      * This function is called periodically during operator control
      */
@@ -236,4 +251,3 @@ public class Robot extends IterativeRobot {
         climber.dumpSmartdashboardValues();
     }
 }
-
