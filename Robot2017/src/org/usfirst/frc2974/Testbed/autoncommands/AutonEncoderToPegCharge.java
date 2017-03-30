@@ -35,6 +35,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private final static double PEG_END_LENGTH = 0.95;
 
 	private final static double PEG_OFF_DISPLACEMENT = 0.8;
+	private final static double PEG_OFF_OFFSET = 0.4;
 
 	private final static Pose ZERO = new Pose(new Point2D(0, 0), 0);
 
@@ -86,7 +87,8 @@ public class AutonEncoderToPegCharge extends Command {
 				if (true) {
 					return Delay;
 				}
-				return this;  //FIXME: correct the if statement, once we know how to use the sensor
+				return this; // FIXME: correct the if statement, once we know
+								// how to use the sensor
 			}
 
 			@Override
@@ -125,16 +127,16 @@ public class AutonEncoderToPegCharge extends Command {
 				Robot.poseEstimator.reset();
 				switch (aetpc.position) {
 				case RED3:
-					aetpc.addDriveParametersRed3GF();
+					aetpc.addDriveParametersGoForward(Math.PI / 3);
 					break;
 				case RED1:
-					aetpc.addDriveParametersRed1GF();
+					aetpc.addDriveParametersGoForward(-Math.PI / 3);
 					break;
 				case BLUE3:
-					aetpc.addDriveParametersBlue3GF();
+					aetpc.addDriveParametersGoForward(Math.PI / 3);
 					break;
 				case BLUE1:
-					aetpc.addDriveParametersBlue1GF();
+					aetpc.addDriveParametersGoForward(-Math.PI / 3);
 					break;
 				}
 				aetpc.driveTrain.startMotion();
@@ -232,83 +234,21 @@ public class AutonEncoderToPegCharge extends Command {
 
 	}
 
-	private void addDriveParametersRed1GF() {
+	private void addDriveParametersGoForward(double pegAngle) {
 		driveTrain.cancelMotion();
 
-		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
-		double displaceY = Math.sin(60) * -PEG_OFF_DISPLACEMENT;
+		Point2D displacement = new Point2D(Math.cos(pegAngle) * PEG_OFF_DISPLACEMENT + PEG_OFF_OFFSET,
+				Math.sin(pegAngle) * PEG_OFF_DISPLACEMENT);
 
-		Point2D displacement = new Point2D(displaceX, displaceY);
-
-		Pose atPeg = new Pose(new Point2D(0, 0), -PEG_ANGLE);
+		Pose atPeg = new Pose(new Point2D(0, 0), pegAngle);
 		Pose displacementPose = new Pose(displacement, 0);
 
-		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
-				MAX_SPEED, MAX_ACCELERATION, false);
+		MotionProvider chargeBack = new MotionPathSpline(atPeg, PEG_OFF_DISPLACEMENT * 2 / 3, displacementPose,
+				PEG_OFF_OFFSET * 2 / 3, MAX_SPEED, MAX_ACCELERATION, true);
 
 		driveTrain.addControllerMotion(chargeBack);
 		driveTrain.addControllerMotion(
-				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
-	}
-
-	private void addDriveParametersRed3GF() {
-		driveTrain.cancelMotion();
-
-		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
-		double displaceY = Math.sin(60) * PEG_OFF_DISPLACEMENT;
-
-		Point2D displacement = new Point2D(displaceX, displaceY);
-
-		Pose atPeg = new Pose(new Point2D(0, 0), PEG_ANGLE);
-		Pose displacementPose = new Pose(displacement, 0);
-
-		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
-				MAX_SPEED, MAX_ACCELERATION, false);
-
-		driveTrain.addControllerMotion(chargeBack);
-		driveTrain.addControllerMotion(
-				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
-
-	}
-
-	private void addDriveParametersBlue1GF() {
-		driveTrain.cancelMotion();
-
-		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
-		double displaceY = Math.sin(60) * PEG_OFF_DISPLACEMENT;
-
-		Point2D displacement = new Point2D(displaceX, displaceY);
-
-		Pose atPeg = new Pose(new Point2D(0, 0), PEG_ANGLE);
-		Pose displacementPose = new Pose(displacement, 0);
-
-		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
-				MAX_SPEED, MAX_ACCELERATION, false);
-
-		driveTrain.addControllerMotion(chargeBack);
-		driveTrain.addControllerMotion(
-				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
-
-	}
-
-	private void addDriveParametersBlue3GF() {
-		driveTrain.cancelMotion();
-
-		double displaceX = Math.cos(60) * PEG_OFF_DISPLACEMENT + 0.2;
-		double displaceY = Math.sin(60) * -PEG_OFF_DISPLACEMENT;
-
-		Point2D displacement = new Point2D(displaceX, displaceY);
-
-		Pose atPeg = new Pose(new Point2D(0, 0), -PEG_ANGLE);
-		Pose displacementPose = new Pose(displacement, 0);
-
-		MotionProvider chargeBack = new MotionPathSpline(atPeg, displaceX * 2 / 3, displacementPose, displaceY * 2 / 3,
-				MAX_SPEED, MAX_ACCELERATION, false);
-
-		driveTrain.addControllerMotion(chargeBack);
-		driveTrain.addControllerMotion(
-				new MotionPathStraight(chargeBack.getFinalPose(), -2.4384, MAX_SPEED, MAX_ACCELERATION));
-
+				new MotionPathStraight(chargeBack.getFinalPose(), -3, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	@Override
