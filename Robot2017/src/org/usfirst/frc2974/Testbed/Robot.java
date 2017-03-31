@@ -16,6 +16,7 @@ import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
 import org.usfirst.frc2974.Testbed.autoncommands.Aim;
 import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPeg;
 import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPegCharge;
+import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPegShoot;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveDiffTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveSplineByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightByEncoder;
@@ -156,6 +157,8 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("Red 3 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED3));
 		autoChooser.addObject("Blue 1 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE1));
 		autoChooser.addObject("Blue 3 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE3));
+		autoChooser.addObject("Red 3 and Shoot", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.RED3));
+		autoChooser.addObject("Blue 1 and Shoot", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.BLUE1));
 
 		// autoChooser.addObject("Auton move to peg and boiler", new
 		// AutonEncoderWithVision(true));
