@@ -36,6 +36,7 @@ public class AutonEncoderToPegCharge extends Command {
 
 	private final static double PEG_OFF_DISPLACEMENT = 0.8;
 	private final static double PEG_OFF_OFFSET = 0.4;
+	private final static double CHARGE_DISTANCE = -6;
 
 	private final static Pose ZERO = new Pose(new Point2D(0, 0), 0);
 
@@ -248,7 +249,7 @@ public class AutonEncoderToPegCharge extends Command {
 
 		driveTrain.addControllerMotion(chargeBack);
 		driveTrain.addControllerMotion(
-				new MotionPathStraight(chargeBack.getFinalPose(), -3, MAX_SPEED, MAX_ACCELERATION));
+				new MotionPathStraight(chargeBack.getFinalPose(), CHARGE_DISTANCE, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	@Override

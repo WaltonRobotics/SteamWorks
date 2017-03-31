@@ -21,7 +21,7 @@ public class Shooter extends Subsystem {
 	private boolean enabled = false;
 
 	private static final double fSPEED = 14500; // rpm
-	private static final double ACCEPTED_ERROR = 400;
+	private static final double ACCEPTED_ERROR = 1200;
 	private static final double KP = 0.1;
 	private static final double KI = 0.0;
 	private static final double KD = 1.0;
