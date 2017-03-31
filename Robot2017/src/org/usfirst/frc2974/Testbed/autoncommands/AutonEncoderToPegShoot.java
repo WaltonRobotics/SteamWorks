@@ -9,6 +9,7 @@ import org.usfirst.frc2974.Testbed.controllers.Pose;
 import org.usfirst.frc2974.Testbed.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -33,8 +34,7 @@ public class AutonEncoderToPegShoot extends Command {
 	private final static Pose ZERO = new Pose(new Point2D(0, 0), 0);
 
 	public Position position;
-
-	private static final double HOLD_POWER = 0.25;
+	private double startTime;
 
 	public enum Position {
 		RED3, BLUE1;
@@ -45,7 +45,7 @@ public class AutonEncoderToPegShoot extends Command {
 			@Override
 			public State run(AutonEncoderToPegShoot aetps) {
 				if (aetps.driveTrain.isControllerFinished()) {
-					return Shoot;
+					return ShootWait;
 				}
 				return this;
 			}
@@ -66,16 +66,20 @@ public class AutonEncoderToPegShoot extends Command {
 				aetps.driveTrain.startMotion();
 			}
 		},
-		Shoot {
+		ShootWait {
 			@Override
 			public State run(AutonEncoderToPegShoot aetps) {
-				Robot.shooter.index(true);
-				Robot.shooter.enable();
-				return this;
+				return Timer.getFPGATimestamp() - aetps.startTime < 2 ? this: ShootFire;
 			}
 
 			@Override
 			public void init(AutonEncoderToPegShoot aetps) {
+				Robot.shooter.enable();
+				aetps.startTime = Timer.getFPGATimestamp();
+			}
+		},ShootFire{
+			public void init(AutonEncoderToPegShoot aetps) {
+				Robot.shooter.index(true);
 			}
 		};
 		
