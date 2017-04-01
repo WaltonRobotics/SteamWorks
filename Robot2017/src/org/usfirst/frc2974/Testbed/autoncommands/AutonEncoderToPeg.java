@@ -125,34 +125,6 @@ public class AutonEncoderToPeg extends Command {
 
 	}
 
-	private void addDriveParametersRed1GF() {
-		driveTrain.cancelMotion();
-
-		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0);
-
-		Pose peg = new Pose(PEG_POINT_RED1, -PEG_ANGLE);
-		peg.offsetPoint(-offset);
-
-		MotionProvider toPeg = new MotionPathSpline(ZERO, PEG_START_LENGTH + offset, peg, PEG_END_LENGTH, MAX_SPEED,
-				MAX_ACCELERATION, false);
-
-		driveTrain.addControllerMotion(toPeg);
-		driveTrain.addControllerMotion(new MotionPathStraight(toPeg.getFinalPose(), -0.3, PEG_SPEED, PEG_ACCELERATION));
-
-	}
-
-	private void addDriveParametersRed3GF() {
-
-	}
-
-	private void addDriveParametersBlue1GF() {
-
-	}
-
-	private void addDriveParametersBlue3GF() {
-
-	}
-
 	@Override
 	public void initialize() {
 		Robot.poseEstimator.reset();

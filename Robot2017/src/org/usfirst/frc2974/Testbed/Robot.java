@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 	public static Hopper hopper;
 	public static Intake intake;
 	public static Climber climber;
-	public static Aim aim;
+//	public static Aim aim;
 
 	public static GearIntake gearIntake;
 
@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 		hopper = new Hopper();
 		intake = new Intake();
 		climber = new Climber();
-		aim = new Aim();
+//		aim = new Aim();
 		gearIntake = new GearIntake();
 
 		// OI must be constructed after subsystems. If the OI creates Commands
@@ -178,13 +178,10 @@ public class Robot extends IterativeRobot {
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		// RobotMap.compressor.start();
-		createTestButtons();
+		// createTestButtons();
 
-		Scheduler.getInstance().add(aim); // TODO add other commands
-
-		// CameraServer.getInstance().addServer("server");
-		// CameraServer.getInstance().startAutomaticCapture("cam0", 0);
-		 CameraServer.getInstance().startAutomaticCapture();
+//		Scheduler.getInstance().add(aim); // TODO add other commands
+		CameraServer.getInstance().startAutomaticCapture();
 	}
 
 	/**
@@ -198,51 +195,34 @@ public class Robot extends IterativeRobot {
 
 	public void createTestButtons() {
 
-		// SmartDashboard.putData("MoveTimeForward", new
-		// DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-		// SmartDashboard.getNumber("Duration", 0),
-		// DriveStraightTrapezoid.Direction.FORWARD));
-		// SmartDashboard.putData("MoveTimeAntiforward",
-		// new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-		// SmartDashboard.getNumber("Duration", 0),
-		// DriveStraightTrapezoid.Direction.ANTIFORWARD));
-		// SmartDashboard.putData("DiffTimeClockWise",
-		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-		// SmartDashboard.getNumber("Duration", 0),
-		// SmartDashboard.getNumber("DiffPercent", 0),
-		// DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
-		// SmartDashboard.putData("DiffTimeAntiClockWise",
-		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-		// SmartDashboard.getNumber("Duration", 0),
-		// SmartDashboard.getNumber("DiffPercent", 0),
-		// DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
-		// SmartDashboard.putData("DiffTimeClockWiseBack",
-		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-		// SmartDashboard.getNumber("Duration", 0),
-		// SmartDashboard.getNumber("DiffPercent", 0),
-		// DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
-		// SmartDashboard.putData("DiffTimeAntiClockWiseBack",
-		// new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
-		// SmartDashboard.getNumber("Duration", 0),
-		// SmartDashboard.getNumber("DiffPercent", 0),
-		// DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));
-		// SmartDashboard.putData("SetMotionControllerConstants", new
-		// SetMotionControllerConstants());
+		SmartDashboard.putData("MoveTimeForward", new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+				SmartDashboard.getNumber("Duration", 0), DriveStraightTrapezoid.Direction.FORWARD));
+		SmartDashboard.putData("MoveTimeAntiforward",
+				new DriveStraightTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+						SmartDashboard.getNumber("Duration", 0), DriveStraightTrapezoid.Direction.ANTIFORWARD));
+		SmartDashboard.putData("DiffTimeClockWise",
+				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
+						DriveDiffTrapezoid.DiffDirection.CLOCKWISE));
+		SmartDashboard.putData("DiffTimeAntiClockWise",
+				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
+						DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISE));
+		SmartDashboard.putData("DiffTimeClockWiseBack",
+				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
+						DriveDiffTrapezoid.DiffDirection.CLOCKWISEBACK));
+		SmartDashboard.putData("DiffTimeAntiClockWiseBack",
+				new DriveDiffTrapezoid(true, SmartDashboard.getNumber("aMax", 0),
+						SmartDashboard.getNumber("Duration", 0), SmartDashboard.getNumber("DiffPercent", 0),
+						DriveDiffTrapezoid.DiffDirection.ANTICLOCKWISEBACK));
+		SmartDashboard.putData("SetMotionControllerConstants", new SetMotionControllerConstants());
 
-		// SmartDashboard.putData("MotionEncoder", new
-		// DriveStraightByEncoder(true, 0, 0, 0));
-		// SmartDashboard.putData("TurnByEncoder", new DriveTurnByEncoder(true,
-		// 0, 0, 0));
-		// SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true,
-		// 0, 0, 0, 0));
-		//
-		// SmartDashboard.putData("testShooterPower", new TestShooterPower());
-		// SmartDashboard.putData("testToPegCenter", new
-		// AutonEncoderToPeg(AutonEncoderToPeg.Position.CENTER));
-		// SmartDashboard.putData("testToPegLeft", new
-		// AutonEncoderToPeg(AutonEncoderToPeg.Position.RED));
-		// SmartDashboard.putData("testToPegRight", new
-		// AutonEncoderToPeg(AutonEncoderToPeg.Position.RIGHT));
+		SmartDashboard.putData("MotionEncoder", new DriveStraightByEncoder(true, 0, 0, 0));
+		SmartDashboard.putData("TurnByEncoder", new DriveTurnByEncoder(true, 0, 0, 0));
+		SmartDashboard.putData("TurnBySpline", new DriveSplineByEncoder(true, 0, 0, 0, 0));
+
+		SmartDashboard.putData("testShooterPower", new TestShooterPower());
 	}
 
 	@Override
