@@ -119,6 +119,15 @@ public class Drivetrain extends Subsystem {
 		if (reset || !pref.containsKey("drivetrain.pushToPeg")) {
 			pref.putBoolean("drivetrain.pushToPeg", false);
 		}
+		if (reset || !pref.containsKey("drivetrain.pegDelay")) {
+			pref.putDouble("drivetrain.pegDelay", 2.5);
+		}
+		if (reset || !pref.containsKey("drivetrain.shootDistance")) {
+			pref.putDouble("drivetrain.shootDistance", 3);
+		}
+		if (reset || !pref.containsKey("drivetrain.shootAngle")) {
+			pref.putDouble("drivetrain.shootAngle", 10.0);
+		}
 	}
 
 	public boolean getControllerStatus() {
