@@ -128,6 +128,9 @@ public class Drivetrain extends Subsystem {
 		if (reset || !pref.containsKey("drivetrain.shootAngle")) {
 			pref.putDouble("drivetrain.shootAngle", 10.0);
 		}
+		if (reset || !pref.containsKey("drivetrain.offsetLeft")) {
+			pref.putDouble("drivetrain.offsetBlue3", 0);
+		}
 	}
 
 	public boolean getControllerStatus() {
