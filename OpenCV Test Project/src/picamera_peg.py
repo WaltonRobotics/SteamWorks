@@ -1,4 +1,5 @@
 import time
+from time import strftime
 import picamera
 import numpy as np
 import cv2
@@ -7,13 +8,14 @@ from networktables import NetworkTables
 from fractions import Fraction
 import math 
 import os
+from datetime import datetime
 
 #Units are in feet
 # As a client to connect to a robot
 ## Todo read from Actual robott
 ##NetworkTables.initialize(server='roborio-XXX-frc.local')
 
-PID_FILE_NAME = "pid.pid"
+#PID_FILE_NAME = "pid.pid"
 
 #try:
 #    os.remove(PID_FILE_NAME)
@@ -22,7 +24,11 @@ PID_FILE_NAME = "pid.pid"
 
 #with open(PID_FILE_NAME, "w") as fd:    
 #    fd.write("{0:d}\n".format(os.getpid()))
+#path = datetime.now().strftime("%Y-%m-%d-%H-%M")
+#os.mkdir(path)
+#os.chdir(path)
 
+#values_file = open("SmartDashboardValues.txt", "w")
 
 image = np.empty((240, 320, 3), dtype=np.uint8)
 gripped = GripPipeline()
@@ -42,7 +48,7 @@ def camera_setup(camera):
     camera.resolution = (320, 240)
     camera.framerate = 60
     camera.iso = 100
-    camera.shutter_speed = 2000
+    camera.shutter_speed = 600
     camera.awb_mode = "off"
     camera.awb_gains = (Fraction(135, 128), Fraction(343, 128))
     time.sleep(2)
@@ -76,14 +82,42 @@ with picamera.PiCamera() as camera:
     #print(type(sd))
     print("Started preview")
     
+ #   startT = time.time()
+  #  timeL = startT
+   # i = 0
+
     while True:
         camera.capture(image, 'bgr', True)
+        #timeL = timeN        
+    #    timeN = time.time()
+
+        #print("%f - %f = %f" % (timeN, startT, timeN - startT))
+
+        #if sd.getBoolean("captureImage", False) and timeN - startT >= .5: 
+     #   if timeN - timeL >= .5:
+      #      cv2.imwrite("{0:s}{1:d}{2:s}".format("image",i,".jpeg"), image)
+       #     timeL = timeN
+        #    i += 1
+
         #cv2.imshow('img2', image)
         gripped.process(image)
 
         #print(camera.digital_gain, camera.analog_gain)
         #cv2.imshow('img', image)
-        if len(gripped.filter_contours_output) >= 2:
+        #cX = 0
+        cX = 0
+        if len(gripped.filter_contours_output) == 1:
+            M = cv2.moments(gripped.filter_contours_output[0])
+            X1 = int(M["m10"] / M["m00"])
+
+            if(X1 > 160):
+                cX = X1 + 68
+            else:
+                cX = X1 - 68
+
+            print (cX - 160)
+            
+        elif len(gripped.filter_contours_output) >= 2:
             #print(gripped.filter_contours_output)
             #print(gripped.filter_contours_output[0].shape)
             #print(type(cv2.minAreaRect(gripped.filter_contours_output[0])))
@@ -139,18 +173,25 @@ with picamera.PiCamera() as camera:
             #distance /= length
 
             if (abs(X1-X2) > abs(Y1-Y2)):
-                sd.putNumber("Center point X peg", cX)
                 sd.putNumber("Center point Y peg", cY)
                 #sd.putNumber("Camera distance peg", distance)
-
-                if is_valid_angle:
-                    sd.putNumber("Target angle peg", tilt_angle)
+                print ("cX: %d cY: %d  cX - lX: %d rX - cX: %d" % (cX -160, cY, X1 - cX , cX - X2))
+                
+         #       values_file.write("{0:f}, {1:f}, {2:f}\n".format(timeN - startT, cX, cY))
+          #      values_file.flush()
+#                if is_valid_angle:
+#                    sd.putNumber("Target angle peg", tilt_angle)
             #sd.putNumberArray("image", gripped.filter_contours_output)
             #break
+
+        cX = cX - 160
+        cX = cX * 1.867637 
         
         sd.putNumber("status peg", len(gripped.filter_contours_output))
+        sd.putNumber("mm peg centerX", cX)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         NetworkTables.flush()
+                   
     camera.stop_preview()
