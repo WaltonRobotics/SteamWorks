@@ -9,6 +9,9 @@ from fractions import Fraction
 import math 
 import os
 from datetime import datetime
+import logging
+import collections
+
 
 #Units are in feet
 # As a client to connect to a robot
@@ -36,13 +39,8 @@ gripped = GripPipeline()
 NetworkTables.initialize(server="roboRIO-2974-frc.local")
 sd = NetworkTables.getTable("SmartDashboard")
 
-#inches
-KNOWN_WIDTH = 2
+Point = collections.namedtuple("Point", "x y")
 
-KNOWN_DISTANCE = 52
-KNOWN_FOCAL_LENGTH = 676.0
-#KNOWN_ASPECT_RATIO = 5/2
-KNOWN_HYPOTENEUSE = 8.375
 
 def camera_setup(camera):
     camera.resolution = (320, 240)
@@ -72,39 +70,60 @@ def camera_setup(camera):
 
 #    return angle, angle_valid
 
+ANGLE_LIMIT = 10
+MIN_WIDTH = 25
+MAX_WIDTH = 35
+
+
+
+def validate_contours(contours):
+    valid_centers = []
+
+    for contour in contours:
+        boundries = cv2.minAreaRect(contour)
+        width, height, angle = boundaries[1][0], boundaries[1][1], boundries[2]
+
+        logging.info("Width={0:d}, height={1:d}, angle={2:d}".format(width, height, angle))
+
+        moments = None
+        if -ANGLE_LIMIT < angle < ANGLE_LIMIT:
+            if MIN_WIDTH < width < MAX_WIDTH:
+                moments = cv2.moments(contour)
+
+        elif -90 - ANGLE_LIMIT < angle < -90 + ANGLE_LIMIT:
+            if MIN_WIDTH < width < MAX_WIDTH:
+                moments = cv2.moments(contour)
+
+        if moments is not None:
+            cx = moments["m10"] / moments["m00"]
+            cy = moments["m01"] / moments["m00"]
+            valid_centers.append(Point(cx, cy))
+
+    return valid_centers
+
+
 with picamera.PiCamera() as camera:
     camera_setup(camera)
-
-    sd.putNumber("resolutionX", camera.resolution[0])
-    sd.putNumber("resolutionY", camera.resolution[1])
-    
-    camera.start_preview(fullscreen=False, window=(640,640,320,240))
-    #print(type(sd))
-    print("Started preview")
-    
- #   startT = time.time()
-  #  timeL = startT
-   # i = 0
+    camera.start_preview(fullscreen=False, window=(640, 640, 320, 240))
+    logging.info("Started preview")
 
     while True:
         camera.capture(image, 'bgr', True)
-        #timeL = timeN        
-    #    timeN = time.time()
-
-        #print("%f - %f = %f" % (timeN, startT, timeN - startT))
-
-        #if sd.getBoolean("captureImage", False) and timeN - startT >= .5: 
-     #   if timeN - timeL >= .5:
-      #      cv2.imwrite("{0:s}{1:d}{2:s}".format("image",i,".jpeg"), image)
-       #     timeL = timeN
-        #    i += 1
-
-        #cv2.imshow('img2', image)
         gripped.process(image)
+        valid_centers = validate_contours(gripped.filter_contours_output)
 
-        #print(camera.digital_gain, camera.analog_gain)
-        #cv2.imshow('img', image)
-        #cX = 0
+        if len(valid_centers) == 1:
+            # Single rectangle process
+            pegX = ...
+        elif len(valid_centers) == 2:
+            # Double rectangle process
+            pegX = ...
+        else:
+            # INVALID!!!
+            pegX = 0
+
+        # Send to SmartDashboard
+
         cX = 0
         if len(gripped.filter_contours_output) == 1:
             M = cv2.moments(gripped.filter_contours_output[0])
