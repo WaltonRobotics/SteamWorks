@@ -8,13 +8,13 @@ import os
 from time import strftime
 import time
 
-# Import for the OpenCV classes
-import cv2
-
 from grip_peg import GripPipeline
 from networktables import NetworkTables
 import numpy as np
 import picamera
+
+# Import for the OpenCV classes
+import cv2
 
 # Creates an empty image 320x240
 image = np.empty((240, 320, 3), dtype=np.uint8)
@@ -106,10 +106,12 @@ with picamera.PiCamera() as camera:
     
     # Starts the camera
     camera.start_preview(fullscreen=False, window=(640, 640, 320, 240))
+    
+    # Warns user that the camera has started
     logging.info("Started preview")
 
     while True:
-        # Gets the current image frame
+        # Gets the current image frame in a specific format (bgr) while using the video port to increase speed
         camera.capture(image, 'bgr', True)
         
         # Processes the image using the GripPipeline. Gets the contours and sets them in gripped.filter_contours_output
