@@ -46,7 +46,7 @@ def camera_setup(camera):
 
 ANGLE_LIMIT = 10
 MIN_WIDTH = 25
-MAX_WIDTH = 35
+MAX_WIDTH = 45
 
 # This function is used to validate the contours received from the image camera and processed by the GripPipline.
 def validate_contours(contours):
@@ -56,24 +56,32 @@ def validate_contours(contours):
     for contour in contours:
         # Creates a rectangle of the smallest size possible around the contour
         boundries = cv2.minAreaRect(contour)
+        moments = cv2.moments(contour)
         
         # When using cv2.minAreaRect(aContour) you must know that it returns a tuple:
         # ((x, y), (width, height), angle)
         
-        width, height, angle = boundaries[1][0], boundaries[1][1], boundries[2]
+        width, height, angle = boundries[1][0], boundries[1][1], boundries[2]
+
+        # Find the x coordinate of the centre of the contour moment 
+        cx = moments["m10"] / moments["m00"]
+
+        #print("Center= %f" % cx)
+            
+        # Find the y coordinate of the centre of the contour moment
+        cy = moments["m01"] / moments["m00"]
 
         # Prints to the screen the width, height and angle
-        logging.info("Width={0:d}, height={1:d}, angle={2:d}".format(width, height, angle))
+        print("Width={0:f}, height={1:f}, angle={2:f}, cX={3:f}".format(width, height, angle, cx))
 
         # Initialises moments with nothing
-        moments = None
         
         # If the angle of the rectangle is between -ANGLE_LIMIT and ANGLE_LIMIT
         if -ANGLE_LIMIT < angle < ANGLE_LIMIT:
             # If the width is between MIN_WIDTH and MAX_WIDTH
             if MIN_WIDTH < width < MAX_WIDTH:
                 # Set moments to the moment of the contour. This means that the contour is valid
-                moments = cv2.moments(contour)
+                valid_centers.append(Point(cx, cy))
 
         # If the rectangle is reversed and so the rectangle angle is between -90 - ANGLE_LIMIT < angle < -90 + ANGLE_LIMIT
         elif -90 - ANGLE_LIMIT < angle < -90 + ANGLE_LIMIT:
@@ -82,19 +90,7 @@ def validate_contours(contours):
             if MIN_WIDTH < height < MAX_WIDTH:
                 
                 # Set moments to the moment of the contour. This means that the contour is valid
-                moments = cv2.moments(contour)
-
-        # If the contour is valid
-        if moments is not None:
-            
-            # Find the x coordinate of the centre of the contour moment 
-            cx = moments["m10"] / moments["m00"]
-            
-            # Find the y coordinate of the centre of the contour moment
-            cy = moments["m01"] / moments["m00"]
-            
-            # Add the coordinate of the centre to the valid centres list
-            valid_centers.append(Point(cx, cy))
+                valid_centers.append(Point(cx, cy))
 
     # Returns the computed valid centres of the contour list
     return valid_centers
@@ -108,7 +104,7 @@ with picamera.PiCamera() as camera:
     camera.start_preview(fullscreen=False, window=(640, 640, 320, 240))
     
     # Warns user that the camera has started
-    logging.info("Started preview")
+    #logging.info("Started preview")
 
     while True:
         # Gets the current image frame in a specific format (bgr) while using the video port to increase speed
@@ -121,7 +117,7 @@ with picamera.PiCamera() as camera:
         valid_centers = validate_contours(gripped.filter_contours_output)
         
         # Prints the valid contours to screen
-        logging.info(valid_centers)
+        #logging.info(valid_centers)
 
         # Checks if there is only one valid contour
         if len(valid_centers) == 1:
@@ -149,7 +145,9 @@ with picamera.PiCamera() as camera:
             pegX = 0
 
         # Converts the x coordinate into millimetres
-        pegX *= 1.867637 
+        pegX *= 1.867637
+
+        print("mm = %f" % pegX)
 
         # Sends to SmartDashboard the value of the centre x coordinate in millimetres
         sd.putNumber("mm peg centerX", pegX)
