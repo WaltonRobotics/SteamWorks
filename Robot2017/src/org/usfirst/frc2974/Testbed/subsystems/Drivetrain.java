@@ -128,8 +128,17 @@ public class Drivetrain extends Subsystem {
 		if (reset || !pref.containsKey("drivetrain.shootAngle")) {
 			pref.putDouble("drivetrain.shootAngle", 10.0);
 		}
-		if (reset || !pref.containsKey("drivetrain.offsetLeft")) {
-			pref.putDouble("drivetrain.offsetBlue3", 0);
+		if (reset || !pref.containsKey("drivetrain.offsetAngleB1")) {
+			pref.putDouble("drivetrain.offsetAngleB1", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleB3")) {
+			pref.putDouble("drivetrain.offsetAngleB3", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleR1")) {
+			pref.putDouble("drivetrain.offsetAngleR1", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleR3")) {
+			pref.putDouble("drivetrain.offsetAngleR3", 0);
 		}
 	}
 

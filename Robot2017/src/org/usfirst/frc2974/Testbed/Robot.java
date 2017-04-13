@@ -128,7 +128,9 @@ public class Robot extends IterativeRobot {
 			autonomousCommand = autoChooser.getSelected();
 			autonomousCommand.start();
 		} catch (NullPointerException e) {
-			autonomousCommand = new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2);
+			autonomousCommand = new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.CENTER,
+					AutonEncoderCameraToPeg.Control.NOTHING
+					);
 			autonomousCommand.start();
 		}
 	}

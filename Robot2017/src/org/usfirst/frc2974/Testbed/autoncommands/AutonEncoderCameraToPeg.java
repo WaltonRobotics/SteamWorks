@@ -40,9 +40,6 @@ public class AutonEncoderCameraToPeg extends Command {
 	public Control control;
 	private State state;
 
-	private boolean pushToPeg;
-	private static final double HOLD_POWER = 0.25;
-
 	double gearDelay;
 	double startTime;
 	double chargeAngle;
@@ -77,24 +74,24 @@ public class AutonEncoderCameraToPeg extends Command {
 					aectp.addDriveParametersCenter();
 					break;
 				case BLUE1:
-					aectp.addDriveParametersSide(new Point2D(-1.98, 0.95), -Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0));
-					aectp.chargeAngle = -Math.PI / 3;
+					aectp.addDriveParametersSide(new Point2D(-2.02, 0.95), -Math.PI / 3,
+							Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleB1", 0));
 					break;
 				case BLUE3:
-					aectp.addDriveParametersSide(new Point2D(-1.98, -0.80), Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0));
-					aectp.chargeAngle = Math.PI / 3;
+					aectp.addDriveParametersSide(new Point2D(-2.02, -0.80), Math.PI / 3,
+							Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleB3", 0));
 					break;
 				case RED1:
-					aectp.addDriveParametersSide(new Point2D(-1.98, 0.80), -Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0));
-					aectp.chargeAngle = -Math.PI / 3;
+					aectp.addDriveParametersSide(new Point2D(-2.02, 0.80), -Math.PI / 3,
+							Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleR1", 0));
 					break;
 				case RED3:
-					aectp.addDriveParametersSide(new Point2D(-1.98, -0.95), Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0));
-					aectp.chargeAngle = Math.PI / 3;
+					aectp.addDriveParametersSide(new Point2D(-2.02, -0.95), Math.PI / 3,
+							Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleR3", 0));
 					break;
 				}
 				aectp.driveTrain.startMotion();
@@ -146,7 +143,7 @@ public class AutonEncoderCameraToPeg extends Command {
 			@Override
 			public void init(AutonEncoderCameraToPeg aectp) {
 				aectp.driveTrain.cancelMotion();
-				aectp.driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
+				aectp.driveTrain.setSpeeds(0, 0);
 				aectp.startTime = Timer.getFPGATimestamp();
 			}
 		},
@@ -162,7 +159,19 @@ public class AutonEncoderCameraToPeg extends Command {
 			@Override
 			public void init(AutonEncoderCameraToPeg aectp) {
 				Robot.poseEstimator.reset();
-				aectp.addDriveParametersGoForward(aectp.chargeAngle);
+				switch (aectp.position) {
+				case BLUE1:
+					aectp.addDriveParametersGoForward(-Math.PI / 3);
+					break;
+				case BLUE3:
+					aectp.addDriveParametersGoForward(Math.PI / 3);
+					break;
+				case RED1:
+					aectp.addDriveParametersGoForward(-Math.PI / 3);
+					break;
+				case RED3:
+					aectp.addDriveParametersGoForward(Math.PI / 3);
+				}
 				aectp.driveTrain.startMotion();
 			}
 		},
@@ -178,7 +187,13 @@ public class AutonEncoderCameraToPeg extends Command {
 			@Override
 			public void init(AutonEncoderCameraToPeg aectp) {
 				Robot.poseEstimator.reset();
-				aectp.addDriveParametersGoForward(aectp.chargeAngle);
+				switch (aectp.position) {
+				case RED3:
+					aectp.addDriveParametersShoot(Math.PI / 3, -aectp.shootAngle);
+					break;
+				case BLUE1:
+					aectp.addDriveParametersShoot(-Math.PI / 3, aectp.shootAngle);
+				}
 				aectp.driveTrain.startMotion();
 			}
 		},
@@ -222,13 +237,15 @@ public class AutonEncoderCameraToPeg extends Command {
 		driveTrain.addControllerMotion(new MotionPathStraight(ZERO, -0.984, MAX_SPEED, MAX_ACCELERATION));
 	}
 
-	private void addDriveParametersSide(Point2D pegPoint, double angle, double offset) {
+	private void addDriveParametersSide(Point2D pegPoint, double angle, double offset, double angleOffset) {
 		driveTrain.cancelMotion();
 
-		Pose peg = new Pose(pegPoint, PEG_ANGLE);
+		angle += angleOffset;
 
-		double l0 = pegPoint.x * 2 / 3;
-		double l1 = pegPoint.y * 2 / 3;
+		Pose peg = new Pose(pegPoint.offsetPoint(-offset, 0), angle);
+
+		double l0 = 1.0 * (Math.abs(pegPoint.x) - Math.abs(pegPoint.y) / Math.tan(Math.abs(angle))) + offset;
+		double l1 = 1.0 * Math.abs(pegPoint.y) / Math.sin(Math.abs(angle));
 
 		driveTrain.addControllerMotion(new MotionPathSpline(ZERO, l0, peg, l1, MAX_SPEED, MAX_ACCELERATION, false));
 	}
@@ -238,8 +255,7 @@ public class AutonEncoderCameraToPeg extends Command {
 
 		double x = -1.016;
 		double y = SmartDashboard.getNumber("mm peg centerX", 0) / 1000;
-		double l0 = x / 2;
-		double l1 = y / 2;
+		double controlPoint = Math.abs(x / 2);
 
 		Point2D pegPoint = new Point2D(x, y);
 
@@ -247,7 +263,7 @@ public class AutonEncoderCameraToPeg extends Command {
 
 		System.out.println(y);
 
-		return new MotionPathSpline(ZERO, l0, peg, l1, PEG_SPEED, PEG_ACCELERATION, false);
+		return new MotionPathSpline(ZERO, controlPoint, peg, controlPoint, PEG_SPEED, PEG_ACCELERATION, false);
 	}
 
 	private void addDriveParametersGoForward(double pegAngle) {
@@ -267,7 +283,7 @@ public class AutonEncoderCameraToPeg extends Command {
 				new MotionPathStraight(chargeBack.getFinalPose(), CHARGE_DISTANCE, MAX_SPEED, MAX_ACCELERATION));
 	}
 
-	private void addDriveParametersShoot(double pegAngle) {
+	private void addDriveParametersShoot(double pegAngle, double shootAngle) {
 		driveTrain.cancelMotion();
 
 		Point2D displacement = new Point2D(Math.cos(pegAngle) * shootDistance + 0.2,
@@ -276,20 +292,21 @@ public class AutonEncoderCameraToPeg extends Command {
 		Pose atPeg = new Pose(new Point2D(0, 0), pegAngle);
 		Pose displacementPose = new Pose(displacement, pegAngle + shootAngle);
 
-		MotionProvider shootDrive = new MotionPathSpline(atPeg, shootDistance / 3.0, displacementPose,
-				shootDistance / 3, MAX_SPEED, MAX_ACCELERATION, true);
+		MotionProvider shootDrive = new MotionPathSpline(atPeg, shootDistance / 2, displacementPose, shootDistance / 2,
+				MAX_SPEED, MAX_ACCELERATION, true);
 
 		driveTrain.addControllerMotion(shootDrive);
 	}
 
 	public void initialize() {
 		Robot.poseEstimator.reset();
-		pushToPeg = Preferences.getInstance().getBoolean("drivetrain.pushToPeg", false);
 		Robot.drivetrain.shiftDown();
 
 		gearDelay = Preferences.getInstance().getDouble("drivetrain.pegDelay", 2.5);
 		shootDistance = Preferences.getInstance().getDouble("drivetrain.shootDistance", 3);
 		shootAngle = Math.PI * Preferences.getInstance().getDouble("driveTrain.shootAngle", 10) / 180;
+
+		SmartDashboard.putNumber("mm peg centerX", 0);
 
 		state = State.ToOffset;
 		state.init(this);
@@ -297,12 +314,11 @@ public class AutonEncoderCameraToPeg extends Command {
 
 	@Override
 	public void execute() {
-		if (!pushToPeg && driveTrain.isControllerFinished()) {
-			driveTrain.cancelMotion();
-			driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
-			pushToPeg = true;
-		} else if (pushToPeg) {
-			driveTrain.setSpeeds(-HOLD_POWER, -HOLD_POWER);
+		State newState = state.run(this);
+		if (newState != state) {
+			state = newState;
+			SmartDashboard.putString("AutonState", state.name());
+			state.init(this);
 		}
 	}
 
