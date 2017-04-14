@@ -42,6 +42,8 @@ public class RobotMap {
 	
 	public static Compressor compressor;
 	public static Solenoid pneumaticsShifter;
+	
+	public static Talon balls;
 
     public static void init() {
     	left = new Talon(0);
@@ -54,5 +56,7 @@ public class RobotMap {
     	encoderLeft = new Encoder(new DigitalInput(2), new DigitalInput(3));    	
     	
     	
+    	//TODO Change to correct motor and position
+    	balls = new Talon(2);
     }
 }
