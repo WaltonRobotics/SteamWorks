@@ -75,23 +75,23 @@ public class AutonEncoderCameraToPeg extends Command {
 					break;
 				case BLUE1:
 					aectp.addDriveParametersSide(new Point2D(-2.02, 0.95), -Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0),
-							Preferences.getInstance().getDouble("drivetrain.offsetAngleB1", 0));
+							Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0.5),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleB1", -0.125));
 					break;
 				case BLUE3:
 					aectp.addDriveParametersSide(new Point2D(-2.02, -0.80), Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0),
-							Preferences.getInstance().getDouble("drivetrain.offsetAngleB3", 0));
+							Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0.3),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleB3", 0.3));
 					break;
 				case RED1:
 					aectp.addDriveParametersSide(new Point2D(-2.02, 0.80), -Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0),
-							Preferences.getInstance().getDouble("drivetrain.offsetAngleR1", 0));
+							Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0.2),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleR1", -0.15));
 					break;
 				case RED3:
 					aectp.addDriveParametersSide(new Point2D(-2.02, -0.95), Math.PI / 3,
-							Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0),
-							Preferences.getInstance().getDouble("drivetrain.offsetAngleR3", 0));
+							Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0.3),
+							Preferences.getInstance().getDouble("drivetrain.offsetAngleR3", 0.175));
 					break;
 				}
 				aectp.driveTrain.startMotion();
@@ -100,23 +100,27 @@ public class AutonEncoderCameraToPeg extends Command {
 		ReadCamera {
 			@Override
 			public State run(AutonEncoderCameraToPeg aectp) {
-				return DriveToPeg;
+				if (Timer.getFPGATimestamp() - aectp.startTime > 0.5) {
+					return DriveToPeg;
+				}
+				System.out.println(SmartDashboard.getNumber("mm peg centerX", 0) / 1000);
+				return this;
 			}
 
 			@Override
 			public void init(AutonEncoderCameraToPeg aectp) {
 				aectp.driveTrain.cancelMotion();
-				aectp.driveTrain.addControllerMotion(aectp.createCameraSpline());
+				aectp.startTime = Timer.getFPGATimestamp();
 			}
 		},
 		DriveToPeg {
 			@Override
 			public State run(AutonEncoderCameraToPeg aectp) {
 				if (aectp.driveTrain.isControllerFinished()) {
-					if (Objects.equals(aectp.control, Control.NOTHING)) {
+					if (aectp.control == Control.NOTHING) {
 						return End;
 					} else {
-						return Delay;
+						return WaitForGear;
 					}
 				}
 				return this;
@@ -124,7 +128,43 @@ public class AutonEncoderCameraToPeg extends Command {
 
 			@Override
 			public void init(AutonEncoderCameraToPeg aectp) {
-				// aectp.driveTrain.startMotion();
+				switch (aectp.position) {
+				case BLUE1:
+					aectp.driveTrain.addControllerMotion(aectp
+							.createCameraSpline(Preferences.getInstance().getDouble("drivetrain.pegExtraB1", 0.0)));
+					break;
+				case BLUE3:
+					aectp.driveTrain.addControllerMotion(aectp
+							.createCameraSpline(Preferences.getInstance().getDouble("drivetrain.pegExtraB3", 0.0)));
+					break;
+				case CENTER:
+					aectp.driveTrain.addControllerMotion(aectp
+							.createCameraSpline(Preferences.getInstance().getDouble("drivetrain.pegExtraCenter", 0.0)));
+					break;
+				case RED1:
+					aectp.driveTrain.addControllerMotion(aectp
+							.createCameraSpline(Preferences.getInstance().getDouble("drivetrain.pegExtraR1", 0.0)));
+					break;
+				case RED3:
+					aectp.driveTrain.addControllerMotion(aectp
+							.createCameraSpline(Preferences.getInstance().getDouble("drivetrain.pegExtraR3", 0.0)));
+					break;
+				}
+				aectp.driveTrain.startMotion();
+			}
+		},
+		WaitForGear {
+			@Override
+			public State run(AutonEncoderCameraToPeg aectp) {
+				if (!Robot.gearIntake.hasGear()) {
+					return Delay;
+				}
+				return this;
+			}
+
+			@Override
+			public void init(AutonEncoderCameraToPeg aectp) {
+				aectp.driveTrain.cancelMotion();
 			}
 		},
 		Delay {
@@ -186,6 +226,8 @@ public class AutonEncoderCameraToPeg extends Command {
 
 			@Override
 			public void init(AutonEncoderCameraToPeg aectp) {
+				Robot.shooter.enable();
+
 				Robot.poseEstimator.reset();
 				switch (aectp.position) {
 				case RED3:
@@ -234,7 +276,7 @@ public class AutonEncoderCameraToPeg extends Command {
 	private void addDriveParametersCenter() {
 		driveTrain.cancelMotion();
 
-		driveTrain.addControllerMotion(new MotionPathStraight(ZERO, -0.984, MAX_SPEED, MAX_ACCELERATION));
+		driveTrain.addControllerMotion(new MotionPathStraight(ZERO, -1.184, MAX_SPEED, MAX_ACCELERATION));
 	}
 
 	private void addDriveParametersSide(Point2D pegPoint, double angle, double offset, double angleOffset) {
@@ -250,10 +292,10 @@ public class AutonEncoderCameraToPeg extends Command {
 		driveTrain.addControllerMotion(new MotionPathSpline(ZERO, l0, peg, l1, MAX_SPEED, MAX_ACCELERATION, false));
 	}
 
-	private MotionProvider createCameraSpline() {
+	private MotionProvider createCameraSpline(double offset) {
 		driveTrain.cancelMotion();
 
-		double x = -1.016;
+		double x = -1.016 - offset;
 		double y = SmartDashboard.getNumber("mm peg centerX", 0) / 1000;
 		double controlPoint = Math.abs(x / 2);
 

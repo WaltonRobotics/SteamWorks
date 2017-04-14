@@ -85,11 +85,10 @@ public class AutonEncoderToPegCharge extends Command {
 		WaitForGear {
 			@Override
 			public State run(AutonEncoderToPegCharge aetpc) {
-				if (true) {
+				if (!Robot.gearIntake.hasGear()) {
 					return Delay;
 				}
-				return this; // FIXME: correct the if statement, once we know
-								// how to use the sensor
+				return this;
 			}
 
 			@Override
@@ -174,7 +173,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersRed1() {
 		driveTrain.cancelMotion();
 
-		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed1", 0);
+		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed1Legacy", 0);
 
 		Pose peg = new Pose(PEG_POINT_RED1, -PEG_ANGLE);
 		peg.offsetPoint(-offset);
@@ -190,7 +189,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersRed3() {
 		driveTrain.cancelMotion();
 
-		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0);
+		double offset = Preferences.getInstance().getDouble("drivetrain.offsetRed3Legacy", 0);
 
 		Pose peg = new Pose(PEG_POINT_RED3, PEG_ANGLE);
 		peg.offsetPoint(-offset);
@@ -206,7 +205,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersBlue1() {
 		driveTrain.cancelMotion();
 
-		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0);
+		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue1Legacy", 0);
 
 		Pose peg = new Pose(PEG_POINT_BLUE1, -PEG_ANGLE);
 		peg.offsetPoint(-offset);
@@ -222,7 +221,7 @@ public class AutonEncoderToPegCharge extends Command {
 	private void addDriveParametersBlue3() {
 		driveTrain.cancelMotion();
 
-		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue3", 0);
+		double offset = Preferences.getInstance().getDouble("drivetrain.offsetBlue3Legacy", 0);
 
 		Pose peg = new Pose(PEG_POINT_BLUE3, PEG_ANGLE);
 		peg.offsetPoint(-offset);

@@ -30,13 +30,15 @@ public class RobotMap {
 
 	public static Encoder encoderLeft;
 	public static Encoder encoderRight;
-	public static Encoder encoderFlyWheel;
+//	public static Encoder encoderFlyWheel;
 
 	public static Compressor compressor;
 	public static Solenoid pneumaticsShifter;
 	public static Solenoid hopperRelease;
 	
 	public static Solenoid flapCylinder;
+	
+	public static DigitalInput gearSensor;
 
 	public static PowerDistributionPanel powerPanel;
 	
@@ -56,8 +58,11 @@ public class RobotMap {
 
 		encoderRight = new Encoder(new DigitalInput(0), new DigitalInput(1));
 		encoderLeft = new Encoder(new DigitalInput(2), new DigitalInput(3));
-		encoderFlyWheel = new Encoder(new DigitalInput(4), new DigitalInput(5));
+//		encoderFlyWheel = new Encoder(new DigitalInput(4), new DigitalInput(5));
+		
+		gearSensor = new DigitalInput(4);
 		
 		powerPanel = new PowerDistributionPanel(0);
+		
 	}
 }
