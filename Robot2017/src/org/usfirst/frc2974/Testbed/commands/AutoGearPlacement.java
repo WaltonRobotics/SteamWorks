@@ -34,9 +34,9 @@ public class AutoGearPlacement extends Command {
 			@Override
 			void init() {
 				Robot.drivetrain.cancelMotion();
-				
+
 				Robot.drivetrain.addControllerMotion(createCameraSpline(0));
-				
+
 				Robot.drivetrain.startMotion();
 			}
 
@@ -44,17 +44,17 @@ public class AutoGearPlacement extends Command {
 			State run() {
 				// TODO move the robot to pegh using spline
 				// TODO figure out how to use the distance parameter
-				if(Robot.drivetrain.isControllerFinished())
+				if (Robot.drivetrain.isControllerFinished())
 					return State.WAIT_FOR_GEAR_REMOVAL;
-					
-					return super.run();
+
+				return super.run();
 			}
-			
+
 			private final Pose ZERO = new Pose(new Point2D(0, 0), 0);
-			
+
 			public static final double PEG_SPEED = 1;
 			public static final double PEG_ACCELERATION = 1;
-			
+
 			private MotionProvider createCameraSpline(double offset) {
 				Robot.drivetrain.cancelMotion();
 
@@ -103,21 +103,21 @@ public class AutoGearPlacement extends Command {
 			@Override
 			void init() {
 				Robot.drivetrain.cancelMotion();
-				
+
 				Pose pose = new Pose(new Point2D(0, 0), 0);
-				
-				MotionPathStraight forwardDrive = new MotionPathStraight(pose, .5,1, 1);
-				
+
+				MotionPathStraight forwardDrive = new MotionPathStraight(pose, .5, 1, 1);
+
 				Robot.drivetrain.addControllerMotion(forwardDrive);
-				
+
 				Robot.drivetrain.startMotion();
 			}
-			
+
 			@Override
 			State run() {
-				if(Robot.drivetrain.isControllerFinished())
-				return END;
-				
+				if (Robot.drivetrain.isControllerFinished())
+					return END;
+
 				return super.run();
 			}
 		},
@@ -126,7 +126,7 @@ public class AutoGearPlacement extends Command {
 			void init() {
 				super.init();
 			}
-			
+
 			@Override
 			State run() {
 				return State.LOOKING;
