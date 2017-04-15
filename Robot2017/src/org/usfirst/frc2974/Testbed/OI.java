@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * interface to the commands and command groups that allow control of the robot.
  */
 public class OI {
-	
+
 	public Joystick left;
 	public Joystick right;
 	public Gamepad gamepad;
@@ -43,12 +43,14 @@ public class OI {
 	public Button dumptake;
 
 	public Button hopperControl;
-//	public Button hopperAltControl;
-//	public Button aimOverride;
+	// public Button hopperAltControl;
+	// public Button aimOverride;
 	public Button atSpeed;
-	
+
 	public Button intakeGear;
-	
+
+	public Button autoGearPlacement;
+
 	public OI() {
 		right = new Joystick(1);
 		left = new Joystick(0);
@@ -64,27 +66,29 @@ public class OI {
 		intake = new JoystickButton(gamepad, 1);
 		outtake = new JoystickButton(gamepad, 3);
 		stoptake = new JoystickButton(gamepad, 2);
-		dumptake = new JoystickButton(gamepad,4);
-		
+		dumptake = new JoystickButton(gamepad, 4);
+
 		intakeGear = new JoystickButton(gamepad, 8);
 
 		hopperControl = new JoystickButton(left, 9);
-//		hopperAltControl = new JoystickButton(gamepad,8);
+		// hopperAltControl = new JoystickButton(gamepad,8);
 
-//		aimOverride = new JoystickButton(right, 7);
+		// aimOverride = new JoystickButton(right, 7);
 		atSpeed = new JoystickButton(left, 8);
+
+		// TODO Change this value to something that the drivers want
+		autoGearPlacement = new JoystickButton(gamepad, 0);
 	}
 
 	public boolean startHold() {
 		return gamepad.getRawButton(7);
 	}
-	
+
 	public boolean toggleHold() {
 		return gamepad.getRawButton(5);
 	}
-	
-	public boolean climbBoost()
-	{
+
+	public boolean climbBoost() {
 		return gamepad.getRawButton(12);
 	}
 

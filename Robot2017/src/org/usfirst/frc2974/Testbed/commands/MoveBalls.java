@@ -1,6 +1,5 @@
 package org.usfirst.frc2974.Testbed.commands;
 
-
 import org.usfirst.frc2974.Testbed.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -23,8 +22,8 @@ public class MoveBalls extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		
-		//TODO refine this and ask the drivers what they want as key 
+
+		// TODO refine this and ask the drivers what they want as key
 		Robot.ballMover.setSpeed(Robot.oi.gamepad.getRightY());
 	}
 

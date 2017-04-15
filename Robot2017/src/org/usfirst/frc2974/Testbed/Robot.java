@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import javax.lang.model.element.Parameterizable;
+
 import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
 //import org.usfirst.frc2974.Testbed.auton.AutonEncoderWithVision;
 import org.usfirst.frc2974.Testbed.autoncommands.Aim;
@@ -24,6 +26,7 @@ import org.usfirst.frc2974.Testbed.autoncommands.DriveSplineByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightByEncoder;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveStraightTrapezoid;
 import org.usfirst.frc2974.Testbed.autoncommands.DriveTurnByEncoder;
+import org.usfirst.frc2974.Testbed.commands.AutoGearPlacement;
 import org.usfirst.frc2974.Testbed.commands.SetMotionControllerConstants;
 import org.usfirst.frc2974.Testbed.commands.TestShooterPower;
 import org.usfirst.frc2974.Testbed.subsystems.*;
@@ -51,7 +54,7 @@ public class Robot extends IterativeRobot {
 	// public static Aim aim;
 
 	public static GearIntake gearIntake;
-	
+
 	public static BallMover ballMover;
 
 	/**
@@ -70,7 +73,7 @@ public class Robot extends IterativeRobot {
 		climber = new Climber();
 		// aim = new Aim();
 		gearIntake = new GearIntake();
-		
+
 		ballMover = new BallMover();
 
 		// OI must be constructed after subsystems. If the OI creates Commands
@@ -218,6 +221,9 @@ public class Robot extends IterativeRobot {
 			autonomousCommand.cancel();
 		// RobotMap.compressor.start();
 		// createTestButtons();
+
+		// Starts the command and will
+		new AutoGearPlacement().start();
 
 		// Scheduler.getInstance().add(aim); // TODO add other commands
 		CameraServer.getInstance().startAutomaticCapture();
