@@ -25,6 +25,8 @@ public class RobotMap {
 	public static Talon indexer;
 	public static Talon intake;
 	public static Talon climber;
+	
+	public static Talon ballMover;
 
 	public static CANTalon flywheelMotor;
 
@@ -49,6 +51,8 @@ public class RobotMap {
 		intake = new Talon(3);
 		climber = new Talon(4);
 		flywheelMotor = new CANTalon(1);
+		
+		ballMover = new Talon(5);
 
 		compressor = new Compressor();
 		pneumaticsShifter = new Solenoid(0);
@@ -63,6 +67,5 @@ public class RobotMap {
 		gearSensor = new DigitalInput(4);
 		
 		powerPanel = new PowerDistributionPanel(0);
-		
 	}
 }
