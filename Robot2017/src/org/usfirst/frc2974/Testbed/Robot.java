@@ -51,6 +51,8 @@ public class Robot extends IterativeRobot {
 	// public static Aim aim;
 
 	public static GearIntake gearIntake;
+	
+	public static BallMover ballMover;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -68,6 +70,8 @@ public class Robot extends IterativeRobot {
 		climber = new Climber();
 		// aim = new Aim();
 		gearIntake = new GearIntake();
+		
+		ballMover = new BallMover();
 
 		// OI must be constructed after subsystems. If the OI creates Commands
 		// (which it very likely will), subsystems are not guaranteed to be

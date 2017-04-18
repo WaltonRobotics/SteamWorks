@@ -29,4 +29,12 @@ public class Hopper extends Subsystem {
 		//FIXME: Disabled for Ashville as solenoid removed
 //		piston.set(down);
 	}
+	
+	public void setBallMoverSpeed(double power) {
+		RobotMap.ballMover.set(power);
+	}
+
+	public void disableBallMover() {
+		RobotMap.ballMover.set(0);
+	}
 }

@@ -20,11 +20,12 @@ public class HopperControl extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		if (Robot.oi.hopperControl.get()) {//||Robot.oi.hopperAltControl.get()) {
-			Robot.hopper.setPistonDown(true);
-		} else {
-			Robot.hopper.setPistonDown(false);
-		}
+//		if (Robot.oi.hopperControl.get()) {//||Robot.oi.hopperAltControl.get()) {
+//			Robot.hopper.setPistonDown(true);
+//		} else {
+//			Robot.hopper.setPistonDown(false);
+//		}
+		Robot.hopper.setBallMoverSpeed(Robot.oi.gamepad.getRightY());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -34,7 +35,7 @@ public class HopperControl extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
-		
+		Robot.hopper.disableBallMover();
 	}
 
 	// Called when another command which requires one or more of the same
