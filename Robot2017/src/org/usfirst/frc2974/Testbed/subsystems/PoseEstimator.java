@@ -19,7 +19,7 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	
 	private RobotPair wheelPositions;
 	private double angle;
-	public static final double distancePerPulse = 0.0005814; //Pracice bot
+	public static final double distancePerPulse = 0.0005652 // Original value  0.0005814; //Pracice bot
 	public static final double wheelDistance = .70485; //practice bot
 	private Point2D X;
 	
