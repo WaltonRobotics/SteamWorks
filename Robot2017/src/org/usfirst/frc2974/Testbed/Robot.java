@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc2974.Testbed.auton.AutonDiffRunnable;
 //import org.usfirst.frc2974.Testbed.auton.AutonEncoderWithVision;
 import org.usfirst.frc2974.Testbed.autoncommands.Aim;
+import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderCameraToPeg;
 import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPeg;
 import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPegCharge;
 import org.usfirst.frc2974.Testbed.autoncommands.AutonEncoderToPegShoot;
@@ -40,13 +41,14 @@ public class Robot extends IterativeRobot {
 
 	public static OI oi;
 	private SendableChooser<Command> autoChooser;
+	private SendableChooser<Command> legacyChooser;
 	public static Drivetrain drivetrain;
 	public static PoseEstimator poseEstimator;
 	public static Shooter shooter;
 	public static Hopper hopper;
 	public static Intake intake;
 	public static Climber climber;
-//	public static Aim aim;
+	// public static Aim aim;
 
 	public static GearIntake gearIntake;
 
@@ -64,7 +66,7 @@ public class Robot extends IterativeRobot {
 		hopper = new Hopper();
 		intake = new Intake();
 		climber = new Climber();
-//		aim = new Aim();
+		// aim = new Aim();
 		gearIntake = new GearIntake();
 
 		// OI must be constructed after subsystems. If the OI creates Commands
@@ -74,6 +76,7 @@ public class Robot extends IterativeRobot {
 		oi = new OI();
 
 		createAutonomousChooser();
+		createLegacyChooser();
 		SmartDashboard.putNumber("Duration", 0);
 		SmartDashboard.putNumber("aMax", 0);
 		SmartDashboard.putNumber("DiffPercent", 0);
@@ -99,6 +102,7 @@ public class Robot extends IterativeRobot {
 		Drivetrain.declarePrefs(reset);
 		Shooter.declarePrefs(reset);
 		Climber.declarePrefs(reset);
+		GearIntake.declarePrefs(reset);
 
 		pref.putBoolean("reset", false);
 	}
@@ -124,10 +128,15 @@ public class Robot extends IterativeRobot {
 
 		drivetrain.shiftDown();
 		try {
-			autonomousCommand = autoChooser.getSelected();
+			if (Preferences.getInstance().getBoolean("drivetrain.autonLegacy", true)) {
+				autonomousCommand = legacyChooser.getSelected();
+			} else {
+				autonomousCommand = autoChooser.getSelected();
+			}
 			autonomousCommand.start();
 		} catch (NullPointerException e) {
-			autonomousCommand = new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2);
+			autonomousCommand = new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.CENTER,
+					AutonEncoderCameraToPeg.Control.NOTHING);
 			autonomousCommand.start();
 		}
 	}
@@ -143,29 +152,55 @@ public class Robot extends IterativeRobot {
 	}
 
 	private void createAutonomousChooser() {
-
 		autoChooser = new SendableChooser<Command>();
-		autoChooser.addDefault("Do Nothing", null);
-		autoChooser.addObject("CrossLine",
-				new DriveStraightTrapezoid(false, 1, 0.6, DriveStraightTrapezoid.Direction.ANTIFORWARD));
-		autoChooser.addObject("Red 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1));
-		autoChooser.addObject("Red 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2));
-		autoChooser.addObject("Red 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED3));
-		autoChooser.addObject("Blue 1", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE1));
-		autoChooser.addObject("Blue 2", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE2));
-		autoChooser.addObject("Blue 3", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE3));
-		autoChooser.addObject("Red 1 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED1));
-		autoChooser.addObject("Red 3 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED3));
-		autoChooser.addObject("Blue 1 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE1));
-		autoChooser.addObject("Blue 3 and Charge", new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE3));
-		autoChooser.addObject("Red 3 and Shoot", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.RED3));
-		autoChooser.addObject("Blue 1 and Shoot", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.BLUE1));
 
-		// autoChooser.addObject("Auton move to peg and boiler", new
-		// AutonEncoderWithVision(true));
-		// autoChooser.addObject("Auton move forward past line", new
-		// AutonEncoderWithVision(false));
+		autoChooser.addDefault("Center", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.CENTER,
+				AutonEncoderCameraToPeg.Control.NOTHING));
+		autoChooser.addObject("Red 1", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.RED1,
+				AutonEncoderCameraToPeg.Control.NOTHING));
+		autoChooser.addObject("Red 3", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.RED3,
+				AutonEncoderCameraToPeg.Control.NOTHING));
+		autoChooser.addObject("Blue 1", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.BLUE1,
+				AutonEncoderCameraToPeg.Control.NOTHING));
+		autoChooser.addObject("Blue 3", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.BLUE3,
+				AutonEncoderCameraToPeg.Control.NOTHING));
+		autoChooser.addObject("Red 1 and Charge", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.RED1,
+				AutonEncoderCameraToPeg.Control.CHARGE));
+		autoChooser.addObject("Red 3 and Charge", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.RED3,
+				AutonEncoderCameraToPeg.Control.CHARGE));
+		autoChooser.addObject("Blue 1 and Charge", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.BLUE1,
+				AutonEncoderCameraToPeg.Control.CHARGE));
+		autoChooser.addObject("Blue 3 and Charge", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.BLUE3,
+				AutonEncoderCameraToPeg.Control.CHARGE));
+		autoChooser.addObject("Red 3 and Shoot", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.RED3,
+				AutonEncoderCameraToPeg.Control.SHOOT));
+		autoChooser.addObject("Blue 1 and Shoot", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.BLUE1,
+				AutonEncoderCameraToPeg.Control.SHOOT));
+
 		SmartDashboard.putData("Auto", autoChooser);
+	}
+
+	public void createLegacyChooser() {
+		legacyChooser = new SendableChooser<Command>();
+
+		legacyChooser.addDefault("Center Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2));
+		legacyChooser.addObject("Blue 1 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE1));
+		legacyChooser.addObject("Blue 3 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE3));
+		legacyChooser.addObject("Red 1 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1));
+		legacyChooser.addObject("Red 3 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED3));
+		legacyChooser.addObject("Blue 1 Shoot Legacy",
+				new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.BLUE1));
+		legacyChooser.addObject("Red 3 Shoot Legacy", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.RED3));
+		legacyChooser.addObject("Blue 1 Charge Legacy",
+				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE1));
+		legacyChooser.addObject("Blue 3 Charge Legacy",
+				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE3));
+		legacyChooser.addObject("Red 1 Charge Legacy",
+				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED1));
+		legacyChooser.addObject("Red 3 Charge Legacy",
+				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED3));
+
+		SmartDashboard.putData("Auto Legacy", legacyChooser);
 	}
 
 	public void teleopInit() {
@@ -180,7 +215,7 @@ public class Robot extends IterativeRobot {
 		// RobotMap.compressor.start();
 		// createTestButtons();
 
-//		Scheduler.getInstance().add(aim); // TODO add other commands
+		// Scheduler.getInstance().add(aim); // TODO add other commands
 		CameraServer.getInstance().startAutomaticCapture();
 	}
 

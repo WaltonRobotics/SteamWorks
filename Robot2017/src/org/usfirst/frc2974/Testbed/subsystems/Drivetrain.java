@@ -102,16 +102,16 @@ public class Drivetrain extends Subsystem {
 			pref.putString("drivetrain.driver", DEFAULTDRIVER.getName());
 		}
 		if (reset || !pref.containsKey("drivetrain.offsetRed1")) {
-			pref.putDouble("drivetrain.offsetRed1", 0);
+			pref.putDouble("drivetrain.offsetRed1", 0.2);
 		}
 		if (reset || !pref.containsKey("drivetrain.offsetRed3")) {
-			pref.putDouble("drivetrain.offsetRed3", 0);
+			pref.putDouble("drivetrain.offsetRed3", 0.3);
 		}
 		if (reset || !pref.containsKey("drivetrain.offsetBlue1")) {
-			pref.putDouble("drivetrain.offsetBlue1", 0);
+			pref.putDouble("drivetrain.offsetBlue1", 0.5);
 		}
 		if (reset || !pref.containsKey("drivetrain.offsetBlue3")) {
-			pref.putDouble("drivetrain.offsetBlue3", 0);
+			pref.putDouble("drivetrain.offsetBlue3", 0.3);
 		}
 		if (reset || !pref.containsKey("drivetrain.minThrottle")) {
 			pref.putDouble("drivetrain.minThrottle", 0.3);
@@ -123,10 +123,51 @@ public class Drivetrain extends Subsystem {
 			pref.putDouble("drivetrain.pegDelay", 2.5);
 		}
 		if (reset || !pref.containsKey("drivetrain.shootDistance")) {
-			pref.putDouble("drivetrain.shootDistance", 3);
+			pref.putDouble("drivetrain.shootDistance", 3.5);
 		}
 		if (reset || !pref.containsKey("drivetrain.shootAngle")) {
 			pref.putDouble("drivetrain.shootAngle", 10.0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleB1")) {
+			pref.putDouble("drivetrain.offsetAngleB1", -0.125);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleB3")) {
+			pref.putDouble("drivetrain.offsetAngleB3", 0.3);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleR1")) {
+			pref.putDouble("drivetrain.offsetAngleR1", -0.15);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetAngleR3")) {
+			pref.putDouble("drivetrain.offsetAngleR3", 0.175);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetRed1Legacy")) {
+			pref.putDouble("drivetrain.offsetRed1Legacy", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetRed3Legacy")) {
+			pref.putDouble("drivetrain.offsetRed3Legacy", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetBlue1Legacy")) {
+			pref.putDouble("drivetrain.offsetBlue1Legacy", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.offsetBlue3Legacy")) {
+			pref.putDouble("drivetrain.offsetBlue3Legacy", 0);
+		}
+		if (reset || !pref.containsKey("drivetrain.autonLegacy")) {
+			pref.putBoolean("drivetrain.autonLegacy", false);
+		}
+		if (reset || !pref.containsKey("drivetrain.pegExtraR1")) {
+			pref.putDouble("drivetrain.pegExtraR1", 0.0);
+		}
+		if (reset || !pref.containsKey("drivetrain.pegExtraR3")) {
+			pref.putDouble("drivetrain.pegExtratR3", 0.0);
+		}
+		if (reset || !pref.containsKey("drivetrain.pegExtraB1")) {
+			pref.putDouble("drivetrain.pegExtraB1", 0.0);
+		}
+		if (reset || !pref.containsKey("drivetrain.pegExtraB3")) {
+			pref.putDouble("drivetrain.pegExtraB3", 0.0);
+		}if (reset || !pref.containsKey("drivetrain.pegExtraCenter")) {
+			pref.putDouble("drivetrain.pegExtraCenter", 0.0);
 		}
 	}
 
