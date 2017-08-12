@@ -24,7 +24,7 @@ public class Drive extends Command {
 	}
 
 	protected void initialize() {
-		drivetrain.setDriver();
+		drivetrain.setDriver(Robot.driverSelect.getSelected());
 		
 		updateMinThrottle();
 	}

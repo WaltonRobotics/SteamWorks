@@ -51,12 +51,11 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public Driver convertedDriver(String driver) {
-		for (int i = 0; i < Driver.values().length; i++) {
-			if (driver == Driver.values()[i].getName()) {
-				return Driver.values()[i];
-			}
+		try {
+			return Driver.valueOf(Driver.class, driver);
+		} catch (IllegalArgumentException ignored) {
+			return Driver.Tank;
 		}
-		return Driver.Robert;
 	}
 
 	private Talon right = RobotMap.right;
@@ -73,11 +72,11 @@ public class Drivetrain extends Subsystem {
 	public Drivetrain() {
 		controller = new MotionProfileController(Robot.poseEstimator, PERIOD);
 		setConstants();
-		setDriver();
+		setDriver(Robot.driverSelect.getSelected());
 	}
 
-	public void setDriver() {
-		driver = convertedDriver(Preferences.getInstance().getString("drivetrain.driver", "Robert"));
+	public void setDriver(String driver) {
+		this.driver = convertedDriver(driver);
 	}
 
 	public Driver getDriver() {
@@ -166,7 +165,8 @@ public class Drivetrain extends Subsystem {
 		}
 		if (reset || !pref.containsKey("drivetrain.pegExtraB3")) {
 			pref.putDouble("drivetrain.pegExtraB3", 0.0);
-		}if (reset || !pref.containsKey("drivetrain.pegExtraCenter")) {
+		}
+		if (reset || !pref.containsKey("drivetrain.pegExtraCenter")) {
 			pref.putDouble("drivetrain.pegExtraCenter", 0.0);
 		}
 	}

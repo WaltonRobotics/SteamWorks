@@ -42,6 +42,7 @@ public class Robot extends IterativeRobot {
 	public static OI oi;
 	private SendableChooser<Command> autoChooser;
 	private SendableChooser<Command> legacyChooser;
+	public static SendableChooser<String> driverSelect;
 	public static Drivetrain drivetrain;
 	public static PoseEstimator poseEstimator;
 	public static Shooter shooter;
@@ -51,6 +52,8 @@ public class Robot extends IterativeRobot {
 	// public static Aim aim;
 
 	public static GearIntake gearIntake;
+	
+//	public static BallMover ballMover;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -68,6 +71,8 @@ public class Robot extends IterativeRobot {
 		climber = new Climber();
 		// aim = new Aim();
 		gearIntake = new GearIntake();
+		
+//		ballMover = new BallMover();
 
 		// OI must be constructed after subsystems. If the OI creates Commands
 		// (which it very likely will), subsystems are not guaranteed to be
@@ -77,6 +82,7 @@ public class Robot extends IterativeRobot {
 
 		createAutonomousChooser();
 		createLegacyChooser();
+		createDriverSelect();
 		SmartDashboard.putNumber("Duration", 0);
 		SmartDashboard.putNumber("aMax", 0);
 		SmartDashboard.putNumber("DiffPercent", 0);
@@ -178,6 +184,13 @@ public class Robot extends IterativeRobot {
 				AutonEncoderCameraToPeg.Control.SHOOT));
 
 		SmartDashboard.putData("Auto", autoChooser);
+	}
+	
+	public void createDriverSelect() {
+		driverSelect = new SendableChooser<String>();
+		
+		driverSelect.addDefault("Tank", "Tank");
+		driverSelect.addObject("Cheesy", "Cheesy");
 	}
 
 	public void createLegacyChooser() {
