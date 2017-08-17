@@ -27,7 +27,7 @@ public class Drivetrain extends Subsystem {
 	private static final double DEFAULTKK = 0;
 	private static final double DEFAULTKA = 0.1;
 	private static final double DEFAULTKP = 20;
-	private static final Driver DEFAULTDRIVER = Driver.Robert;
+	private static final Driver DEFAULTDRIVER = Driver.Tank;
 
 	public enum Driver {
 		Robert {
