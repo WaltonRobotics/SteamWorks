@@ -54,10 +54,10 @@ public class OI {
 		left = new Joystick(0);
 		gamepad = new Gamepad(2);
 
-		shiftUp = new JoystickButton(left, 3);
-		shiftDown = new JoystickButton(left, 2);
-		shiftUpAlt = new JoystickButton(left, 10);
-		shiftDownAlt = new JoystickButton(left, 11);
+		shiftUp = new JoystickButton(left, 2);
+		shiftDown = new JoystickButton(left, 3);
+		shiftUpAlt = new JoystickButton(left, 11);
+		shiftDownAlt = new JoystickButton(left, 10);
 
 		shoot = new JoystickButton(left, 1);
 

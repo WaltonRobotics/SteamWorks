@@ -72,7 +72,12 @@ public class Drivetrain extends Subsystem {
 	public Drivetrain() {
 		controller = new MotionProfileController(Robot.poseEstimator, PERIOD);
 		setConstants();
-		setDriver(Robot.driverSelect.getSelected());
+		try {
+			setDriver(Robot.driverSelect.getSelected());
+		} catch (NullPointerException e) {
+			setDriver("Tank");
+		}
+		shifter.set(false);
 	}
 
 	public void setDriver(String driver) {
@@ -206,6 +211,7 @@ public class Drivetrain extends Subsystem {
 	public void dumpSmartdashboardValues() {
 		SmartDashboard.putNumber("Power Left", left.get());
 		SmartDashboard.putNumber("Power Right", right.get());
+		SmartDashboard.putBoolean("Shifted Up", shifter.get());
 
 	}
 
