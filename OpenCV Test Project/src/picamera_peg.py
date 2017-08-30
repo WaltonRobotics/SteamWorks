@@ -8,7 +8,7 @@ import os
 from time import strftime
 import time
 
-from grip_peg import GripPipeline
+from grip import GripPipeline
 from networktables import NetworkTables
 import numpy as np
 import picamera
@@ -29,7 +29,7 @@ NetworkTables.initialize(server="roboRIO-2974-frc.local")
 sd = NetworkTables.getTable("SmartDashboard")
 
 # Creates a named tuple with x,y coordinates. A named tuple is like an object 
-Point = collections.namedtuple("Point", "x y")
+Point = collections.namedtuple("Point", "x y");
 
 # Function used to initialise the camera settings. These settings are predefined and are used to make the camera more efficient.
 def camera_setup(camera):
@@ -45,8 +45,7 @@ def camera_setup(camera):
     camera.exposure_mode = "off"
 
 ANGLE_LIMIT = 10
-MIN_WIDTH = 25
-MAX_WIDTH = 45
+MIN_WIDTH = 10
 
 # This function is used to validate the contours received from the image camera and processed by the GripPipline.
 def validate_contours(contours):
@@ -79,7 +78,7 @@ def validate_contours(contours):
         # If the angle of the rectangle is between -ANGLE_LIMIT and ANGLE_LIMIT
         if -ANGLE_LIMIT < angle < ANGLE_LIMIT:
             # If the width is between MIN_WIDTH and MAX_WIDTH
-            if MIN_WIDTH < width < MAX_WIDTH:
+            if width >= MIN_WIDTH:
                 # Set moments to the moment of the contour. This means that the contour is valid
                 valid_centers.append(Point(cx, cy))
 
@@ -87,8 +86,7 @@ def validate_contours(contours):
         elif -90 - ANGLE_LIMIT < angle < -90 + ANGLE_LIMIT:
             
             # Since the rectangle is reversed the height is the width is the height so we have to check the height
-            if MIN_WIDTH < height < MAX_WIDTH:
-                
+            if height >= MIN_WIDTH:
                 # Set moments to the moment of the contour. This means that the contour is valid
                 valid_centers.append(Point(cx, cy))
 
@@ -105,7 +103,7 @@ with picamera.PiCamera() as camera:
     
     # Warns user that the camera has started
     #logging.info("Started preview")
-
+    i = 0
     while True:
         # Gets the current image frame in a specific format (bgr) while using the video port to increase speed
         camera.capture(image, 'bgr', True)
@@ -151,10 +149,16 @@ with picamera.PiCamera() as camera:
 
         # Sends to SmartDashboard the value of the centre x coordinate in millimetres
         sd.putNumber("mm peg centerX", pegX)
+        
+        #if i % 30 == 0:
+        #    cv2.imwrite("/home/pi/Desktop/image/image" + str((i / 300)) + ".jpg", image)
 
+        i += 1
         # If 'q' is pressed on the keyboard exit loop
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        
+        #Uncomment this code to allow the program to break from loop terminating
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+         #   break
         
         # Send all values from SmartDashboard to the network so that the Driver Station can recieve it
         NetworkTables.flush()
