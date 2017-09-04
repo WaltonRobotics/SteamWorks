@@ -34,9 +34,9 @@ public class Climber extends Subsystem {
 	}
 	
 	public void dumpSmartdashboardValues() {
-		SmartDashboard.putNumber("Climber hold", hold);
-		SmartDashboard.putNumber("Climber current", getCurrent());
-		SmartDashboard.putNumber("Climber power", climberMotor.get()); 
+//		SmartDashboard.putNumber("Climber hold", hold);
+//		SmartDashboard.putNumber("Climber current", getCurrent());
+//		SmartDashboard.putNumber("Climber power", climberMotor.get()); 
 		
 	}
 	

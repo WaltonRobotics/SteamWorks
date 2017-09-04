@@ -15,7 +15,7 @@ public class TestShooterPower extends Command {
         // eg. requires(chassis);
     	requires(Robot.shooter);
     	
-    	SmartDashboard.putNumber("testPower", .1);
+//    	SmartDashboard.putNumber("testPower", .1);
     }
 
     // Called just before this Command runs the first time

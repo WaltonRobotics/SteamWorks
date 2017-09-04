@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -17,12 +18,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class GearIntake extends Subsystem {
 
 	private Solenoid piston;
-	
+
 	private DigitalInput gearSensor;
 
 	public GearIntake() {
 		piston = RobotMap.flapCylinder;
 		this.gearSensor = RobotMap.gearSensor;
+
 	}
 
 	public void initDefaultCommand() {
@@ -32,13 +34,15 @@ public class GearIntake extends Subsystem {
 	public void setPiston(boolean deployed) {
 		piston.set(deployed);
 	}
-	
+
 	public boolean hasGear() {
+
 		if (Preferences.getInstance().getBoolean("gearintake.hasSensor", false)) {
-			return gearSensor.get();
+			return !gearSensor.get();
 		}
 		return false;
 	}
+
 	public static void declarePrefs(boolean reset) {
 		Preferences pref = Preferences.getInstance();
 		if (reset || !pref.containsKey("gearintake.hasSensor")) {

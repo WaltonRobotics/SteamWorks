@@ -83,17 +83,17 @@ public class Robot extends IterativeRobot {
 		createAutonomousChooser();
 		createLegacyChooser();
 		createDriverSelect();
-		SmartDashboard.putNumber("Duration", 0);
-		SmartDashboard.putNumber("aMax", 0);
-		SmartDashboard.putNumber("DiffPercent", 0);
-		SmartDashboard.putNumber("Distance", 0);
-		SmartDashboard.putNumber("vCruise", 0);
-		SmartDashboard.putNumber("encoderDistance", 0);
-		SmartDashboard.putNumber("encoderAccel", 0);
-		SmartDashboard.putNumber("encoderSpeed", 0);
-		SmartDashboard.putNumber("encoderAngle", 0);
-		SmartDashboard.putBoolean("isForwards", true);
-		SmartDashboard.putBoolean("captureImage", false);
+//		SmartDashboard.putNumber("Duration", 0);
+//		SmartDashboard.putNumber("aMax", 0);
+//		SmartDashboard.putNumber("DiffPercent", 0);
+//		SmartDashboard.putNumber("Distance", 0);
+//		SmartDashboard.putNumber("vCruise", 0);
+//		SmartDashboard.putNumber("encoderDistance", 0);
+//		SmartDashboard.putNumber("encoderAccel", 0);
+//		SmartDashboard.putNumber("encoderSpeed", 0);
+//		SmartDashboard.putNumber("encoderAngle", 0);
+//		SmartDashboard.putBoolean("isForwards", true);
+//		SmartDashboard.putBoolean("captureImage", false);
 	}
 
 	private void declarePrefs() {

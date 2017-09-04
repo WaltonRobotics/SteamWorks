@@ -92,11 +92,11 @@ public class PoseEstimator extends Subsystem implements PoseProvider{
 	public synchronized void dumpSmartdashboardValues() {
 //		System.out.printf("Right:%d\tLeft:%d%n",  encoderRight.getRaw() ,encoderLeft.getRaw());
 		
-		SmartDashboard.putNumber("EncoderLeft", encoderLeft.getDistance());
-		SmartDashboard.putNumber("EncoderRight", encoderRight.getDistance());
-		
-		SmartDashboard.putNumber("VelocityLeft", encoderLeft.getRate());
-		SmartDashboard.putNumber("VelocityRight", encoderRight.getRate());
+//		SmartDashboard.putNumber("EncoderLeft", encoderLeft.getDistance());
+//		SmartDashboard.putNumber("EncoderRight", encoderRight.getDistance());
+//		
+//		SmartDashboard.putNumber("VelocityLeft", encoderLeft.getRate());
+//		SmartDashboard.putNumber("VelocityRight", encoderRight.getRate());
 	}
 	
 }

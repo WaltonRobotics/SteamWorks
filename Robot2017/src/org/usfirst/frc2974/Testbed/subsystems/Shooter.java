@@ -116,9 +116,9 @@ public class Shooter extends Subsystem {
 	{
 		SmartDashboard.putBoolean("isShooterAtSpeed", isAtSpeed());
 		SmartDashboard.putNumber("ShooterRPM", flywheelMotor.getSpeed());
-		SmartDashboard.putNumber("ShooterCurrentTrue", flywheelMotor.getOutputCurrent());
-		SmartDashboard.putNumber("ShooterVoltageTrue", flywheelMotor.getOutputVoltage());
-		SmartDashboard.putNumber("TargetSpeed", speed);
+//		SmartDashboard.putNumber("ShooterCurrentTrue", flywheelMotor.getOutputCurrent());
+//		SmartDashboard.putNumber("ShooterVoltageTrue", flywheelMotor.getOutputVoltage());
+//		SmartDashboard.putNumber("TargetSpeed", speed);
 	}
 
 	public void index(boolean on) {
