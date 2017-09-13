@@ -36,7 +36,7 @@ public class AutonEncoderToPegCharge extends Command {
 
 	private final static double PEG_OFF_DISPLACEMENT = 0.8;
 	private final static double PEG_OFF_OFFSET = 0.4;
-	private final static double CHARGE_DISTANCE = -6;
+	private final static double CHARGE_DISTANCE = -6 - 3.6576;
 
 	private final static Pose ZERO = new Pose(new Point2D(0, 0), 0);
 
@@ -127,16 +127,16 @@ public class AutonEncoderToPegCharge extends Command {
 				Robot.poseEstimator.reset();
 				switch (aetpc.position) {
 				case RED3:
-					aetpc.addDriveParametersGoForward(Math.PI / 3);
+					aetpc.addDriveParametersGoForward(Math.PI / 3, 30);
 					break;
 				case RED1:
-					aetpc.addDriveParametersGoForward(-Math.PI / 3);
+					aetpc.addDriveParametersGoForward(-Math.PI / 3, 0);
 					break;
 				case BLUE3:
-					aetpc.addDriveParametersGoForward(Math.PI / 3);
+					aetpc.addDriveParametersGoForward(Math.PI / 3, 0);
 					break;
 				case BLUE1:
-					aetpc.addDriveParametersGoForward(-Math.PI / 3);
+					aetpc.addDriveParametersGoForward(-Math.PI / 3, 30);
 					break;
 				}
 				aetpc.driveTrain.startMotion();
@@ -234,14 +234,14 @@ public class AutonEncoderToPegCharge extends Command {
 
 	}
 
-	private void addDriveParametersGoForward(double pegAngle) {
+	private void addDriveParametersGoForward(double pegAngle, double removePegAngle) {
 		driveTrain.cancelMotion();
 
 		Point2D displacement = new Point2D(Math.cos(pegAngle) * PEG_OFF_DISPLACEMENT + PEG_OFF_OFFSET,
 				Math.sin(pegAngle) * PEG_OFF_DISPLACEMENT);
 
 		Pose atPeg = new Pose(new Point2D(0, 0), pegAngle);
-		Pose displacementPose = new Pose(displacement, 0);
+		Pose displacementPose = new Pose(displacement, Math.toRadians(removePegAngle));
 
 		MotionProvider chargeBack = new MotionPathSpline(atPeg, PEG_OFF_DISPLACEMENT * 2 / 3, displacementPose,
 				PEG_OFF_OFFSET * 2 / 3, MAX_SPEED, MAX_ACCELERATION, true);
