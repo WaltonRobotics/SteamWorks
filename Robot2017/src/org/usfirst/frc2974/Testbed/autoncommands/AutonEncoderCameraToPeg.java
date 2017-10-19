@@ -47,7 +47,7 @@ public class AutonEncoderCameraToPeg extends Command {
 	double shootDistance;
 
 	public enum Position {
-		RED1, RED3, CENTER, BLUE1, BLUE3
+		RED1, RED3, CENTER, BLUE1, BLUE3, DONOTHING, 
 	}
 
 	public enum Control {
@@ -74,7 +74,7 @@ public class AutonEncoderCameraToPeg extends Command {
 					aectp.addDriveParametersCenter();
 					break;
 				case BLUE1:
-					aectp.addDriveParametersSide(new Point2D(-2.02, 0.95), -Math.PI / 3,
+					aectp.addDriveParametersSide(new Point2D(-1.96 /* testing this value */, 0.95), -Math.PI / 3, //default -2.02
 							Preferences.getInstance().getDouble("drivetrain.offsetBlue1", 0.5),
 							Preferences.getInstance().getDouble("drivetrain.offsetAngleB1", -0.125));
 					break;
@@ -93,7 +93,10 @@ public class AutonEncoderCameraToPeg extends Command {
 							Preferences.getInstance().getDouble("drivetrain.offsetRed3", 0.3),
 							Preferences.getInstance().getDouble("drivetrain.offsetAngleR3", 0.175));
 					break;
+				case DONOTHING:
+					break;
 				}
+					
 				aectp.driveTrain.startMotion();
 			}
 		},

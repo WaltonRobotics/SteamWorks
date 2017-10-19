@@ -54,8 +54,8 @@ public class OI {
 		left = new Joystick(0);
 		gamepad = new Gamepad(2);
 
-		shiftUp = new JoystickButton(left, 2);
-		shiftDown = new JoystickButton(left, 3);
+		shiftUp = new JoystickButton(left, 3); //Shifting buttons approved by Mr.B for Noah
+		shiftDown = new JoystickButton(left, 2);
 		shiftUpAlt = new JoystickButton(left, 11);
 		shiftDownAlt = new JoystickButton(left, 10);
 

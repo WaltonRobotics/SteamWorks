@@ -182,6 +182,8 @@ public class Robot extends IterativeRobot {
 				AutonEncoderCameraToPeg.Control.SHOOT));
 		autoChooser.addObject("Blue 1 and Shoot", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.BLUE1,
 				AutonEncoderCameraToPeg.Control.SHOOT));
+		autoChooser.addObject("Do Nothing", new AutonEncoderCameraToPeg(AutonEncoderCameraToPeg.Position.DONOTHING, 
+				AutonEncoderCameraToPeg.Control.NOTHING)); //Do nothing auton chooser
 
 		SmartDashboard.putData("Auto", autoChooser);
 	}
@@ -198,21 +200,21 @@ public class Robot extends IterativeRobot {
 	public void createLegacyChooser() {
 		legacyChooser = new SendableChooser<Command>();
 
-		legacyChooser.addDefault("Center Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2));
-		legacyChooser.addObject("Blue 1 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE1));
-		legacyChooser.addObject("Blue 3 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE3));
-		legacyChooser.addObject("Red 1 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1));
-		legacyChooser.addObject("Red 3 Legacy", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED3));
-		legacyChooser.addObject("Blue 1 Shoot Legacy",
+		legacyChooser.addDefault("Center No Camera", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED2));
+		legacyChooser.addObject("Blue 1 No Camera", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE1));
+		legacyChooser.addObject("Blue 3 No Camera", new AutonEncoderToPeg(AutonEncoderToPeg.Position.BLUE3));
+		legacyChooser.addObject("Red 1 No Camera", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED1));
+		legacyChooser.addObject("Red 3 No Camera", new AutonEncoderToPeg(AutonEncoderToPeg.Position.RED3));
+		legacyChooser.addObject("Blue 1 Shoot No Camera",
 				new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.BLUE1));
-		legacyChooser.addObject("Red 3 Shoot Legacy", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.RED3));
-		legacyChooser.addObject("Blue 1 Charge Legacy",
+		legacyChooser.addObject("Red 3 Shoot No Camera", new AutonEncoderToPegShoot(AutonEncoderToPegShoot.Position.RED3));
+		legacyChooser.addObject("Blue 1 Charge No Camera",
 				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE1));
-		legacyChooser.addObject("Blue 3 Charge Legacy",
+		legacyChooser.addObject("Blue 3 Charge No Camera",
 				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.BLUE3));
-		legacyChooser.addObject("Red 1 Charge Legacy",
+		legacyChooser.addObject("Red 1 Charge No Camera",
 				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED1));
-		legacyChooser.addObject("Red 3 Charge Legacy",
+		legacyChooser.addObject("Red 3 Charge No Camera",
 				new AutonEncoderToPegCharge(AutonEncoderToPegCharge.Position.RED3));
 
 		SmartDashboard.putData("Auto Legacy", legacyChooser);

@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class Kinematics {
 	
-	public static final double robotWidth = .70485; //practice bot
+	// The width of the robot in meters.
+	public static final double robotWidth = .70485;
 	
 	  private MotionProvider motion;
 	  private KinematicPose lastPose;
@@ -44,8 +45,8 @@ public class Kinematics {
 	  }
 	  private void evaluateLastPose(){
 		  Pose pose = motion.evaluatePose(1.0);
-		  KinematicState left = new KinematicState(lastPose.left.l, v1, 0);
-		  KinematicState right = new KinematicState(lastPose.right.l, v1, 0);
+		  KinematicState left = new KinematicState(lastPose.left.length, v1, 0);
+		  KinematicState right = new KinematicState(lastPose.right.length, v1, 0);
 		  
 		  lastPose = nextPose = new KinematicPose(pose, left, right, lastPose.t, true);
 		  System.out.println("Last Pose: " + lastPose.toString());
@@ -126,8 +127,8 @@ public class Kinematics {
 		  }
 		  
 		  //create new kinematic state. Old state is retained to interpolate positions, new state contains estimate for speed and accel
-		  KinematicState left = new KinematicState(lastPose.left.l + dlLeft, dlLeft / dt, a * direction);
-		  KinematicState right = new KinematicState(lastPose.right.l + dlRight, dlRight / dt, a * direction);
+		  KinematicState left = new KinematicState(lastPose.left.length + dlLeft, dlLeft / dt, a * direction);
+		  KinematicState right = new KinematicState(lastPose.right.length + dlRight, dlRight / dt, a * direction);
 		  
 		  nextPose = new KinematicPose(pose, left, right, lastPose.t + dt, isFinished);
 		  System.out.println("Next Pose " + nextPose.toString());
@@ -165,7 +166,7 @@ public class Kinematics {
 	  }
 
 	  public RobotPair getWheelPositions() {
-		  return new RobotPair(nextPose.left.l, nextPose.right.l);
+		  return new RobotPair(nextPose.left.length, nextPose.right.length);
 	  }
 	  
 	  public double getTime(){

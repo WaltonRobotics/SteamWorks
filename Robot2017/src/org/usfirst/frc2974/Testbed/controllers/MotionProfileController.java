@@ -129,11 +129,11 @@ public class MotionProfileController{
 //			System.out.println("time:" + time+ " " + wheelPositions + " " + kinematicPose);
 			synchronized (this) {
 				//feed forward
-				leftPower += (kV * kinematicPose.left.v + kK) + kA * kinematicPose.left.a;
-				rightPower += (kV * kinematicPose.right.v + kK) + kA * kinematicPose.right.a;
+				leftPower += (kV * kinematicPose.left.velocity + kK) + kA * kinematicPose.left.acceleration;
+				rightPower += (kV * kinematicPose.right.velocity + kK) + kA * kinematicPose.right.acceleration;
 				//feed back		
-				leftPower += kP * (kinematicPose.left.l - wheelPositions.left);
-				rightPower += kP * (kinematicPose.right.l - wheelPositions.right);
+				leftPower += kP * (kinematicPose.left.length - wheelPositions.left);
+				rightPower += kP * (kinematicPose.right.length - wheelPositions.right);
 				
 			}
 			

@@ -15,11 +15,11 @@ public class KinematicPose extends Pose{
 	}
 	
 	public double getLCenter() {
-		return (this.left.l + this.right.l) / 2.0;
+		return (this.left.length + this.right.length) / 2.0;
 	}
 	
 	public double getVCenter() {
-		return(this.left.v + this.right.v) / 2.0;
+		return(this.left.velocity + this.right.velocity) / 2.0;
 	}
 	
 	public static KinematicPose interpolate(KinematicPose pose0, double p, KinematicPose pose1, double q) {

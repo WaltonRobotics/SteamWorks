@@ -1,156 +1,167 @@
-import time
-import picamera
-import numpy as np
-import cv2
-from grip_peg import GripPipeline
-from networktables import NetworkTables
+# Imports for project
+import collections
+from datetime import datetime
 from fractions import Fraction
+import logging
 import math 
 import os
+from time import strftime
+import time
 
-#Units are in feet
-# As a client to connect to a robot
-## Todo read from Actual robott
-##NetworkTables.initialize(server='roborio-XXX-frc.local')
+from grip import GripPipeline
+from networktables import NetworkTables
+import numpy as np
+import picamera
 
-PID_FILE_NAME = "pid.pid"
+# Import for the OpenCV classes
+import cv2
 
-#try:
-#    os.remove(PID_FILE_NAME)
-#except IOError:
-#    pass
-
-#with open(PID_FILE_NAME, "w") as fd:    
-#    fd.write("{0:d}\n".format(os.getpid()))
-
-
+# Creates an empty image 320x240
 image = np.empty((240, 320, 3), dtype=np.uint8)
+
+# Creates an instance of the GripPipeline object. This class is used to process the image received from the camera
 gripped = GripPipeline()
 
+# Starts the network connection to the SmartDashboard from the RoboRIO
 NetworkTables.initialize(server="roboRIO-2974-frc.local")
+
+# Gets the instance of the SmartDashboard to use
 sd = NetworkTables.getTable("SmartDashboard")
 
-#inches
-KNOWN_WIDTH = 2
+# Creates a named tuple with x,y coordinates. A named tuple is like an object 
+Point = collections.namedtuple("Point", "x y");
 
-KNOWN_DISTANCE = 52
-KNOWN_FOCAL_LENGTH = 676.0
-#KNOWN_ASPECT_RATIO = 5/2
-KNOWN_HYPOTENEUSE = 8.375
-
+# Function used to initialise the camera settings. These settings are predefined and are used to make the camera more efficient.
 def camera_setup(camera):
     camera.resolution = (320, 240)
     camera.framerate = 60
     camera.iso = 100
-    camera.shutter_speed = 2000
+    camera.shutter_speed = 600
     camera.awb_mode = "off"
     camera.awb_gains = (Fraction(135, 128), Fraction(343, 128))
+    
+    # Lets the camera set the settings. Waits for 2 seconds.
     time.sleep(2)
     camera.exposure_mode = "off"
 
-#def find_angle(distance1, distance2):
-#    angle_valid = False
-    
-#    delta_d = distance2 - distance1    
-    #print(delta_d)
+ANGLE_LIMIT = 10
+MIN_WIDTH = 10
 
-#    angle = ""
-    
-#    if math.fabs(delta_d) < KNOWN_HYPOTENEUSE:
-#        angle = math.asin(delta_d / KNOWN_HYPOTENEUSE) if math.asin(delta_d / KNOWN_HYPOTENEUSE) else ""
-#        if not isinstance(angle, str):
-#            angle_vaild = True
+# This function is used to validate the contours received from the image camera and processed by the GripPipline.
+def validate_contours(contours):
+    valid_centers = []
 
-#    sd.putBoolean("Valid angle peg", angle_valid)
-
-
-#    return angle, angle_valid
-
-with picamera.PiCamera() as camera:
-    camera_setup(camera)
-
-    sd.putNumber("resolutionX", camera.resolution[0])
-    sd.putNumber("resolutionY", camera.resolution[1])
-    
-    camera.start_preview(fullscreen=False, window=(640,640,320,240))
-    #print(type(sd))
-    print("Started preview")
-    
-    while True:
-        camera.capture(image, 'bgr', True)
-        #cv2.imshow('img2', image)
-        gripped.process(image)
-
-        #print(camera.digital_gain, camera.analog_gain)
-        #cv2.imshow('img', image)
-        if len(gripped.filter_contours_output) >= 2:
-            #print(gripped.filter_contours_output)
-            #print(gripped.filter_contours_output[0].shape)
-            #print(type(cv2.minAreaRect(gripped.filter_contours_output[0])))
-            #print(cv2.minAreaRect(gripped.filter_contours_output[0])[1][0] * KNOWN_DISTANCE/ KNOWN_WIDTH)
-            #print(distance)
-
-            cY = 0
-            #distance = 0
-            cX = 0
-            
-            #distance1 = 0
-            #distance2 = 0
-            
-            lcv = 0
-
-            for c in gripped.filter_contours_output:
-                    #countour.append(c)
-                    lcv+=1 
-                    M = cv2.moments(c)
-                    boundries = cv2.minAreaRect(c)
-    
-                    #print(M)
-                    if (lcv == 1):
-                         X1 = int(M["m10"] / M["m00"])
-                         Y1 = int(M["m01"] / M["m00"])
-                         width1 = boundries[1][0]
-
-                         #distance1 = KNOWN_WIDTH * KNOWN_FOCAL_LENGTH / boundries[1][0]
-                    elif (lcv == 2):
-                         X2 = int(M["m10"] / M["m00"])
-                         Y2 = int(M["m01"] / M["m00"])
-                         width2 = boundries[1][0]
-                         #distance2 = KNOWN_WIDTH * KNOWN_FOCAL_LENGTH / boundries[1][0]
-
-                    #print(boundries[1][0])
-
-                    cX += int(M["m10"] / M["m00"])
-                    #distance += KNOWN_WIDTH * KNOWN_FOCAL_LENGTH / boundries[1][0]
-                    cY += int(M["m01"] / M["m00"])
-                    #cv2.drawContours(image, [c], -1, (255,0,0),2)
-                  
-            length = len(gripped.filter_contours_output)
-
-
-            #print(distance1, distance2)
-
-            #(tilt_angle, is_valid_angle) = find_angle(distance1, distance2) 
-
-            #print(tilt_angle)
-
-            cY /= length
-            cX /= length
-            #distance /= length
-
-            if (abs(X1-X2) > abs(Y1-Y2)):
-                sd.putNumber("Center point X peg", cX)
-                sd.putNumber("Center point Y peg", cY)
-                #sd.putNumber("Camera distance peg", distance)
-
-                if is_valid_angle:
-                    sd.putNumber("Target angle peg", tilt_angle)
-            #sd.putNumberArray("image", gripped.filter_contours_output)
-            #break
+    # Loops through the given contours
+    for contour in contours:
+        # Creates a rectangle of the smallest size possible around the contour
+        boundries = cv2.minAreaRect(contour)
+        moments = cv2.moments(contour)
         
-        sd.putNumber("status peg", len(gripped.filter_contours_output))
+        # When using cv2.minAreaRect(aContour) you must know that it returns a tuple:
+        # ((x, y), (width, height), angle)
+        
+        width, height, angle = boundries[1][0], boundries[1][1], boundries[2]
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # Find the x coordinate of the centre of the contour moment 
+        cx = moments["m10"] / moments["m00"]
+
+        #print("Center= %f" % cx)
+            
+        # Find the y coordinate of the centre of the contour moment
+        cy = moments["m01"] / moments["m00"]
+
+        # Prints to the screen the width, height and angle
+        print("Width={0:f}, height={1:f}, angle={2:f}, cX={3:f}".format(width, height, angle, cx))
+
+        # Initialises moments with nothing
+        
+        # If the angle of the rectangle is between -ANGLE_LIMIT and ANGLE_LIMIT
+        if -ANGLE_LIMIT < angle < ANGLE_LIMIT:
+            # If the width is between MIN_WIDTH and MAX_WIDTH
+            if width >= MIN_WIDTH:
+                # Set moments to the moment of the contour. This means that the contour is valid
+                valid_centers.append(Point(cx, cy))
+
+        # If the rectangle is reversed and so the rectangle angle is between -90 - ANGLE_LIMIT < angle < -90 + ANGLE_LIMIT
+        elif -90 - ANGLE_LIMIT < angle < -90 + ANGLE_LIMIT:
+            
+            # Since the rectangle is reversed the height is the width is the height so we have to check the height
+            if height >= MIN_WIDTH:
+                # Set moments to the moment of the contour. This means that the contour is valid
+                valid_centers.append(Point(cx, cy))
+
+    # Returns the computed valid centres of the contour list
+    return valid_centers
+
+# Gets the camera from the raspberry pi
+with picamera.PiCamera() as camera:
+    # Sets up the camera
+    camera_setup(camera)
+    
+    # Starts the camera
+    camera.start_preview(fullscreen=False, window=(640, 640, 320, 240))
+    
+    # Warns user that the camera has started
+    #logging.info("Started preview")
+    i = 0
+    while True:
+        # Gets the current image frame in a specific format (bgr) while using the video port to increase speed
+        camera.capture(image, 'bgr', True)
+        
+        # Processes the image using the GripPipeline. Gets the contours and sets them in gripped.filter_contours_output
+        gripped.process(image)
+        
+        # Validates the processed centres
+        valid_centers = validate_contours(gripped.filter_contours_output)
+        
+        # Prints the valid contours to screen
+        #logging.info(valid_centers)
+
+        # Checks if there is only one valid contour
+        if len(valid_centers) == 1:
+            # Gets the x coordinate of the single contour
+            pegX = valid_centers[0].x
+
+            # If the contour is more to the right adds 68 pixels
+            if pegX > 160:
+                pegX += 68
+
+            # If the contour is more to the left removes 68 pixels
+            else:
+                pegX -= 68
+
+            # Removes 160 from centre coordinate as to make 0 the middle of the screen as the resolution is 360x240
+            pegX -= 160
+  
+        # Checks if there are 2 contours
+        elif len(valid_centers) == 2:
+            # Gets the average of the two x coordinates as to get the middle. Subtracts 160 to make 0 the middle 
+            pegX = (valid_centers[0].x + valid_centers[1].x) / 2 - 160
+        
+        # Every other solution is invalid so makes pegX
+        else:
+            pegX = 0
+
+        # Converts the x coordinate into millimetres
+        pegX *= 1.867637
+
+        print("mm = %f" % pegX)
+
+        # Sends to SmartDashboard the value of the centre x coordinate in millimetres
+        sd.putNumber("mm peg centerX", pegX)
+        
+        #if i % 30 == 0:
+        #    cv2.imwrite("/home/pi/Desktop/image/image" + str((i / 300)) + ".jpg", image)
+
+        i += 1
+        # If 'q' is pressed on the keyboard exit loop
+        
+        #Uncomment this code to allow the program to break from loop terminating
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+         #   break
+        
+        # Send all values from SmartDashboard to the network so that the Driver Station can recieve it
         NetworkTables.flush()
+    
+    # Stops camera
     camera.stop_preview()
