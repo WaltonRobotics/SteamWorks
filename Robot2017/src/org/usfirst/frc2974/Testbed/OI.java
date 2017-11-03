@@ -10,85 +10,78 @@
 
 package org.usfirst.frc2974.Testbed;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc2974.Testbed.commands.*;
-import org.usfirst.frc2974.Testbed.subsystems.*;
-
-import edu.wpi.first.wpilibj.GamepadBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
- * This class is the glue that binds the controls on the physical operator
- * interface to the commands and command groups that allow control of the robot.
+ * This class is the glue that binds the controls on the physical operator interface to the commands
+ * and command groups that allow control of the robot.
  */
 public class OI {
-	
-	public Joystick left;
-	public Joystick right;
-	public Gamepad gamepad;
 
-	public Button shiftUp;
-	public Button shiftDown;
-	public Button shiftUpAlt;
-	public Button shiftDownAlt;
+  public Joystick left;
+  public Joystick right;
+  public Gamepad gamepad;
 
-	public Button shoot;
+  public Button shiftUp;
+  public Button shiftDown;
+  public Button shiftUpAlt;
+  public Button shiftDownAlt;
 
-	public Button intake;
-	public Button outtake;
-	public Button stoptake;
-	public Button dumptake;
+  public Button shoot;
 
-	public Button hopperControl;
-//	public Button hopperAltControl;
-//	public Button aimOverride;
-	public Button atSpeed;
-	
-	public Button intakeGear;
-	
-	public OI() {
-		right = new Joystick(1);
-		left = new Joystick(0);
-		gamepad = new Gamepad(2);
+  public Button intake;
+  public Button outtake;
+  public Button stoptake;
+  public Button dumptake;
 
-		shiftUp = new JoystickButton(left, 3); //Shifting buttons approved by Mr.B for Noah
-		shiftDown = new JoystickButton(left, 2);
-		shiftUpAlt = new JoystickButton(left, 11);
-		shiftDownAlt = new JoystickButton(left, 10);
+  public Button hopperControl;
+  // public Button hopperAltControl;
+  // public Button aimOverride;
+  public Button atSpeed;
 
-		shoot = new JoystickButton(left, 1);
+  public Button intakeGear;
 
-		intake = new JoystickButton(gamepad, 1);
-		outtake = new JoystickButton(gamepad, 3);
-		stoptake = new JoystickButton(gamepad, 2);
-		dumptake = new JoystickButton(gamepad,4);
-		
-		intakeGear = new JoystickButton(gamepad, 8);
+  public OI() {
+    right = new Joystick(1);
+    left = new Joystick(0);
+    gamepad = new Gamepad(2);
 
-		hopperControl = new JoystickButton(left, 9);
-//		hopperAltControl = new JoystickButton(gamepad,8);
+    shiftUp = new JoystickButton(left, 3); // Shifting buttons approved by Mr.B for Noah
+    shiftDown = new JoystickButton(left, 2);
+    shiftUpAlt = new JoystickButton(left, 11);
+    shiftDownAlt = new JoystickButton(left, 10);
 
-//		aimOverride = new JoystickButton(right, 7);
-		atSpeed = new JoystickButton(left, 8);
-	}
+    shoot = new JoystickButton(left, 1);
 
-	public boolean startHold() {
-		return gamepad.getRawButton(7);
-	}
-	
-	public boolean toggleHold() {
-		return gamepad.getRawButton(5);
-	}
-	
-	public boolean climbBoost()
-	{
-		return gamepad.getRawButton(12);
-	}
+    intake = new JoystickButton(gamepad, 1);
+    outtake = new JoystickButton(gamepad, 3);
+    stoptake = new JoystickButton(gamepad, 2);
+    dumptake = new JoystickButton(gamepad, 4);
 
-	public double climbY() {
-		return gamepad.getLeftY();
-	}
+    intakeGear = new JoystickButton(gamepad, 8);
+
+    hopperControl = new JoystickButton(left, 9);
+    // hopperAltControl = new JoystickButton(gamepad,8);
+
+    // aimOverride = new JoystickButton(right, 7);
+    atSpeed = new JoystickButton(left, 8);
+  }
+
+  public boolean startHold() {
+    return gamepad.getRawButton(7);
+  }
+
+  public boolean toggleHold() {
+    return gamepad.getRawButton(5);
+  }
+
+  public boolean climbBoost() {
+    return gamepad.getRawButton(12);
+  }
+
+  public double climbY() {
+    return gamepad.getLeftY();
+  }
 }

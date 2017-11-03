@@ -1,7 +1,6 @@
 package org.usfirst.frc2974.Testbed.autoncommands;
 
 import org.usfirst.frc2974.Testbed.Robot;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,148 +9,152 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class DriveDiffTrapezoid extends Command {
-	public static final double vmax = 1; // Value is 1 because 1 is the max
-											// velocity
-	public double amax; // Max acceleration (one of the inputs)
-	public double duration; // How long to run code (one of inputs)
-	public double t1;
-	public double t0;
-	public double dtaccel;
-	public double triTime;
-	public double diffPercent;
-	public DiffDirection diffDirection;
+  public static final double vmax = 1; // Value is 1 because 1 is the max
+                                       // velocity
+  public double amax; // Max acceleration (one of the inputs)
+  public double duration; // How long to run code (one of inputs)
+  public double t1;
+  public double t0;
+  public double dtaccel;
+  public double triTime;
+  public double diffPercent;
+  public DiffDirection diffDirection;
 
-	private enum State {
-		ACC {
-			@Override // For accelerating portion of movement - moves to next
-						// state when done
-			public void run(DriveDiffTrapezoid d) {
-				if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
-					d.state = State.DEC;
-					return;
-				} else if (Timer.getFPGATimestamp() >= d.t1) {
-					d.state = State.CONST;
-					return;
-				}
+  private enum State {
+    ACC {
+      @Override // For accelerating portion of movement - moves to next
+                // state when done
+      public void run(DriveDiffTrapezoid d) {
+        if (d.duration / 2 < Timer.getFPGATimestamp() - d.t0) {
+          d.state = State.DEC;
+          return;
+        } else if (Timer.getFPGATimestamp() >= d.t1) {
+          d.state = State.CONST;
+          return;
+        }
 
-				double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
-				if (d.diffDirection == DiffDirection.ANTICLOCKWISE) {
-					Robot.drivetrain.setSpeeds(power * d.diffPercent, power);
-				} else if (d.diffDirection == DiffDirection.CLOCKWISE) {
-					Robot.drivetrain.setSpeeds(power, power * d.diffPercent);
-				} else if (d.diffDirection == DiffDirection.ANTICLOCKWISEBACK) {
-					Robot.drivetrain.setSpeeds(-power, -power * d.diffPercent);
-				} else {
-					Robot.drivetrain.setSpeeds(-power * d.diffPercent, -power);
-				}
-			}
-		},
-		CONST {
-			@Override // Constant velocity portion of motion
-			public void run(DriveDiffTrapezoid d) {
-				if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
-					d.state = State.DEC;
-					return;
-				}
+        double power = (Timer.getFPGATimestamp() - d.t0) / d.dtaccel;
+        if (d.diffDirection == DiffDirection.ANTICLOCKWISE) {
+          Robot.drivetrain.setSpeeds(power * d.diffPercent, power);
+        } else if (d.diffDirection == DiffDirection.CLOCKWISE) {
+          Robot.drivetrain.setSpeeds(power, power * d.diffPercent);
+        } else if (d.diffDirection == DiffDirection.ANTICLOCKWISEBACK) {
+          Robot.drivetrain.setSpeeds(-power, -power * d.diffPercent);
+        } else {
+          Robot.drivetrain.setSpeeds(-power * d.diffPercent, -power);
+        }
+      }
+    },
+    CONST {
+      @Override // Constant velocity portion of motion
+      public void run(DriveDiffTrapezoid d) {
+        if (d.duration - Timer.getFPGATimestamp() <= d.dtaccel) {
+          d.state = State.DEC;
+          return;
+        }
 
-				if (d.diffDirection == DiffDirection.ANTICLOCKWISE) {
-					Robot.drivetrain.setSpeeds(vmax * d.diffPercent, vmax);
-				} else if (d.diffDirection == DiffDirection.CLOCKWISE) {
-					Robot.drivetrain.setSpeeds(vmax, vmax * d.diffPercent);
-				} else if (d.diffDirection == DiffDirection.ANTICLOCKWISEBACK) {
-					Robot.drivetrain.setSpeeds(-vmax, -vmax * d.diffPercent);
-				} else {
-					Robot.drivetrain.setSpeeds(-vmax * d.diffPercent, -vmax);
-				}
-			}
-		},
-		DEC {
-			@Override // Decelerating portion of motion
-			public void run(DriveDiffTrapezoid d) {
-				if (d.duration < Timer.getFPGATimestamp() - d.t0) {
-					d.state = END;
-					return;
-				}
+        if (d.diffDirection == DiffDirection.ANTICLOCKWISE) {
+          Robot.drivetrain.setSpeeds(vmax * d.diffPercent, vmax);
+        } else if (d.diffDirection == DiffDirection.CLOCKWISE) {
+          Robot.drivetrain.setSpeeds(vmax, vmax * d.diffPercent);
+        } else if (d.diffDirection == DiffDirection.ANTICLOCKWISEBACK) {
+          Robot.drivetrain.setSpeeds(-vmax, -vmax * d.diffPercent);
+        } else {
+          Robot.drivetrain.setSpeeds(-vmax * d.diffPercent, -vmax);
+        }
+      }
+    },
+    DEC {
+      @Override // Decelerating portion of motion
+      public void run(DriveDiffTrapezoid d) {
+        if (d.duration < Timer.getFPGATimestamp() - d.t0) {
+          d.state = END;
+          return;
+        }
 
-				double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
-				if (d.diffDirection == DiffDirection.ANTICLOCKWISE) {
-					Robot.drivetrain.setSpeeds(power * d.diffPercent, power);
-				} else if (d.diffDirection == DiffDirection.CLOCKWISE) {
-					Robot.drivetrain.setSpeeds(power, power * d.diffPercent);
-				} else if (d.diffDirection == DiffDirection.ANTICLOCKWISEBACK) {
-					Robot.drivetrain.setSpeeds(-power, -power * d.diffPercent);
-				} else {
-					Robot.drivetrain.setSpeeds(-power * d.diffPercent, -power);
-				}
-			}
-		},
-		END {
-			@Override // Sets speed to 0 and ends program
-			public void run(DriveDiffTrapezoid d) {
-				Robot.drivetrain.setSpeeds(0, 0);
-				d.end();
-			}
-		};
-		public void run(DriveDiffTrapezoid d) {
-		}
-	}
+        double power = (d.duration - Timer.getFPGATimestamp()) / d.dtaccel;
+        if (d.diffDirection == DiffDirection.ANTICLOCKWISE) {
+          Robot.drivetrain.setSpeeds(power * d.diffPercent, power);
+        } else if (d.diffDirection == DiffDirection.CLOCKWISE) {
+          Robot.drivetrain.setSpeeds(power, power * d.diffPercent);
+        } else if (d.diffDirection == DiffDirection.ANTICLOCKWISEBACK) {
+          Robot.drivetrain.setSpeeds(-power, -power * d.diffPercent);
+        } else {
+          Robot.drivetrain.setSpeeds(-power * d.diffPercent, -power);
+        }
+      }
+    },
+    END {
+      @Override // Sets speed to 0 and ends program
+      public void run(DriveDiffTrapezoid d) {
+        Robot.drivetrain.setSpeeds(0, 0);
+        d.end();
+      }
+    };
+    public void run(DriveDiffTrapezoid d) {}
+  }
 
-	private State state;
-	public boolean isDashboard;
+  private State state;
+  public boolean isDashboard;
 
-	public enum DiffDirection {
-		CLOCKWISE, ANTICLOCKWISE, CLOCKWISEBACK, ANTICLOCKWISEBACK
-	}
+  public enum DiffDirection {
+    CLOCKWISE, ANTICLOCKWISE, CLOCKWISEBACK, ANTICLOCKWISEBACK
+  }
 
-	public DriveDiffTrapezoid(boolean isDashboard, double amax, double time, double diffPercent,
-			DiffDirection diffDirection) {
-		// Use requires() here to declare subsystem dependencies
-		requires(Robot.drivetrain);
+  public DriveDiffTrapezoid(boolean isDashboard, double amax, double time, double diffPercent,
+      DiffDirection diffDirection) {
+    // Use requires() here to declare subsystem dependencies
+    requires(Robot.drivetrain);
 
-		this.isDashboard = isDashboard;
-		this.amax = amax;
-		duration = time;
-		this.diffPercent = diffPercent;
-		this.diffDirection = diffDirection;
-	}
+    this.isDashboard = isDashboard;
+    this.amax = amax;
+    duration = time;
+    this.diffPercent = diffPercent;
+    this.diffDirection = diffDirection;
+  }
 
-	// Called just before this Command runs the first time
-	protected void initialize() {
-		if (isDashboard) {
-			amax = SmartDashboard.getNumber("amax", 0);
-			duration = SmartDashboard.getNumber("duration", 0);
-			diffPercent = SmartDashboard.getNumber("diffPercent", 0);
-		}
-		state = State.ACC;
-		t0 = Timer.getFPGATimestamp();
-		dtaccel = t1 - t0;
-		triTime = (duration / 2) - t0;
-	}
+  // Called just before this Command runs the first time
+  @Override
+  protected void initialize() {
+    if (isDashboard) {
+      amax = SmartDashboard.getNumber("amax", 0);
+      duration = SmartDashboard.getNumber("duration", 0);
+      diffPercent = SmartDashboard.getNumber("diffPercent", 0);
+    }
+    state = State.ACC;
+    t0 = Timer.getFPGATimestamp();
+    dtaccel = t1 - t0;
+    triTime = (duration / 2) - t0;
+  }
 
-	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
-		state.run(this);
-	}
+  // Called repeatedly when this Command is scheduled to run
+  @Override
+  protected void execute() {
+    state.run(this);
+  }
 
-	// Make this return true when this Command no longer needs to run execute()
-	protected boolean isFinished() {
-		return duration < Timer.getFPGATimestamp() - t0;// || state == State.END
-														// ;
-	}
+  // Make this return true when this Command no longer needs to run execute()
+  @Override
+  protected boolean isFinished() {
+    return duration < Timer.getFPGATimestamp() - t0;// || state == State.END
+                                                    // ;
+  }
 
-	// Called once after isFinished returns true
-	protected void end() {
-		Robot.drivetrain.setSpeeds(0, 0);
-	}
+  // Called once after isFinished returns true
+  @Override
+  protected void end() {
+    Robot.drivetrain.setSpeeds(0, 0);
+  }
 
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	protected void interrupted() {
-		end();
-	}
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
+  @Override
+  protected void interrupted() {
+    end();
+  }
 
-	@Override
-	public String toString() {
-		return String.format("amax = %f, duration = %f, diffPercent = %f", amax, duration, diffPercent);
-	}
+  @Override
+  public String toString() {
+    return String.format("amax = %f, duration = %f, diffPercent = %f", amax, duration, diffPercent);
+  }
 }
