@@ -1,48 +1,48 @@
 package org.usfirst.frc2974.Testbed.subsystems;
 
-import org.usfirst.frc2974.Testbed.RobotMap;
-import org.usfirst.frc2974.Testbed.commands.GearIntakeControl;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc2974.Testbed.RobotMap;
+import org.usfirst.frc2974.Testbed.commands.GearIntakeControl;
 
 /**
  *
  */
 public class GearIntake extends Subsystem {
 
-  private Solenoid piston;
+	private Solenoid piston;
 
-  private DigitalInput gearSensor;
+	private DigitalInput gearSensor;
 
-  public GearIntake() {
-    piston = RobotMap.flapCylinder;
-    this.gearSensor = RobotMap.gearSensor;
+	public GearIntake() {
+		piston = RobotMap.flapCylinder;
+		this.gearSensor = RobotMap.gearSensor;
 
-  }
+	}
 
-  @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new GearIntakeControl());
-  }
+	public static void declarePrefs(boolean reset) {
+		Preferences pref = Preferences.getInstance();
+		if (reset || !pref.containsKey("gearintake.hasSensor")) {
+			pref.putBoolean("gearintake.hasSensor", false);
+		}
+	}
 
-  public void setPiston(boolean deployed) {
-    piston.set(deployed);
-  }
+	@Override
+	public void initDefaultCommand() {
+		setDefaultCommand(new GearIntakeControl());
+	}
 
-  public boolean hasGear() {
+	public void setPiston(boolean deployed) {
+		piston.set(deployed);
+	}
 
-    if (Preferences.getInstance().getBoolean("gearintake.hasSensor", false)) {
-      return !gearSensor.get();
-    }
-    return false;
-  }
+	public boolean hasGear() {
 
-  public static void declarePrefs(boolean reset) {
-    Preferences pref = Preferences.getInstance();
-    if (reset || !pref.containsKey("gearintake.hasSensor")) {
-      pref.putBoolean("gearintake.hasSensor", false);
-    }
-  }
+		if (Preferences.getInstance().getBoolean("gearintake.hasSensor", false)) {
+			return !gearSensor.get();
+		}
+		return false;
+	}
 }

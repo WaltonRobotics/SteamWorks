@@ -1,171 +1,172 @@
 package org.usfirst.frc2974.Testbed.controllers;
 
+import edu.wpi.first.wpilibj.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import org.usfirst.frc2974.Testbed.Robot;
-import edu.wpi.first.wpilibj.Timer;
 
 public class MotionProfileController {
-  private double kV = 0, kK = 0, kA = 0, kP = 0;
-  private Kinematics currentKinematics = null;
-  private KinematicPose staticKinematicPose;
-  private BlockingDeque<MotionProvider> motions = new LinkedBlockingDeque<MotionProvider>();
-  private PoseProvider poseProvider;
-  private java.util.Timer controller;
-  private double period;
-  private boolean isEnabled;
-  private final int nPoints = 50;
 
-  private class MPCTask extends TimerTask {
+	private final int nPoints = 50;
+	private double kV = 0, kK = 0, kA = 0, kP = 0;
+	private Kinematics currentKinematics = null;
+	private KinematicPose staticKinematicPose;
+	private BlockingDeque<MotionProvider> motions = new LinkedBlockingDeque<MotionProvider>();
+	private PoseProvider poseProvider;
+	private java.util.Timer controller;
+	private double period;
+	private boolean isEnabled;
 
-    @Override
-    public void run() {
-      calculate();
-    }
+	public MotionProfileController(PoseProvider poseProvider, double period) {
 
-  }
+		this.poseProvider = poseProvider;
+		this.period = period;
 
-  public MotionProfileController(PoseProvider poseProvider, double period) {
+		controller = new java.util.Timer();
 
-    this.poseProvider = poseProvider;
-    this.period = period;
+		controller.schedule(new MPCTask(), 0L, (long) (period * 1000));
 
-    controller = new java.util.Timer();
+		staticKinematicPose = Kinematics.staticPose(poseProvider.getPose(),
+			poseProvider.getWheelPositions(), Timer.getFPGATimestamp());
+	}
 
-    controller.schedule(new MPCTask(), 0L, (long) (period * 1000));
+	public void free() {
+		controller.cancel();
+		// RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask
+		// is destroyed.");
+	}
 
-    staticKinematicPose = Kinematics.staticPose(poseProvider.getPose(),
-        poseProvider.getWheelPositions(), Timer.getFPGATimestamp());
-  }
+	public synchronized void addMotion(MotionProvider motion) {
+		motions.addLast(motion);
+		System.out.println("added motion" + motion.toString());
+	}
 
-  public void free() {
-    controller.cancel();
-    // RobotLoggerManager.setFileHandlerInstance("robot.controller").info("MPCTask
-    // is destroyed.");
-  }
+	public synchronized void enable() {
+		System.out.println(String.format("kK=%f, kV=%f, kA=%f, kP=%f", kK, kV, kA, kP));
+		MotionProvider newMotion = motions.poll();
+		if (newMotion != null) {
+			currentKinematics = new Kinematics(newMotion, poseProvider.getWheelPositions(),
+				Timer.getFPGATimestamp(), 0, 0, nPoints);
+			// System.out.println("starting new motion:" + currentKinematics.toString());
+			isEnabled = true;
+		}
+	}
 
-  public synchronized void addMotion(MotionProvider motion) {
-    motions.addLast(motion);
-    System.out.println("added motion" + motion.toString());
-  }
+	public synchronized void cancel() {
+		isEnabled = false;
+		currentKinematics = null;
+		motions.clear();
+		Robot.drivetrain.setSpeeds(0, 0);
+	}
 
-  public synchronized void enable() {
-    System.out.println(String.format("kK=%f, kV=%f, kA=%f, kP=%f", kK, kV, kA, kP));
-    MotionProvider newMotion = motions.poll();
-    if (newMotion != null) {
-      currentKinematics = new Kinematics(newMotion, poseProvider.getWheelPositions(),
-          Timer.getFPGATimestamp(), 0, 0, nPoints);
-      // System.out.println("starting new motion:" + currentKinematics.toString());
-      isEnabled = true;
-    }
-  }
+	public boolean getEnabled() {
+		return isEnabled;
+	}
 
-  public synchronized void cancel() {
-    isEnabled = false;
-    currentKinematics = null;
-    motions.clear();
-    Robot.drivetrain.setSpeeds(0, 0);
-  }
+	public synchronized double getKV() {
+		return kV;
+	}
 
-  public boolean getEnabled() {
-    return isEnabled;
-  }
+	public synchronized void setKV(double kV) {
+		this.kV = kV;
+	}
 
-  public synchronized double getKV() {
-    return kV;
-  }
+	public synchronized double getKK() {
+		return kK;
+	}
 
-  public synchronized void setKV(double kV) {
-    this.kV = kV;
-  }
+	public synchronized void setKK(double kK) {
+		this.kK = kK;
+	}
 
-  public synchronized double getKK() {
-    return kK;
-  }
+	public synchronized double getKA() {
+		return kA;
+	}
 
-  public synchronized void setKK(double kK) {
-    this.kK = kK;
-  }
+	public synchronized void setKA(double kA) {
+		this.kA = kA;
+	}
 
-  public synchronized double getKA() {
-    return kA;
-  }
+	public synchronized double getKP() {
+		return kP;
+	}
 
-  public synchronized void setKA(double kA) {
-    this.kA = kA;
-  }
+	public synchronized void setKP(double kP) {
+		this.kP = kP;
+	}
 
-  public synchronized double getKP() {
-    return kP;
-  }
+	private void calculate() {
 
-  public synchronized void setKP(double kP) {
-    this.kP = kP;
-  }
+		double leftPower = 0;
+		double rightPower = 0;
+		boolean enabled;
 
-  private void calculate() {
+		synchronized (this) {
+			enabled = this.isEnabled;
+		}
 
-    double leftPower = 0;
-    double rightPower = 0;
-    boolean enabled;
+		if (enabled) {
 
-    synchronized (this) {
-      enabled = this.isEnabled;
-    }
+			double time = Timer.getFPGATimestamp();
 
-    if (enabled) {
+			RobotPair wheelPositions = poseProvider.getWheelPositions();
 
-      double time = Timer.getFPGATimestamp();
+			KinematicPose kinematicPose;
+			if (currentKinematics != null) {
+				kinematicPose = currentKinematics.interpolatePose(time);
+			} else {
+				kinematicPose = staticKinematicPose;
+			}
 
-      RobotPair wheelPositions = poseProvider.getWheelPositions();
+			// System.out.println("time:" + time+ " " + wheelPositions + " " +
+			// kinematicPose);
+			synchronized (this) {
+				// feed forward
+				leftPower += (kV * kinematicPose.left.velocity + kK) + kA * kinematicPose.left.acceleration;
+				rightPower +=
+					(kV * kinematicPose.right.velocity + kK) + kA * kinematicPose.right.acceleration;
+				// feed back
+				leftPower += kP * (kinematicPose.left.length - wheelPositions.left);
+				rightPower += kP * (kinematicPose.right.length - wheelPositions.right);
 
-      KinematicPose kinematicPose;
-      if (currentKinematics != null) {
-        kinematicPose = currentKinematics.interpolatePose(time);
-      } else {
-        kinematicPose = staticKinematicPose;
-      }
+			}
 
-      // System.out.println("time:" + time+ " " + wheelPositions + " " +
-      // kinematicPose);
-      synchronized (this) {
-        // feed forward
-        leftPower += (kV * kinematicPose.left.velocity + kK) + kA * kinematicPose.left.acceleration;
-        rightPower +=
-            (kV * kinematicPose.right.velocity + kK) + kA * kinematicPose.right.acceleration;
-        // feed back
-        leftPower += kP * (kinematicPose.left.length - wheelPositions.left);
-        rightPower += kP * (kinematicPose.right.length - wheelPositions.right);
+			leftPower = Math.max(-1, Math.min(1, leftPower));
+			rightPower = Math.max(-1, Math.min(1, rightPower));
 
-      }
+			// System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f",
+			// leftPower,rightPower,
+			// kinematicPose.left.l - wheelPositions.left,
+			// kinematicPose.right.l - wheelPositions.right));
 
-      leftPower = Math.max(-1, Math.min(1, leftPower));
-      rightPower = Math.max(-1, Math.min(1, rightPower));
+			Robot.drivetrain.setSpeeds(leftPower, rightPower);
 
-      // System.out.println(String.format("LP=%f,RP=%f, err_l=%f, err_r=%f",
-      // leftPower,rightPower,
-      // kinematicPose.left.l - wheelPositions.left,
-      // kinematicPose.right.l - wheelPositions.right));
+			if (kinematicPose.isFinished) {
+				MotionProvider newMotion = motions.pollFirst();
+				if (newMotion != null) {
+					currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(),
+						currentKinematics.getTime(), 0, 0, nPoints);
+					// System.out.println("starting new motion:" + currentKinematics.toString());
+				} else {
+					staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(),
+						currentKinematics.getWheelPositions(), currentKinematics.getTime());
+					currentKinematics = null;
+				}
+			}
+		}
+	}
 
-      Robot.drivetrain.setSpeeds(leftPower, rightPower);
+	public synchronized boolean isFinished() {
+		return currentKinematics == null;
+	}
 
-      if (kinematicPose.isFinished) {
-        MotionProvider newMotion = motions.pollFirst();
-        if (newMotion != null) {
-          currentKinematics = new Kinematics(newMotion, currentKinematics.getWheelPositions(),
-              currentKinematics.getTime(), 0, 0, nPoints);
-          // System.out.println("starting new motion:" + currentKinematics.toString());
-        } else {
-          staticKinematicPose = Kinematics.staticPose(currentKinematics.getPose(),
-              currentKinematics.getWheelPositions(), currentKinematics.getTime());
-          currentKinematics = null;
-        }
-      }
-    }
-  }
+	private class MPCTask extends TimerTask {
 
-  public synchronized boolean isFinished() {
-    return currentKinematics == null;
-  }
+		@Override
+		public void run() {
+			calculate();
+		}
+
+	}
 }

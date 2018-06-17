@@ -1,108 +1,106 @@
 package org.usfirst.frc2974.Testbed.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc2974.Testbed.Robot;
 import org.usfirst.frc2974.Testbed.subsystems.Climber;
-import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
 public class Climb extends Command {
-  private enum State {
-    Disabled {
 
-      @Override
-      public void init(Climb climb) {
-        Robot.climber.endHold();
-      }
+	private State state;
+	private Climber climber;
+	public Climb() {
+		// Use requires() here to declare subsystem dependencies
+		climber = Robot.climber;
+		requires(climber);
+	}
 
-      @Override
-      public State run(Climb climb) {
+	// Called just before this Command runs the first time
+	@Override
+	protected void initialize() {
+		state = State.Disabled;
+		state.init(this);
+	}
 
-        if (Robot.oi.startHold()) {
-          return Climbing;
-        }
-        Robot.climber.set(Robot.oi.climbY(), false);
+	// Called repeatedly when this Command is scheduled to run
+	@Override
+	protected void execute() {
 
-        return Disabled;
-      }
+		State newState = state.run(this);
+		if (newState != state) {
+			newState.init(this);
+			state = newState;
+		}
+	}
 
-    },
-    Climbing {
+	// Make this return true when this Command no longer needs to run execute()
+	@Override
+	protected boolean isFinished() {
+		return false;
+	}
 
-      @Override
-      public void init(Climb climb) {
-        Robot.climber.hold();
-        Robot.climber.startHold();
-      }
+	// Called once after isFinished returns true
+	@Override
+	protected void end() {
+		Robot.climber.hold();
+	}
 
-      @Override
-      public State run(Climb climb) {
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	@Override
+	protected void interrupted() {
+		end();
+	}
 
-        if (Robot.oi.toggleHold()) {
-          Robot.climber.endHold();
-          return Disabled;
-        }
+	private enum State {
+		Disabled {
+			@Override
+			public void init(Climb climb) {
+				Robot.climber.endHold();
+			}
 
-        if (Robot.oi.startHold()) {
-          Robot.climber.hold();
-        }
+			@Override
+			public State run(Climb climb) {
 
-        Robot.climber.set(Robot.oi.climbY(), Robot.oi.climbBoost());
+				if (Robot.oi.startHold()) {
+					return Climbing;
+				}
+				Robot.climber.set(Robot.oi.climbY(), false);
 
-        return Climbing;
-      }
+				return Disabled;
+			}
 
-    };
+		},
+		Climbing {
+			@Override
+			public void init(Climb climb) {
+				Robot.climber.hold();
+				Robot.climber.startHold();
+			}
 
-    public abstract void init(Climb climb);
+			@Override
+			public State run(Climb climb) {
 
-    public abstract State run(Climb climb);
-  }
+				if (Robot.oi.toggleHold()) {
+					Robot.climber.endHold();
+					return Disabled;
+				}
 
-  private State state;
-  private Climber climber;
+				if (Robot.oi.startHold()) {
+					Robot.climber.hold();
+				}
 
-  public Climb() {
-    // Use requires() here to declare subsystem dependencies
-    climber = Robot.climber;
-    requires(climber);
-  }
+				Robot.climber.set(Robot.oi.climbY(), Robot.oi.climbBoost());
 
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
-    state = State.Disabled;
-    state.init(this);
-  }
+				return Climbing;
+			}
 
-  // Called repeatedly when this Command is scheduled to run
-  @Override
-  protected void execute() {
+		};
 
-    State newState = state.run(this);
-    if (newState != state) {
-      newState.init(this);
-      state = newState;
-    }
-  }
+		public abstract void init(Climb climb);
 
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-    Robot.climber.hold();
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-    end();
-  }
+		public abstract State run(Climb climb);
+	}
 }
